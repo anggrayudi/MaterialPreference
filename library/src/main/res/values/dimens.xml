@@ -10,4 +10,6 @@
     <dimen name="preference_seekbar_padding_end">22dp</dimen>
     <!-- The width of the TextView indicating the current value of the SeekBarPreference -->
     <dimen name="preference_seekbar_value_width">36dp</dimen>
+
+    <dimen name="preferenceMinHeight">54dp</dimen>
 </resources>

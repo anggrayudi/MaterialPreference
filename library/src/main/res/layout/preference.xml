@@ -16,24 +16,26 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:minHeight="@dimen/preferenceMinHeight"
     android:gravity="center_vertical"
     android:paddingEnd="?android:attr/scrollbarSize"
-    android:background="@android:drawable/list_selector_background"
-    android:focusable="true" >
+    android:background="?android:attr/selectableItemBackground"
+    android:focusable="true"
+    android:baselineAligned="false">
 
     <FrameLayout
         android:id="@+id/icon_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <ImageView
+        <com.anggrayudi.materialpreference.widget.PreferenceImageView
             android:id="@android:id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            />
+            app:maxWidth="48dp"
+            app:maxHeight="48dp" />
     </FrameLayout>
 
     <RelativeLayout
@@ -49,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="@style/preferenceTitleTextAppearance"
             android:textColor="?android:attr/textColorPrimary"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal" />
@@ -59,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@android:id/title"
             android:layout_alignStart="@android:id/title"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textAppearance="@style/preferenceSummaryTextAppearance"
             android:textColor="?android:attr/textColorSecondary"
             android:maxLines="4" />
 
@@ -71,5 +73,4 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="vertical" />
-
 </LinearLayout>

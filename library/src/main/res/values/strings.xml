@@ -1,5 +1,14 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Material Preference</string>
     <string name="v7_preference_on">ON</string>
     <string name="v7_preference_off">OFF</string>
+    <string name="ringtone_default">Default ringtone</string>
+    <string name="ringtone_default_with_actual">Default (<xliff:g id="actual_ringtone">%1$s</xliff:g>)</string>
+    <string name="ringtone_silent">None</string>
+    <string name="ringtone_picker_title">Ringtones</string>
+    <string name="ringtone_picker_title_alarm">Alarm sounds</string>
+    <string name="ringtone_picker_title_notification">Notification sounds</string>
+    <string name="ringtone_unknown">Unknown</string>
+    <string name="notification_sound_default">Default notification sound</string>
+    <string name="alarm_sound_default">Default alarm sound</string>
 </resources>

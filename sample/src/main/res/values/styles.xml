@@ -14,7 +14,9 @@
         <item name="dialogTheme">@style/AppTheme.Dialog</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="android:windowBackground">@color/preferenceBackground</item>
     </style>
+
 
     <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!--<item name="colorPrimary">@color/primary</item>-->

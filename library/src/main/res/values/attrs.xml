@@ -70,6 +70,7 @@
         <attr name="android:switchPreferenceStyle" />
         <!-- Default style for seekbar preferences. -->
         <attr name="seekBarPreferenceStyle" format="reference" />
+        <attr name="multiSelectListPreferenceStyle" format="reference"/>
     </declare-styleable>
 
     <!-- Base attributes available to PreferenceFragment. -->
@@ -294,5 +295,10 @@
         <attr name="showSeekBarValue" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="RingtonePreference">
+        <attr name="android:ringtoneType"/>
+        <attr name="android:showDefault"/>
+        <attr name="android:showSilent"/>
+    </declare-styleable>
 
 </resources>

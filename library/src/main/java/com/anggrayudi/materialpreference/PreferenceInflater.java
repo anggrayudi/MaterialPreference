@@ -152,8 +152,7 @@ class PreferenceInflater {
                 }
 
                 // Temp is the root that was found in the xml
-                Preference xmlRoot = createItemFromTag(parser.getName(),
-                        attrs);
+                Preference xmlRoot = createItemFromTag(parser.getName(), attrs);
 
                 result = onMergeRoots(root, (PreferenceGroup) xmlRoot);
 

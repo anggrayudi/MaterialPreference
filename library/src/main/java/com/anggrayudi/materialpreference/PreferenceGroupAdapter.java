@@ -16,6 +16,7 @@
 
 package com.anggrayudi.materialpreference;
 
+import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -23,8 +24,9 @@ import android.support.annotation.RestrictTo;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.util.ListUpdateCallback;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +43,8 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
  * @hide
  */
 @RestrictTo(LIBRARY_GROUP)
-public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewHolder>
-        implements Preference.OnPreferenceChangeInternalListener,
-        PreferenceGroup.PreferencePositionCallback {
+public class PreferenceGroupAdapter implements
+        Preference.OnPreferenceChangeInternalListener, ListUpdateCallback {
 
     private static final String TAG = "PreferenceGroupAdapter";
 
@@ -70,6 +71,7 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
      */
     private List<PreferenceLayout> mPreferenceLayouts;
 
+    private ViewGroup mRootParent;
 
     private PreferenceLayout mTempPreferenceLayout = new PreferenceLayout();
 
@@ -116,7 +118,8 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         }
     }
 
-    public PreferenceGroupAdapter(PreferenceGroup preferenceGroup) {
+    public PreferenceGroupAdapter(PreferenceGroup preferenceGroup, ViewGroup parent) {
+        mRootParent = parent;
         mPreferenceGroup = preferenceGroup;
         // If this group gets or loses any children, let us know
         mPreferenceGroup.setOnPreferenceChangeInternalListener(this);
@@ -125,14 +128,11 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         mPreferenceListInternal = new ArrayList<>();
         mPreferenceLayouts = new ArrayList<>();
 
-        if (mPreferenceGroup instanceof PreferenceScreen) {
-            setHasStableIds(((PreferenceScreen) mPreferenceGroup).shouldUseGeneratedIds());
-        } else {
-            setHasStableIds(true);
-        }
-
         syncMyPreferences();
     }
+
+    // TODO: 02/07/18 Preference visibility
+    // TODO: 02/07/18 perbaiki preference yang memakai dialog
 
     private void syncMyPreferences() {
         for (final Preference preference : mPreferenceListInternal) {
@@ -156,8 +156,7 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         mPreferenceListInternal = fullPreferenceList;
 
         final PreferenceManager preferenceManager = mPreferenceGroup.getPreferenceManager();
-        if (preferenceManager != null
-                && preferenceManager.getPreferenceComparisonCallback() != null) {
+        if (preferenceManager != null && preferenceManager.getPreferenceComparisonCallback() != null) {
             final PreferenceManager.PreferenceComparisonCallback comparisonCallback =
                     preferenceManager.getPreferenceComparisonCallback();
             final DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
@@ -238,22 +237,9 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mPreferenceList.size();
-    }
-
     public Preference getItem(int position) {
-        if (position < 0 || position >= getItemCount()) return null;
+        if (position < 0 || position >= mPreferenceList.size()) return null;
         return mPreferenceList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        if (!hasStableIds()) {
-            return RecyclerView.NO_ID;
-        }
-        return this.getItem(position).getId();
     }
 
     @Override
@@ -262,7 +248,7 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         // If we don't find the preference, we don't need to notify anyone
         if (index != -1) {
             // Send the pref object as a placeholder to ensure the view holder is recycled in place
-            notifyItemChanged(index, preference);
+            onItemChanged(index);
         }
     }
 
@@ -293,7 +279,7 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
             // Insert this preference into the active list just after the previous visible entry
             mPreferenceList.add(previousVisibleIndex + 1, preference);
 
-            notifyItemInserted(previousVisibleIndex + 1);
+//            notifyItemInserted(previousVisibleIndex + 1);
         } else {
             // The preference has become invisible. Find it in the list and remove it.
 
@@ -305,13 +291,12 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
                 }
             }
             mPreferenceList.remove(removalIndex);
-            notifyItemRemoved(removalIndex);
+//            notifyItemRemoved(removalIndex);
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        final Preference preference = this.getItem(position);
+    private int getItemViewType(int position) {
+        final Preference preference = getItem(position);
 
         mTempPreferenceLayout = createPreferenceLayout(preference, mTempPreferenceLayout);
 
@@ -325,26 +310,23 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         }
     }
 
-    @Override
-    public PreferenceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final PreferenceLayout pl = mPreferenceLayouts.get(viewType);
-        final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        TypedArray a
-                = parent.getContext().obtainStyledAttributes(null, R.styleable.BackgroundStyle);
-        Drawable background
-                = a.getDrawable(R.styleable.BackgroundStyle_android_selectableItemBackground);
+    private PreferenceViewHolder createViewHolder(int viewType, Preference preference) {
+        PreferenceLayout pl = mPreferenceLayouts.get(viewType);
+        Context context = mPreferenceGroup.getContext();
+        TypedArray a = context.obtainStyledAttributes(null, R.styleable.BackgroundStyle);
+        Drawable background = a.getDrawable(R.styleable.BackgroundStyle_android_selectableItemBackground);
         if (background == null) {
-            background = ContextCompat.getDrawable(parent.getContext(),
-                    android.R.drawable.list_selector_background);
+            background = ContextCompat.getDrawable(context, android.R.drawable.list_selector_background);
         }
         a.recycle();
 
-        final View view = inflater.inflate(pl.resId, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        final View view = inflater.inflate(pl.resId, getParentView(preference), false);
         if (view.getBackground() == null) {
             ViewCompat.setBackground(view, background);
         }
 
-        final ViewGroup widgetFrame = (ViewGroup) view.findViewById(android.R.id.widget_frame);
+        final ViewGroup widgetFrame = view.findViewById(android.R.id.widget_frame);
         if (widgetFrame != null) {
             if (pl.widgetResId != 0) {
                 inflater.inflate(pl.widgetResId, widgetFrame);
@@ -356,33 +338,49 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         return new PreferenceViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(PreferenceViewHolder holder, int position) {
-        final Preference preference = getItem(position);
-        preference.onBindViewHolder(holder);
+    public void onItemChanged(int position) {
+        Preference preference = getItem(position);
+        if (preference != null) {
+            if (preference.mPreferenceViewHolder == null) {
+                preference.mPreferenceViewHolder = createViewHolder(getItemViewType(position), preference);
+                getParentView(preference).addView(preference.mPreferenceViewHolder.itemView);
+            }
+
+            preference.onBindViewHolder(preference.mPreferenceViewHolder);
+            preference.mPreferenceViewHolder.itemView.setVisibility(preference.isVisible() ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public void notifyDataSetChanged() {
+        for (int i = 0; i < mPreferenceList.size(); i++) {
+            onItemChanged(i);
+        }
+    }
+
+    private ViewGroup getParentView(Preference preference) {
+        if (preference.getParent() == null || preference instanceof PreferenceCategory)
+            return mRootParent;
+
+        return preference.getParent().mPreferenceViewHolder.itemView.findViewById(android.R.id.content);
     }
 
     @Override
-    public int getPreferenceAdapterPosition(String key) {
-        final int size = mPreferenceList.size();
-        for (int i = 0; i < size; i++) {
-            final Preference candidate = mPreferenceList.get(i);
-            if (TextUtils.equals(key, candidate.getKey())) {
-                return i;
-            }
-        }
-        return RecyclerView.NO_POSITION;
+    public void onInserted(int position, int count) {
+        Log.d(TAG, "onInserted: " + position);
     }
 
     @Override
-    public int getPreferenceAdapterPosition(Preference preference) {
-        final int size = mPreferenceList.size();
-        for (int i = 0; i < size; i++) {
-            final Preference candidate = mPreferenceList.get(i);
-            if (candidate != null && candidate.equals(preference)) {
-                return i;
-            }
-        }
-        return RecyclerView.NO_POSITION;
+    public void onRemoved(int position, int count) {
+        Log.d(TAG, "onRemoved: " + position);
+    }
+
+    @Override
+    public void onMoved(int fromPosition, int toPosition) {
+        Log.d(TAG, "onMoved: fromPosition " + fromPosition + " => toPosition " + toPosition);
+    }
+
+    @Override
+    public void onChanged(int position, int count, Object payload) {
+        Log.d(TAG, "onChanged: " + position + ", payload " + payload.toString());
     }
 }

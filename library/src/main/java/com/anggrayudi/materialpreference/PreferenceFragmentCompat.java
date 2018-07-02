@@ -44,7 +44,7 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
 
     private static final String PREFERENCES_TAG = "android:preferences";
 
-    private static final String DIALOG_FRAGMENT_TAG =
+    static final String DIALOG_FRAGMENT_TAG =
             "com.anggrayudi.materialpreference.PreferenceFragment.DIALOG";
 
     private PreferenceManager mPreferenceManager;
@@ -424,9 +424,11 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
     protected void onUnbindPreferences() {
     }
 
+    private PreferenceGroupAdapter mAdapter;
+
     private void attachPreferences(PreferenceScreen screen) {
         // TODO: 01/07/18 Attach to cardviews
-
+        mAdapter = new PreferenceGroupAdapter(screen, mListContainer);
     }
 
     /**

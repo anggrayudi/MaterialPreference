@@ -1,21 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="General">
+    <!-- TODO: Bagaimana jika di sini langsung PreferenceScreen?   -->
+    <!--<PreferenceScreen-->
+        <!--android:key="screen_downloads"-->
+        <!--android:title="Downloads">-->
+
+        <!--<Preference-->
+            <!--android:key="save_dir"-->
+            <!--android:title="Save directory"/>-->
+    <!--</PreferenceScreen>-->
+
+    <PreferenceCategory android:title="Network">
 
         <SwitchPreference
             android:key="auto_sync"
             android:title="Auto sync"/>
 
         <CheckBoxPreference
-            android:key="update_notification"
-            android:title="Notify when version is released"/>
+            android:key="wifi_only"
+            android:title="Wi-Fi only"
+            android:dependency="auto_sync"/>
+
+        <RingtonePreference
+            android:key="ringtone"
+            android:title="Update ringtone"
+            android:showSilent="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Account">
+
+        <EditTextPreference
+            android:key="account_name"
+            android:title="Account name"/>
+
+        <ListPreference
+            android:key="country"
+            android:title="Country"
+            android:entries="@array/entries_country"
+            android:entryValues="@array/entry_values_country"/>
+
+        <MultiSelectListPreference
+            android:key="friend_list"
+            android:title="Friend list"
+            android:entries="@array/entries_friend"
+            android:entryValues="@array/entries_friend"/>
+
+        <PreferenceScreen
+            android:key="screen_privacy"
+            android:title="Privacy"
+            android:persistent="false">
+
+            <CheckBoxPreference
+                android:key="save_history"
+                android:title="Save browsing history"/>
+
+            <EditTextPreference
+                android:key="app_password"
+                android:title="Application password"
+                android:password="true"/>
+        </PreferenceScreen>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Advanced">
 
         <Preference
             android:key="restore_default"
-            android:title="Restore default settings"/>
+            android:title="Restore default settings"
+            android:persistent="false"/>
+
+        <Preference
+            android:key="open_internal_settings"
+            android:title="Open internal settings"
+            android:persistent="false">
+            <intent android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
+                android:data="package:com.anggrayudi.materialpreference.sample"/>
+        </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            android:key="about"
+            android:title="About"
+            android:persistent="false">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/anggrayudi/MaterialPreference"/>
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

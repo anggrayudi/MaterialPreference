@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -35,10 +36,13 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.AbsSavedState;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.util.DialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +165,8 @@ public class Preference implements Comparable<Preference> {
 
     private List<Preference> mDependents;
     private PreferenceGroup mParentGroup;
+
+    PreferenceViewHolder mPreferenceViewHolder;
 
     private boolean mWasDetached;
     private boolean mBaseMethodCalled;
@@ -559,7 +565,6 @@ public class Preference implements Comparable<Preference> {
      */
     public void onBindViewHolder(PreferenceViewHolder holder) {
         holder.itemView.setOnClickListener(mClickListener);
-        holder.itemView.setId(mViewId);
 
         final TextView titleView = (TextView) holder.findViewById(android.R.id.title);
         if (titleView != null) {
@@ -615,6 +620,19 @@ public class Preference implements Comparable<Preference> {
             }
         }
 
+        ViewGroup widgetFrame = (ViewGroup) holder.findViewById(android.R.id.widget_frame);
+        if (this instanceof PreferenceScreen) {
+            ImageView summaryIcon = widgetFrame.findViewById(R.id.summary_icon);
+            if (summaryIcon == null) {
+                summaryIcon = (ImageView) LayoutInflater.from(mContext).inflate(
+                        R.layout.preference_screen_summary_icon, widgetFrame, false);
+                summaryIcon.getDrawable().mutate().setColorFilter(
+                        DialogUtils.resolveColor(mContext, android.R.attr.textColorSecondary), PorterDuff.Mode.SRC_IN);
+                widgetFrame.addView(summaryIcon);
+                widgetFrame.setVisibility(View.VISIBLE);
+            }
+        }
+
         if (mShouldDisableView) {
             setEnabledStateOnViews(holder.itemView, isEnabled());
         } else {
@@ -625,8 +643,7 @@ public class Preference implements Comparable<Preference> {
         holder.itemView.setFocusable(selectable);
         holder.itemView.setClickable(selectable);
 
-        holder.setDividerAllowedAbove(mAllowDividerAbove);
-        holder.setDividerAllowedBelow(mAllowDividerBelow);
+        mPreferenceViewHolder = holder;
     }
 
     /**
