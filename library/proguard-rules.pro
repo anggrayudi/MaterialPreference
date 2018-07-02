@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keepclassmembernames class android.support.v7.preference.PreferenceManager {
+    void setNoCommit(boolean);
+}
+
+-keepclassmembernames class android.support.v7.preference.PreferenceFragmentCompat {
+    android.support.v7.preference.PreferenceManager mPreferenceManager;
+}

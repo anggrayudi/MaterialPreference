@@ -1,11 +1,43 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:textColorHighlight">@color/text_highlight</item>
+
+        <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
+        <item name="dialogTheme">@style/AppTheme.Dialog</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
+    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!--<item name="colorPrimary">@color/primary</item>-->
+        <!--<item name="colorPrimaryDark">@color/primary_dark</item>-->
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!--<item name="android:textColorHighlight">@color/text_highlight_alt</item>-->
+
+        <!--<item name="android:textAppearanceMedium">?textAppearanceListItem</item>-->
+        <item name="android:textAppearanceMedium">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:textAppearanceMediumInverse">@style/TextAppearance.AppCompat.Subhead.Inverse</item>
+    </style>
+
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <!--<item name="colorPrimary">@color/primary</item>-->
+        <!--<item name="colorPrimaryDark">@color/primary_dark</item>-->
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!--<item name="android:textColorHighlight">@color/text_highlight_alt</item>-->
+
+        <!--<item name="android:textAppearanceMedium">?textAppearanceListItem</item>-->
+        <item name="android:textAppearanceMedium">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:textAppearanceMediumInverse">@style/TextAppearance.AppCompat.Subhead.Inverse</item>
     </style>
 
 </resources>

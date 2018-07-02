@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">MaterialPreference</string>
+    <string name="app_name">Material Preference</string>
+    <string name="v7_preference_on">ON</string>
+    <string name="v7_preference_off">OFF</string>
 </resources>

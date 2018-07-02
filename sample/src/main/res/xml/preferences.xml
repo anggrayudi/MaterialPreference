@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="General">
+
+        <SwitchPreference
+            android:key="auto_sync"
+            android:title="Auto sync"/>
+
+        <CheckBoxPreference
+            android:key="update_notification"
+            android:title="Notify when version is released"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Advanced">
+
+        <Preference
+            android:key="restore_default"
+            android:title="Restore default settings"/>
+    </PreferenceCategory>
+</PreferenceScreen>
