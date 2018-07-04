@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -91,6 +92,9 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
  */
 @SuppressLint("RestrictedApi")
 public class Preference implements Comparable<Preference> {
+
+    private static final String TAG = "Preference";
+
     /**
      * Specify for {@link #setOrder(int)} if a specific order is not required.
      */
@@ -132,6 +136,7 @@ public class Preference implements Comparable<Preference> {
      * mIconResId is overridden by mIcon, if mIcon is specified.
      */
     private int mIconResId;
+    private int mTintIcon;
     private Drawable mIcon;
     private String mKey;
     private Intent mIntent;
@@ -146,12 +151,11 @@ public class Preference implements Comparable<Preference> {
     private boolean mDependencyMet = true;
     private boolean mParentDependencyMet = true;
     private boolean mVisible = true;
-
-    private boolean mAllowDividerAbove = true;
-    private boolean mAllowDividerBelow = true;
     private boolean mHasSingleLineTitleAttr;
     private boolean mSingleLineTitle = true;
     private boolean mIconSpaceReserved;
+    private boolean mLegacySummary;
+    private boolean mBindValueToSummary;
 
     /**
      * @see #setShouldDisableView(boolean)
@@ -305,11 +309,14 @@ public class Preference implements Comparable<Preference> {
         mDependencyKey = TypedArrayUtils.getString(a, R.styleable.Preference_dependency,
                 R.styleable.Preference_android_dependency);
 
-        mAllowDividerAbove = TypedArrayUtils.getBoolean(a, R.styleable.Preference_allowDividerAbove,
-                R.styleable.Preference_allowDividerAbove, mSelectable);
+        mBindValueToSummary = a.getBoolean(R.styleable.Preference_bindValueToSummary, true);
 
-        mAllowDividerBelow = TypedArrayUtils.getBoolean(a, R.styleable.Preference_allowDividerBelow,
-                R.styleable.Preference_allowDividerBelow, mSelectable);
+        mTintIcon = a.getColor(R.styleable.Preference_tintIcon, Color.TRANSPARENT);
+
+        mLegacySummary = a.getBoolean(R.styleable.Preference_legacySummary, true);
+        mLegacySummary = (this instanceof TwoStatePreference || this instanceof PreferenceGroup
+                || this instanceof RingtonePreference)
+                && mLegacySummary && !(this instanceof SeekBarPreference);
 
         if (a.hasValue(R.styleable.Preference_defaultValue)) {
             mDefaultValue = onGetDefaultValue(a, R.styleable.Preference_defaultValue);
@@ -478,6 +485,45 @@ public class Preference implements Comparable<Preference> {
     }
 
     /**
+     * This value always <code>false</code> on these preferences:<br>
+     * <ul>
+     * <li>{@link CheckBoxPreference}</li>
+     * <li>{@link SwitchPreference}</li>
+     * <li>{@link PreferenceScreen}</li>
+     * <li>{@link PreferenceCategory}</li>
+     * <li>{@link RingtonePreference}</li>
+     * <li>{@link MultiSelectListPreference}</li>
+     * </ul>
+     * and always <code>true</code> on {@link SeekBarPreference}.
+     *
+     * @param enable <code>true</code> if you want to put the summary horizontally with this preference's title
+     */
+    public void setLegacySummary(boolean enable) {
+        mLegacySummary = (this instanceof TwoStatePreference || this instanceof PreferenceGroup
+                || this instanceof RingtonePreference)
+                && enable && !(this instanceof SeekBarPreference);
+        notifyChanged();
+    }
+
+    public boolean isLegacySummary() {
+        return mLegacySummary;
+    }
+
+    /**
+     * Default value is <code>true</code>
+     *
+     * @param enable <code>true</code> if you want to bind this preference's value to summary
+     */
+    public void setBindValueToSummary(boolean enable) {
+        mBindValueToSummary = enable;
+        notifyChanged();
+    }
+
+    public boolean isBindValueToSummary() {
+        return mBindValueToSummary;
+    }
+
+    /**
      * Return the extras Bundle object associated with this preference, creating
      * a new Bundle if there currently isn't one.  You can use this to get and
      * set individual extra key/value pairs.
@@ -566,7 +612,7 @@ public class Preference implements Comparable<Preference> {
     public void onBindViewHolder(PreferenceViewHolder holder) {
         holder.itemView.setOnClickListener(mClickListener);
 
-        final TextView titleView = (TextView) holder.findViewById(android.R.id.title);
+        TextView titleView = (TextView) holder.findViewById(android.R.id.title);
         if (titleView != null) {
             final CharSequence title = getTitle();
             if (!TextUtils.isEmpty(title)) {
@@ -580,24 +626,37 @@ public class Preference implements Comparable<Preference> {
             }
         }
 
-        final TextView summaryView = (TextView) holder.findViewById(android.R.id.summary);
-        if (summaryView != null) {
-            final CharSequence summary = getSummary();
-            if (!TextUtils.isEmpty(summary)) {
-                summaryView.setText(summary);
-                summaryView.setVisibility(View.VISIBLE);
+        TextView legacySummaryView = (TextView) holder.findViewById(android.R.id.summary);
+        if (legacySummaryView != null) {
+            if (mLegacySummary && !TextUtils.isEmpty(getSummary())) {
+                legacySummaryView.setText(getSummary());
+                legacySummaryView.setVisibility(View.VISIBLE);
             } else {
-                summaryView.setVisibility(View.GONE);
+                legacySummaryView.setVisibility(View.GONE);
             }
         }
 
-        final ImageView imageView = (ImageView) holder.findViewById(android.R.id.icon);
+        TextView materialSummaryView = (TextView) holder.findViewById(R.id.material_summary);
+        if (materialSummaryView != null) {
+            if (!mLegacySummary && !TextUtils.isEmpty(getSummary())) {
+                materialSummaryView.setText(getSummary());
+                materialSummaryView.setVisibility(View.VISIBLE);
+            } else {
+                materialSummaryView.setVisibility(View.GONE);
+            }
+        }
+
+        ImageView imageView = (ImageView) holder.findViewById(android.R.id.icon);
         if (imageView != null) {
             if (mIconResId != 0 || mIcon != null) {
                 if (mIcon == null) {
                     mIcon = ContextCompat.getDrawable(getContext(), mIconResId);
+                    setTintIcon(mTintIcon);
                 }
                 if (mIcon != null) {
+                    if (mTintIcon != Color.TRANSPARENT) {
+                        mIcon.mutate().setColorFilter(mTintIcon, PorterDuff.Mode.SRC_IN);
+                    }
                     imageView.setImageDrawable(mIcon);
                 }
             }
@@ -736,6 +795,17 @@ public class Preference implements Comparable<Preference> {
      */
     public CharSequence getTitle() {
         return mTitle;
+    }
+
+    public void setTintIcon(int color) {
+        mTintIcon = color;
+        if (mIcon != null && color != Color.TRANSPARENT) {
+            notifyChanged();
+        }
+    }
+
+    public int getTintIcon() {
+        return mTintIcon;
     }
 
     /**

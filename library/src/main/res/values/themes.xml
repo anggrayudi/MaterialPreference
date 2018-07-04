@@ -31,5 +31,10 @@
         <item name="dropdownPreferenceStyle">@style/Preference.DropDown</item>
         <item name="ringtonePreferenceStyle">@style/Preference.DialogPreference.RingtonePreference</item>
         <item name="multiSelectListPreferenceStyle">@style/Preference.DialogPreference.MultiSelectListPreference</item>
+        <item name="seekBarDialogPreferenceStyle">
+            @style/Preference.DialogPreference.SeekBarDialogPreference
+        </item>
+        <item name="folderPreferenceStyle">@style/Preference.DialogPreference.FolderPreference
+        </item>
     </style>
 </resources>

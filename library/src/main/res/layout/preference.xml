@@ -17,6 +17,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/preferenceMinHeight"
@@ -34,14 +35,16 @@
             android:id="@android:id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:maxWidth="48dp"
-            app:maxHeight="48dp" />
+            android:layout_marginStart="@dimen/preferenceHorizontalMargin"
+            app:maxWidth="@dimen/preferenceIconMaxSize"
+            app:maxHeight="@dimen/preferenceIconMaxSize"
+            tools:src="@tools:sample/avatars" />
     </FrameLayout>
 
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dip"
+        android:layout_marginStart="@dimen/preferenceHorizontalMargin"
         android:layout_marginEnd="6dip"
         android:layout_marginTop="6dip"
         android:layout_marginBottom="6dip"
@@ -54,7 +57,10 @@
             android:textAppearance="@style/preferenceTitleTextAppearance"
             android:textColor="?android:attr/textColorPrimary"
             android:ellipsize="marquee"
-            android:fadingEdge="horizontal" />
+            android:fadingEdge="horizontal"
+            android:layout_toStartOf="@+id/material_summary"
+            android:layout_alignParentStart="true"
+            tools:text="Mr. Handsome here" />
 
         <TextView android:id="@android:id/summary"
             android:layout_width="wrap_content"
@@ -63,8 +69,21 @@
             android:layout_alignStart="@android:id/title"
             android:textAppearance="@style/preferenceSummaryTextAppearance"
             android:textColor="?android:attr/textColorSecondary"
-            android:maxLines="4" />
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:textSize="13sp"
+            tools:text="This is summary bitch!" />
 
+        <TextView
+            android:id="@+id/material_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/preferenceSummaryMaxWidth"
+            android:textSize="15sp"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:layout_alignParentEnd="true"
+            tools:text="This is summary bitch!aasdfsdfsadfsadfsdfasdfasd" />
     </RelativeLayout>
 
     <!-- Preference should place its actual preference widget here. -->

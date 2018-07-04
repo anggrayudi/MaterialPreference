@@ -96,14 +96,6 @@ public class RingtonePreference extends DialogPreference {
         }
     }
 
-    public void showDialogFragment(final PreferenceFragmentCompat fragment) {
-        if (fragment.getFragmentManager().findFragmentByTag(PreferenceFragmentCompat.DIALOG_FRAGMENT_TAG) == null) {
-//            DialogFragment f = RingtonePreferenceDialogFragment.newInstance(getKey());
-//            f.setTargetFragment(fragment, 0);
-//            f.show(fragment.getFragmentManager(), PreferenceFragmentCompat.DIALOG_FRAGMENT_TAG);
-        }
-    }
-
     /**
      * When attempting to play a ringtone from external storage without the
      * {@link android.Manifest.permission#READ_EXTERNAL_STORAGE} permission

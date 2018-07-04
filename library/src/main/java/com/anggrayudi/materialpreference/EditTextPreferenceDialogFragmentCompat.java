@@ -19,9 +19,16 @@ package com.anggrayudi.materialpreference;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
+import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragmentCompat;
 
 import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
@@ -31,12 +38,13 @@ public class EditTextPreferenceDialogFragmentCompat extends PreferenceDialogFrag
     private static final String SAVE_STATE_TEXT = "EditTextPreferenceDialogFragment.text";
 
     private EditText mEditText;
+    private TextInputLayout mTextInputLayout;
+    private TextView mTextMessage;
 
     private CharSequence mText;
 
     public static EditTextPreferenceDialogFragmentCompat newInstance(String key) {
-        final EditTextPreferenceDialogFragmentCompat
-                fragment = new EditTextPreferenceDialogFragmentCompat();
+        final EditTextPreferenceDialogFragmentCompat fragment = new EditTextPreferenceDialogFragmentCompat();
         final Bundle b = new Bundle(1);
         b.putString(ARG_KEY, key);
         fragment.setArguments(b);
@@ -62,15 +70,53 @@ public class EditTextPreferenceDialogFragmentCompat extends PreferenceDialogFrag
     @Override
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
+        final EditTextPreference preference = getEditTextPreference();
+        mTextMessage = view.findViewById(android.R.id.message);
+        mTextInputLayout = view.findViewById(android.R.id.inputArea);
+        mEditText = view.findViewById(android.R.id.edit);
 
-        mEditText = (EditText) view.findViewById(android.R.id.edit);
+        mTextMessage.setText(preference.getMessage());
+        if (TextUtils.isEmpty(preference.getMessage()))
+            mTextMessage.setVisibility(View.GONE);
 
-        if (mEditText == null) {
-            throw new IllegalStateException("Dialog view must contain an EditText with id" +
-                    " @android:id/edit");
-        }
+        mTextInputLayout.setCounterEnabled(preference.isCounterEnabled());
+        mTextInputLayout.setCounterMaxLength(preference.getMaxLength());
 
+        if (preference.mInputFilters != null)
+            mEditText.setFilters(preference.mInputFilters);
+
+        mEditText.setHint(preference.getHint());
+        mEditText.setInputType(preference.getInputType());
         mEditText.setText(mText);
+
+        final TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text, int i, int i1, int i2) {
+                boolean underMinChars = text == null || preference.getMinLength() > 0
+                        && text.length() < preference.getMinLength();
+
+                ((MaterialDialog) getDialog()).getActionButton(DialogAction.POSITIVE)
+                        .setEnabled(!underMinChars && text.length() <= preference.getMaxLength());
+
+                mTextInputLayout.setError(underMinChars
+                        ? getString(R.string.min_preference_input_chars_, preference.getMinLength()) : null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        };
+        mEditText.addTextChangedListener(textWatcher);
+        mEditText.post(new Runnable() {
+            @Override
+            public void run() {
+                textWatcher.onTextChanged(mText, 0, 0, 0);
+            }
+        });
     }
 
     private EditTextPreference getEditTextPreference() {
@@ -87,7 +133,6 @@ public class EditTextPreferenceDialogFragmentCompat extends PreferenceDialogFrag
 
     @Override
     public void onDialogClosed(boolean positiveResult) {
-
         if (positiveResult) {
             String value = mEditText.getText().toString();
             if (getEditTextPreference().callChangeListener(value)) {
@@ -95,5 +140,6 @@ public class EditTextPreferenceDialogFragmentCompat extends PreferenceDialogFrag
             }
         }
     }
+
 
 }

@@ -36,6 +36,7 @@ public class PreferenceViewHolder {
         // Pre-cache the views that we know in advance we'll want to find
         mCachedViews.put(android.R.id.title, itemView.findViewById(android.R.id.title));
         mCachedViews.put(android.R.id.summary, itemView.findViewById(android.R.id.summary));
+        mCachedViews.put(R.id.material_summary, itemView.findViewById(R.id.material_summary));
         mCachedViews.put(android.R.id.icon, itemView.findViewById(android.R.id.icon));
         mCachedViews.put(R.id.icon_frame, itemView.findViewById(R.id.icon_frame));
         mCachedViews.put(android.R.id.widget_frame, itemView.findViewById(android.R.id.widget_frame));

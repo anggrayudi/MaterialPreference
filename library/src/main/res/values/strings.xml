@@ -11,4 +11,19 @@
     <string name="ringtone_unknown">Unknown</string>
     <string name="notification_sound_default">Default notification sound</string>
     <string name="alarm_sound_default">Default alarm sound</string>
+    <string name="min_preference_input_chars_">Minimum length is %d</string>
+    <string name="nothing">Nothing</string>
+    <string name="clear">Clear</string>
+    <string name="please_grant_storage_permission">Please grant read and write permissions for external storage.</string>
+    <string name="please_select_sdcard_root">For the first time, you need to grant SD card permissions by selecting its root path.</string>
+    <string name="not_root_path">It is not the root path.</string>
+    <string name="you_can_select_sdcard">You can now select anything from SD card</string>
+    <string name="no_app_to_open_file">No apps installed to open this file type.</string>
+    <string name="no_app_share_file">No apps found to handle file sharing</string>
+    <string name="share">Share</string>
+    <string name="share_file">Share file</string>
+    <string name="file_not_found">File not found</string>
+    <string name="open_as">Open as</string>
+
+
 </resources>

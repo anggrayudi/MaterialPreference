@@ -89,9 +89,10 @@ public class PreferenceGroupAdapter implements
         private int widgetResId;
         private String name;
 
-        public PreferenceLayout() {}
+        PreferenceLayout() {
+        }
 
-        public PreferenceLayout(PreferenceLayout other) {
+        PreferenceLayout(PreferenceLayout other) {
             resId = other.resId;
             widgetResId = other.widgetResId;
             name = other.name;
@@ -118,7 +119,7 @@ public class PreferenceGroupAdapter implements
         }
     }
 
-    public PreferenceGroupAdapter(PreferenceGroup preferenceGroup, ViewGroup parent) {
+    PreferenceGroupAdapter(PreferenceGroup preferenceGroup, ViewGroup parent) {
         mRootParent = parent;
         mPreferenceGroup = preferenceGroup;
         // If this group gets or loses any children, let us know
@@ -330,9 +331,10 @@ public class PreferenceGroupAdapter implements
         if (widgetFrame != null) {
             if (pl.widgetResId != 0) {
                 inflater.inflate(pl.widgetResId, widgetFrame);
-            } else {
-                widgetFrame.setVisibility(View.GONE);
             }
+//            else if (preference.isLegacySummary()){
+//                widgetFrame.setVisibility(View.GONE);
+//            }
         }
 
         return new PreferenceViewHolder(view);

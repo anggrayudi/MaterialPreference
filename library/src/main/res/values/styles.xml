@@ -55,6 +55,10 @@
         <item name="showSeekBarValue">true</item>
     </style>
 
+    <style name="Preference.DialogPreference.SeekBarDialogPreference">
+        <item name="android:dialogLayout">@layout/preference_seekbar_dialog</item>
+    </style>
+
     <style name="Preference.PreferenceScreen">
     </style>
 
@@ -75,6 +79,8 @@
     <style name="Preference.DialogPreference.EditTextPreference">
         <item name="android:dialogLayout">@layout/preference_dialog_edittext</item>
     </style>
+
+    <style name="Preference.DialogPreference.FolderPreference"></style>
 
     <style name="PreferenceFragmentList">
         <item name="android:paddingLeft">16dp</item>

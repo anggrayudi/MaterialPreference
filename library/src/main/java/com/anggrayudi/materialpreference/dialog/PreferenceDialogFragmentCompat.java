@@ -37,6 +37,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.anggrayudi.materialpreference.PreferenceFragmentCompat;
 
 import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
@@ -48,8 +50,7 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
  * is read once during the initial call to {@link #onCreate(Bundle)} and saved/restored in the saved
  * instance state. Custom subclasses should also follow this pattern.
  */
-public abstract class PreferenceDialogFragmentCompat extends DialogFragment implements
-        DialogInterface.OnClickListener {
+public abstract class PreferenceDialogFragmentCompat extends DialogFragment implements MaterialDialog.SingleButtonCallback {
 
     protected static final String ARG_KEY = "key";
 
@@ -71,7 +72,7 @@ public abstract class PreferenceDialogFragmentCompat extends DialogFragment impl
     private BitmapDrawable mDialogIcon;
 
     /** Which button was clicked. */
-    private int mWhichButtonClicked;
+    private DialogAction mWhichButtonClicked;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,26 +138,28 @@ public abstract class PreferenceDialogFragmentCompat extends DialogFragment impl
     public @NonNull
     Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getActivity();
-        mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
+        mWhichButtonClicked = DialogAction.NEGATIVE;
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setTitle(mDialogTitle)
-                .setIcon(mDialogIcon)
-                .setPositiveButton(mPositiveButtonText, this)
-                .setNegativeButton(mNegativeButtonText, this);
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+                .title(mDialogTitle)
+                .icon(mDialogIcon)
+                .positiveText(mPositiveButtonText)
+                .negativeText(mNegativeButtonText)
+                .onPositive(this)
+                .onNegative(this);
 
         View contentView = onCreateDialogView(context);
         if (contentView != null) {
             onBindDialogView(contentView);
-            builder.setView(contentView);
+            builder.customView(contentView, true);
         } else {
-            builder.setMessage(mDialogMessage);
+            builder.content(mDialogMessage);
         }
 
         onPrepareDialogBuilder(builder);
 
         // Create the dialog
-        final Dialog dialog = builder.create();
+        final Dialog dialog = builder.build();
         if (needInputMethod()) {
             requestInputMethod(dialog);
         }
@@ -188,7 +191,8 @@ public abstract class PreferenceDialogFragmentCompat extends DialogFragment impl
      * Do not {@link AlertDialog.Builder#create()} or
      * {@link AlertDialog.Builder#show()}.
      */
-    protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {}
+    protected void onPrepareDialogBuilder(MaterialDialog.Builder builder) {
+    }
 
     /**
      * Returns whether the preference needs to display a soft input method when the dialog
@@ -256,14 +260,14 @@ public abstract class PreferenceDialogFragmentCompat extends DialogFragment impl
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
         mWhichButtonClicked = which;
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        onDialogClosed(mWhichButtonClicked == DialogInterface.BUTTON_POSITIVE);
+        onDialogClosed(mWhichButtonClicked == DialogAction.POSITIVE);
     }
 
     public abstract void onDialogClosed(boolean positiveResult);

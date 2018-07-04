@@ -23,12 +23,15 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.anggrayudi.materialpreference.dialog.DialogPreference;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A {@link Preference} that displays a list of entries as
@@ -42,6 +45,9 @@ public class MultiSelectListPreference extends DialogPreference {
     private CharSequence[] mEntries;
     private CharSequence[] mEntryValues;
     private Set<String> mValues = new HashSet<>();
+    private CharSequence mNothing;
+
+    ListValueEvaluator mEvaluator;
 
     public MultiSelectListPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -61,10 +67,12 @@ public class MultiSelectListPreference extends DialogPreference {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ListPreference, defStyleAttr, defStyleRes);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MultiSelectListPreference, defStyleAttr, defStyleRes);
         mEntries = a.getTextArray(R.styleable.ListPreference_android_entries);
         mEntryValues = a.getTextArray(R.styleable.ListPreference_android_entryValues);
+        mNothing = a.getText(R.styleable.MultiSelectListPreference_summaryNothing);
         a.recycle();
+        Log.d("MultiSelect", "init: " + mNothing);
     }
 
     /**
@@ -136,6 +144,23 @@ public class MultiSelectListPreference extends DialogPreference {
         mValues.clear();
         mValues.addAll(values);
         persistStringSet(values);
+        if (isBindValueToSummary()) {
+            setSummary(values.isEmpty() ? mNothing
+                    : String.format(Locale.US, "%d/%d", values.size(), mEntryValues.length));
+        }
+    }
+
+    private void setFormattedSummary() {
+        Set<String> text = new HashSet<>(mValues.size());
+        Set<String> values = new TreeSet<>(mValues);
+        CharSequence[] entries = getEntries();
+        for (String str : values)
+            text.add(entries[findIndexOfValue(str)].toString());
+
+        String summ = text.toString();
+        CharSequence summary = mValues.isEmpty() ? mNothing
+                : summ.substring(1, summ.length() - 1); // strip []
+        setSummary(summary);
     }
 
     /**
@@ -143,6 +168,22 @@ public class MultiSelectListPreference extends DialogPreference {
      */
     public Set<String> getValues() {
         return mValues;
+    }
+
+    /**
+     * When value is bound to the summary and there is nothing selected in this {@link MultiSelectListPreference},
+     * the 'Nothing' text will be shown as summary.
+     */
+    public void setNothing(CharSequence nothing) {
+        mNothing = nothing;
+        if (isBindValueToSummary()) {
+            setSummary(mValues.isEmpty() ? mNothing
+                    : String.format(Locale.US, "%d/%d", mValues.size(), mEntryValues.length));
+        }
+    }
+
+    public CharSequence getNothing() {
+        return mNothing;
     }
 
     /**
@@ -173,6 +214,10 @@ public class MultiSelectListPreference extends DialogPreference {
         }
 
         return result;
+    }
+
+    public void setListValueEvaluator(ListValueEvaluator evaluator) {
+        mEvaluator = evaluator;
     }
 
     @Override
@@ -255,5 +300,13 @@ public class MultiSelectListPreference extends DialogPreference {
                     return new SavedState[size];
                 }
             };
+    }
+
+    public interface ListValueEvaluator {
+
+        /**
+         * @return <code>true</code> if item on the list dialog can be chosen
+         */
+        boolean evaluate(Integer[] which, CharSequence[] text);
     }
 }

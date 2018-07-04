@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="UnusedAttribute">
+
+    <TextView
+        android:id="@android:id/message"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/abc_dialog_padding_top_material"
+        android:textAlignment="viewStart" />
+
+    <TextView
+        android:id="@+id/seekbar_min"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/seekbar_value"
+        android:maxLines="1"
+        android:textSize="12sp"
+        tools:text="40" />
+
+    <TextView
+        android:id="@+id/seekbar_value"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@android:id/message"
+        android:layout_centerHorizontal="true"
+        android:maxLines="1"
+        android:textColor="?colorAccent"
+        android:textSize="15sp"
+        tools:text="40" />
+
+    <TextView
+        android:id="@+id/seekbar_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/seekbar_value"
+        android:maxLines="1"
+        android:textSize="12sp"
+        tools:text="40" />
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seekbar_value"
+        android:paddingBottom="@dimen/abc_dialog_padding_top_material"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp" />
+</RelativeLayout>

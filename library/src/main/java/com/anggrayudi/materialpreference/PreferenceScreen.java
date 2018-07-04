@@ -106,4 +106,9 @@ public final class PreferenceScreen extends PreferenceGroup {
     protected boolean isOnSameScreenAsChildren() {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(getTitle());
+    }
 }

@@ -22,6 +22,8 @@ import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.content.res.TypedArrayUtils;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.EditText;
@@ -39,11 +41,20 @@ import com.anggrayudi.materialpreference.dialog.DialogPreference;
  */
 @SuppressLint("RestrictedApi")
 public class EditTextPreference extends DialogPreference {
-    private String mText;
 
-    public EditTextPreference(Context context, AttributeSet attrs, int defStyleAttr,
-            int defStyleRes) {
+    private String mText;
+    private String mHint;
+    private String mMessage;
+    private int mInputType;
+    private int mMaxLength;
+    private int mMinLength;
+    private boolean mCounterEnabled;
+
+    InputFilter[] mInputFilters;
+
+    public EditTextPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init(context, attrs, defStyleAttr, defStyleRes);
     }
 
     public EditTextPreference(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -57,6 +68,70 @@ public class EditTextPreference extends DialogPreference {
 
     public EditTextPreference(Context context) {
         this(context, null);
+    }
+
+    private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.EditTextPreference, defStyleAttr, defStyleRes);
+
+        mCounterEnabled = a.getBoolean(R.styleable.EditTextPreference_counterEnabled, true);
+        mHint = a.getString(R.styleable.EditTextPreference_android_hint);
+        mMessage = a.getString(R.styleable.EditTextPreference_android_dialogMessage);
+        mMaxLength = a.getInt(R.styleable.EditTextPreference_android_maxLength, 100);
+        mMinLength = a.getInt(R.styleable.EditTextPreference_minLength, 0);
+        mInputType = a.getInt(R.styleable.EditTextPreference_android_inputType, InputType.TYPE_CLASS_TEXT);
+    }
+
+    public void setMessage(String message) {
+        mMessage = message;
+    }
+
+    public String getMessage() {
+        return mMessage;
+    }
+
+    public void setMinLength(int minLength) {
+        mMinLength = minLength;
+    }
+
+    public int getMinLength() {
+        return mMinLength;
+    }
+
+    public void setMaxLength(int maxLength) {
+        mMaxLength = maxLength;
+    }
+
+    public int getMaxLength() {
+        return mMaxLength;
+    }
+
+    public void setInputFilters(InputFilter[] inputFilters) {
+        mInputFilters = inputFilters;
+    }
+
+    public void setInputType(int inputType) {
+        mInputType = inputType;
+    }
+
+    public int getInputType() {
+        return mInputType;
+    }
+
+    public void setHint(String hint) {
+        mHint = hint;
+    }
+
+    public String getHint() {
+        return mHint;
+    }
+
+    public void setCounterEnabled(boolean counterEnabled) {
+        mCounterEnabled = counterEnabled;
+    }
+
+    public boolean isCounterEnabled() {
+        return mCounterEnabled;
     }
 
     /**
@@ -75,6 +150,8 @@ public class EditTextPreference extends DialogPreference {
         if (isBlocking != wasBlocking) {
             notifyDependencyChange(isBlocking);
         }
+        if (isBindValueToSummary())
+            setSummary(text);
     }
 
     /**
@@ -130,7 +207,7 @@ public class EditTextPreference extends DialogPreference {
     private static class SavedState extends BaseSavedState {
         String text;
 
-        public SavedState(Parcel source) {
+        SavedState(Parcel source) {
             super(source);
             text = source.readString();
         }
@@ -141,7 +218,7 @@ public class EditTextPreference extends DialogPreference {
             dest.writeString(text);
         }
 
-        public SavedState(Parcelable superState) {
+        SavedState(Parcelable superState) {
             super(superState);
         }
 

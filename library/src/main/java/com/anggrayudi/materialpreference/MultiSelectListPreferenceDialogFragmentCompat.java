@@ -16,15 +16,16 @@
 
 package com.anggrayudi.materialpreference;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragmentCompat;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class MultiSelectListPreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat {
@@ -57,7 +58,7 @@ public class MultiSelectListPreferenceDialogFragmentCompat extends PreferenceDia
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            final AbstractMultiSelectListPreference preference = getListPreference();
+            final MultiSelectListPreference preference = getListPreference();
 
             if (preference.getEntries() == null || preference.getEntryValues() == null) {
                 throw new IllegalStateException(
@@ -88,37 +89,70 @@ public class MultiSelectListPreferenceDialogFragmentCompat extends PreferenceDia
         outState.putCharSequenceArray(SAVE_STATE_ENTRY_VALUES, mEntryValues);
     }
 
-    private AbstractMultiSelectListPreference getListPreference() {
-        return (AbstractMultiSelectListPreference) getPreference();
+    private MultiSelectListPreference getListPreference() {
+        return (MultiSelectListPreference) getPreference();
     }
 
     @Override
-    protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
+    protected void onPrepareDialogBuilder(MaterialDialog.Builder builder) {
         super.onPrepareDialogBuilder(builder);
 
-        final int entryCount = mEntryValues.length;
-        final boolean[] checkedItems = new boolean[entryCount];
-        for (int i = 0; i < entryCount; i++) {
-            checkedItems[i] = mNewValues.contains(mEntryValues[i].toString());
+        List<Integer> integers = new ArrayList<>(mEntryValues.length);
+        for (int i = 0; i < mEntryValues.length; i++) {
+            if (mNewValues.contains(mEntryValues[i].toString()))
+                integers.add(i);
         }
-        builder.setMultiChoiceItems(mEntries, checkedItems,
-                new DialogInterface.OnMultiChoiceClickListener() {
+        Integer[] checkedItems = new Integer[integers.size()];
+        for (int i = 0; i < integers.size(); i++) {
+            checkedItems[i] = integers.get(i);
+        }
+
+        final MultiSelectListPreference.ListValueEvaluator evaluator = getListPreference().mEvaluator;
+        builder.autoDismiss(false)
+                .neutralText(R.string.clear)
+                .items(mEntries)
+                .alwaysCallMultiChoiceCallback()
+                .itemsCallbackMultiChoice(checkedItems, new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        if (isChecked) {
-                            mPreferenceChanged |= mNewValues.add(
-                                    mEntryValues[which].toString());
-                        } else {
-                            mPreferenceChanged |= mNewValues.remove(
-                                    mEntryValues[which].toString());
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        if (evaluator == null || evaluator.evaluate(which, text)) {
+                            mPreferenceChanged = true;
+                            mNewValues.clear();
+                            for (int i : which)
+                                mNewValues.add(mEntryValues[i].toString());
+
+                            return true;
                         }
+                        return false;
+                    }
+                })
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        mNewValues.clear();
+                        mPreferenceChanged = true;
+                        dialog.setSelectedIndices(new Integer[0]);
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        mPreferenceChanged = false;
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        MultiSelectListPreferenceDialogFragmentCompat.this.onClick(dialog, DialogAction.POSITIVE);
+                        dialog.dismiss();
                     }
                 });
     }
 
     @Override
     public void onDialogClosed(boolean positiveResult) {
-        final AbstractMultiSelectListPreference preference = getListPreference();
+        final MultiSelectListPreference preference = getListPreference();
         if (positiveResult && mPreferenceChanged) {
             final Set<String> values = mNewValues;
             if (preference.callChangeListener(values)) {

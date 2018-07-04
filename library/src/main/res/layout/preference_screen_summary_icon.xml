@@ -3,6 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/summary_icon"
     android:layout_width="40dp"
-    android:layout_height="32dp"
+    android:layout_height="24dp"
     android:paddingLeft="12dp"
     android:src="@drawable/baseline_navigate_next_black_24" />

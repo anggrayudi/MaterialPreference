@@ -26,7 +26,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
 
 /**
  * Preference based on android.preference.SeekBarPreference but uses support v7 preference as base.
@@ -43,15 +42,19 @@ import android.widget.TextView;
  */
 public class SeekBarPreference extends Preference {
 
+    public interface ValueFormatter {
+        String getValue(int progress);
+    }
+
     private int mSeekBarValue;
     private int mMin;
     private int mMax;
     private int mSeekBarIncrement;
     private boolean mTrackingTouch;
     private SeekBar mSeekBar;
-    private TextView mSeekBarValueTextView;
     private boolean mAdjustable; // whether the seekbar should respond to the left/right keys
     private boolean mShowSeekBarValue; // whether to show the seekbar value TextView next to the bar
+    private ValueFormatter mFormatter;
 
     private static final String TAG = "SeekBarPreference";
 
@@ -149,13 +152,6 @@ public class SeekBarPreference extends Preference {
         super.onBindViewHolder(view);
         view.itemView.setOnKeyListener(mSeekBarKeyListener);
         mSeekBar = (SeekBar) view.findViewById(R.id.seekbar);
-        mSeekBarValueTextView = (TextView) view.findViewById(R.id.seekbar_value);
-        if (mShowSeekBarValue) {
-            mSeekBarValueTextView.setVisibility(View.VISIBLE);
-        } else {
-            mSeekBarValueTextView.setVisibility(View.GONE);
-            mSeekBarValueTextView = null;
-        }
 
         if (mSeekBar == null) {
             Log.e(TAG, "SeekBar view is null in onBindViewHolder.");
@@ -174,8 +170,10 @@ public class SeekBarPreference extends Preference {
         }
 
         mSeekBar.setProgress(mSeekBarValue - mMin);
-        if (mSeekBarValueTextView != null) {
-            mSeekBarValueTextView.setText(String.valueOf(mSeekBarValue));
+        if (mShowSeekBarValue) {
+            setSummary(mFormatter != null ? mFormatter.getValue(mSeekBarValue) : String.valueOf(mSeekBarValue));
+        } else {
+            setSummary(null);
         }
         mSeekBar.setEnabled(isEnabled());
     }
@@ -237,6 +235,11 @@ public class SeekBarPreference extends Preference {
         }
     }
 
+    public void setValueFormatter(ValueFormatter formatter) {
+        mFormatter = formatter;
+        notifyChanged();
+    }
+
     public int getMax() {
         return mMax;
     }
@@ -263,8 +266,10 @@ public class SeekBarPreference extends Preference {
 
         if (seekBarValue != mSeekBarValue) {
             mSeekBarValue = seekBarValue;
-            if (mSeekBarValueTextView != null) {
-                mSeekBarValueTextView.setText(String.valueOf(mSeekBarValue));
+            if (mShowSeekBarValue) {
+                setSummary(mFormatter != null ? mFormatter.getValue(mSeekBarValue) : String.valueOf(mSeekBarValue));
+            } else {
+                setSummary(null);
             }
             persistInt(seekBarValue);
             if (notifyChanged) {
@@ -355,7 +360,7 @@ public class SeekBarPreference extends Preference {
             dest.writeInt(max);
         }
 
-        public SavedState(Parcelable superState) {
+        SavedState(Parcelable superState) {
             super(superState);
         }
 

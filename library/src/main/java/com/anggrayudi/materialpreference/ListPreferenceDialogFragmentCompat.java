@@ -16,11 +16,12 @@
 
 package com.anggrayudi.materialpreference;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
+import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragmentCompat;
 
 import java.util.ArrayList;
@@ -37,8 +38,7 @@ public class ListPreferenceDialogFragmentCompat extends PreferenceDialogFragment
     private CharSequence[] mEntryValues;
 
     public static ListPreferenceDialogFragmentCompat newInstance(String key) {
-        final ListPreferenceDialogFragmentCompat fragment =
-                new ListPreferenceDialogFragmentCompat();
+        final ListPreferenceDialogFragmentCompat fragment = new ListPreferenceDialogFragmentCompat();
         final Bundle b = new Bundle(1);
         b.putString(ARG_KEY, key);
         fragment.setArguments(b);
@@ -95,31 +95,26 @@ public class ListPreferenceDialogFragmentCompat extends PreferenceDialogFragment
     }
 
     @Override
-    protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
+    protected void onPrepareDialogBuilder(MaterialDialog.Builder builder) {
         super.onPrepareDialogBuilder(builder);
-
-        builder.setSingleChoiceItems(mEntries, mClickedDialogEntryIndex,
-                new DialogInterface.OnClickListener() {
+        final ListPreference.ListValueEvaluator evaluator = getListPreference().mEvaluator;
+        builder.autoDismiss(false)
+                .positiveText(null)
+                .negativeText(null)
+                .items(mEntries)
+                .alwaysCallSingleChoiceCallback()
+                .itemsCallbackSingleChoice(mClickedDialogEntryIndex, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mClickedDialogEntryIndex = which;
-
-                        /*
-                         * Clicking on an item simulates the positive button
-                         * click, and dismisses the dialog.
-                         */
-                        ListPreferenceDialogFragmentCompat.this.onClick(dialog,
-                                DialogInterface.BUTTON_POSITIVE);
-                        dialog.dismiss();
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        if (evaluator == null || evaluator.evaluate(which, text)) {
+                            mClickedDialogEntryIndex = which;
+                            onClick(dialog, DialogAction.POSITIVE);
+                            dialog.dismiss();
+                            return true;
+                        }
+                        return false;
                     }
                 });
-
-        /*
-         * The typical interaction for list-based dialogs is to have
-         * click-on-an-item dismiss the dialog instead of the user having to
-         * press 'Ok'.
-         */
-        builder.setPositiveButton(null, null);
     }
 
     @Override

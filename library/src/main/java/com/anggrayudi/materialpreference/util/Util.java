@@ -1,4 +1,4 @@
-package com.anggrayudi.materialpreference;
+package com.anggrayudi.materialpreference.util;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -19,7 +19,7 @@ import android.util.TypedValue;
 
 import static android.support.annotation.Dimension.DP;
 
-final class Util {
+public final class Util {
     public static final int[] DISABLED_STATE_SET = new int[]{-android.R.attr.state_enabled};
     public static final int[] EMPTY_STATE_SET = new int[0];
 

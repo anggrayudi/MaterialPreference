@@ -1,7 +1,9 @@
 package com.anggrayudi.materialpreference;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +48,8 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
 
     static final String DIALOG_FRAGMENT_TAG =
             "com.anggrayudi.materialpreference.PreferenceFragment.DIALOG";
+
+    static final String PREFERENCE_TITLE = "com.anggrayudi.materialpreference.PreferenceFragment.TITLE";
 
     private PreferenceManager mPreferenceManager;
     private NestedScrollView mScrollView;
@@ -132,18 +136,23 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
         if (theme == 0) {
             throw new IllegalStateException("Must specify preferenceTheme in theme");
         }
+        if (getArguments() == null) {
+            throw new IllegalStateException("Must specify non-null PreferenceFragmentCompat arguments");
+        }
         mStyledContext = new ContextThemeWrapper(getActivity(), theme);
-
         mPreferenceManager = new PreferenceManager(mStyledContext);
         mPreferenceManager.setOnNavigateToScreenListener(this);
-        final Bundle args = getArguments();
-        final String rootKey;
-        if (args != null) {
-            rootKey = getArguments().getString(ARG_PREFERENCE_ROOT);
-        } else {
-            rootKey = null;
-        }
+        String rootKey = getArguments().getString(ARG_PREFERENCE_ROOT);
+        if (rootKey == null && savedInstanceState == null)
+            getArguments().putCharSequence(PREFERENCE_TITLE,
+                    ((PreferenceActivityCompat) getActivity()).getActivityLabel());
+
         onCreatePreferences(savedInstanceState, rootKey);
+        ((PreferenceActivityCompat) getActivity()).onCreatePreferences(this, rootKey);
+    }
+
+    public String getPreferenceFragmentTitle() {
+        return getArguments().getString(PREFERENCE_TITLE);
     }
 
     /**
@@ -217,6 +226,8 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
         mPreferenceManager.setOnDisplayPreferenceDialogListener(this);
     }
 
+    private static final String TAG = "PreferenceFragment";
+
     @Override
     public void onStop() {
         super.onStop();
@@ -237,19 +248,12 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-
         final PreferenceScreen preferenceScreen = getPreferenceScreen();
         if (preferenceScreen != null) {
             Bundle container = new Bundle();
             preferenceScreen.saveHierarchyState(container);
             outState.putBundle(PREFERENCES_TAG, container);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        setPreferenceScreen(null);
     }
 
     /**
@@ -399,7 +403,6 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
     private void bindPreferences() {
         final PreferenceScreen preferenceScreen = getPreferenceScreen();
         if (preferenceScreen != null) {
-//            getListView().setAdapter(onCreateAdapter(preferenceScreen));
             attachPreferences(preferenceScreen);
             preferenceScreen.onAttached();
         }
@@ -429,6 +432,15 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
     private void attachPreferences(PreferenceScreen screen) {
         // TODO: 01/07/18 Attach to cardviews
         mAdapter = new PreferenceGroupAdapter(screen, mListContainer);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK)
+            return;
+
+        // TODO: 04/07/18 FolderPreference
     }
 
     /**
@@ -465,8 +477,12 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
             f = EditTextPreferenceDialogFragmentCompat.newInstance(preference.getKey());
         } else if (preference instanceof ListPreference) {
             f = ListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-        } else if (preference instanceof AbstractMultiSelectListPreference) {
+        } else if (preference instanceof MultiSelectListPreference) {
             f = MultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+        } else if (preference instanceof RingtonePreference) {
+            f = RingtonePreferenceDialogFragment.newInstance(preference.getKey());
+        } else if (preference instanceof SeekBarDialogPreference) {
+            f = SeekBarPreferenceDialogFragment.newInstance(preference.getKey());
         } else {
             throw new IllegalArgumentException("Tried to display dialog for unknown " +
                     "preference type. Did you forget to override onDisplayPreferenceDialog()?");

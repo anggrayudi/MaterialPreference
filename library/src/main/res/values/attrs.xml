@@ -70,7 +70,9 @@
         <attr name="android:switchPreferenceStyle" />
         <!-- Default style for seekbar preferences. -->
         <attr name="seekBarPreferenceStyle" format="reference" />
+        <attr name="seekBarDialogPreferenceStyle" format="reference" />
         <attr name="multiSelectListPreferenceStyle" format="reference"/>
+        <attr name="folderPreferenceStyle" format="reference" />
     </declare-styleable>
 
     <!-- Base attributes available to PreferenceFragment. -->
@@ -99,6 +101,7 @@
         <!-- The optional icon for the preference -->
         <attr name="icon" />
         <attr name="android:icon" />
+        <attr name="tintIcon" format="color" />
         <!-- The key to store the Preference value. -->
         <attr name="key" format="string" />
         <attr name="android:key" />
@@ -149,12 +152,6 @@
         <attr name="shouldDisableView" format="boolean" />
         <attr name="android:shouldDisableView" />
 
-        <!-- Whether the preference allows displaying divider on top -->
-        <attr name="allowDividerAbove" format="boolean" />
-
-        <!-- Whether the preference allows displaying divider below it -->
-        <attr name="allowDividerBelow" format="boolean" />
-
         <!-- Whether to use single line for the preference title text. By default, preference title
              will be constrained to one line, so the default value of this attribute is true. -->
         <attr name="singleLineTitle" format="boolean" />
@@ -167,7 +164,8 @@
              -->
         <attr name="iconSpaceReserved" format="boolean" />
         <attr name="android:iconSpaceReserved" />
-
+        <attr name="legacySummary" format="boolean" />
+        <attr name="bindValueToSummary" format="boolean" />
     </declare-styleable>
 
     <!-- Base attributes available to CheckBoxPreference. -->
@@ -224,6 +222,8 @@
              second item in this array will be saved to the preference. -->
         <attr name="entryValues" format="reference" />
         <attr name="android:entryValues" />
+
+        <attr name="entryIcons" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="MultiSelectListPreference">
@@ -236,6 +236,9 @@
              second item in this array will be saved to the preference. -->
         <attr name="entryValues" />
         <attr name="android:entryValues" />
+
+        <attr name="entryIcons" />
+        <attr name="summaryNothing" format="string" />
     </declare-styleable>
 
     <declare-styleable name="SwitchPreference">
@@ -301,4 +304,14 @@
         <attr name="android:showSilent"/>
     </declare-styleable>
 
+    <declare-styleable name="EditTextPreference">
+        <attr name="minLength" format="integer" />
+        <attr name="android:maxLength" />
+        <attr name="android:hint" />
+        <attr name="android:inputType" />
+        <attr name="android:dialogMessage" />
+        <attr name="counterEnabled" />
+    </declare-styleable>
+
+    <declare-styleable name="FolderPreference"></declare-styleable>
 </resources>

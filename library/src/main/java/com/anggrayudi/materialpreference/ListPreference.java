@@ -47,6 +47,8 @@ public class ListPreference extends DialogPreference {
     private String mSummary;
     private boolean mValueSet;
 
+    ListValueEvaluator mEvaluator;
+
     public ListPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
 
@@ -69,6 +71,8 @@ public class ListPreference extends DialogPreference {
 
         mSummary = TypedArrayUtils.getString(a, R.styleable.Preference_summary,
                 R.styleable.Preference_android_summary);
+        if (isBindValueToSummary() && TextUtils.isEmpty(mSummary))
+            mSummary = "%s";
 
         a.recycle();
     }
@@ -253,6 +257,10 @@ public class ListPreference extends DialogPreference {
         return findIndexOfValue(mValue);
     }
 
+    public void setListValueEvaluator(ListValueEvaluator evaluator) {
+        mEvaluator = evaluator;
+    }
+
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
         return a.getString(index);
@@ -321,4 +329,11 @@ public class ListPreference extends DialogPreference {
         };
     }
 
+    public interface ListValueEvaluator {
+
+        /**
+         * @return <code>true</code> if item on the list dialog can be chosen
+         */
+        boolean evaluate(int which, CharSequence text);
+    }
 }

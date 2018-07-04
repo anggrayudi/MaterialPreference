@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- TODO: Bagaimana jika di sini langsung PreferenceScreen?   -->
     <!--<PreferenceScreen-->
@@ -11,55 +12,85 @@
             <!--android:title="Save directory"/>-->
     <!--</PreferenceScreen>-->
 
-    <PreferenceCategory android:title="Network">
+    <PreferenceCategory android:title="Maintenance">
 
         <SwitchPreference
-            android:key="auto_sync"
-            android:title="Auto sync"/>
+            android:key="auto_update"
+            android:title="Automatic update" />
 
         <CheckBoxPreference
             android:key="wifi_only"
             android:title="Wi-Fi only"
-            android:dependency="auto_sync"/>
+            android:dependency="auto_update" />
 
-        <RingtonePreference
-            android:key="ringtone"
-            android:title="Update ringtone"
-            android:showSilent="true"/>
+        <ListPreference
+            android:key="update_interval"
+            android:title="Update interval"
+            android:dependency="auto_update"
+            android:entries="@array/entries_update_interval"
+            android:entryValues="@array/entries_update_interval"
+            app:bindValueToSummary="true"
+            app:legacySummary="false" />
+
+        <PreferenceScreen
+            android:key="screen_notification"
+            android:title="Notification"
+            android:persistent="false">
+
+            <PreferenceCategory>
+
+                <RingtonePreference
+                    android:key="ringtone"
+                    android:title="Update ringtone"
+                    android:showSilent="true" />
+
+                <SeekBarDialogPreference
+                    android:key="vibrate_duration"
+                    android:title="Vibrate duration"
+                    android:dialogMessage="Adjust your device\'s vibrate duration here."
+                    android:dialogTitle="Vibrate duration"
+                    android:max="800"
+                    app:min="200"
+                    app:legacySummary="false" />
+
+                <SeekBarPreference
+                    android:key="notification_volume"
+                    android:title="Notification volume"
+                    app:seekBarIncrement="20"
+                    app:adjustable="true" />
+            </PreferenceCategory>
+        </PreferenceScreen>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Account">
 
         <EditTextPreference
             android:key="account_name"
-            android:title="Account name"/>
+            android:title="Account name"
+            android:hint="Your name"
+            android:dialogMessage="Please fill it with your name"
+            android:inputType="textCapWords"
+            android:maxLength="15"
+            app:minLength="2"
+            app:counterEnabled="true"
+            app:legacySummary="false" />
 
         <ListPreference
             android:key="country"
             android:title="Country"
             android:entries="@array/entries_country"
-            android:entryValues="@array/entry_values_country"/>
+            android:entryValues="@array/entry_values_country"
+            android:defaultValue="ID"
+            android:summary="%s"
+            app:legacySummary="false" />
 
         <MultiSelectListPreference
             android:key="friend_list"
             android:title="Friend list"
             android:entries="@array/entries_friend"
-            android:entryValues="@array/entries_friend"/>
-
-        <PreferenceScreen
-            android:key="screen_privacy"
-            android:title="Privacy"
-            android:persistent="false">
-
-            <CheckBoxPreference
-                android:key="save_history"
-                android:title="Save browsing history"/>
-
-            <EditTextPreference
-                android:key="app_password"
-                android:title="Application password"
-                android:password="true"/>
-        </PreferenceScreen>
+            android:entryValues="@array/entries_friend"
+            app:summaryNothing="@string/nothing"
+            app:bindValueToSummary="true" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Advanced">
@@ -78,11 +109,23 @@
         </Preference>
     </PreferenceCategory>
 
+    <!-- TODO: NExt   -->
+    <!--<PreferenceCategory>-->
+
+    <!--<FolderPreference-->
+    <!--android:key="downloads_directory"-->
+    <!--android:title="Downloads directory"/>-->
+    <!--</PreferenceCategory>-->
+
+    <!-- To make Preferences floating, you must wrap them inside PreferenceCategory -->
     <PreferenceCategory>
         <Preference
             android:key="about"
             android:title="About"
-            android:persistent="false">
+            android:persistent="false"
+            android:icon="@drawable/baseline_info_black_24"
+            app:tintIcon="?colorAccent"
+            app:legacySummary="false">
             <intent android:action="android.intent.action.VIEW"
                 android:data="https://github.com/anggrayudi/MaterialPreference"/>
         </Preference>

@@ -28,4 +28,11 @@
         <item>Nicko</item>
         <item>Tara</item>
     </string-array>
+
+    <string-array name="entries_update_interval">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Whenever ready</item>
+    </string-array>
 </resources>
