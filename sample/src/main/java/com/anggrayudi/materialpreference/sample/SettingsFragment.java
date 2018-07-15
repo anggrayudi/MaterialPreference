@@ -6,11 +6,11 @@ import android.os.Bundle;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anggrayudi.materialpreference.BuildConfig;
 import com.anggrayudi.materialpreference.Preference;
-import com.anggrayudi.materialpreference.PreferenceFragmentCompat;
+import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;
 import com.anggrayudi.materialpreference.SeekBarDialogPreference;
 import com.anggrayudi.materialpreference.SeekBarPreference;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements
+public class SettingsFragment extends PreferenceFragmentMaterial implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "SettingsFragment";

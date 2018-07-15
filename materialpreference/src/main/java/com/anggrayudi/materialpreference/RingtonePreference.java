@@ -119,7 +119,7 @@ public class RingtonePreference extends DialogPreference {
      * * inaccessible ringtones will have placeholder titles in the list.
      * <p>
      * You can also open the in-app picker dialog manually by calling
-     * {@link #showDialogFragment(PreferenceFragmentCompat)} if you want to ignore the error.
+     * {@link #showDialogFragment(PreferenceFragmentMaterial)} if you want to ignore the error.
      *
      * @param onFailedToReadRingtoneListener
      */

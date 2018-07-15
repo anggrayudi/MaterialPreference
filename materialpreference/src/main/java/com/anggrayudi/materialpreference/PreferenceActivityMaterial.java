@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-public abstract class PreferenceActivityCompat extends AppCompatActivity implements
-        PreferenceFragmentCompat.OnPreferenceStartScreenCallback,
+public abstract class PreferenceActivityMaterial extends AppCompatActivity implements
+        PreferenceFragmentMaterial.OnPreferenceStartScreenCallback,
         FragmentManager.OnBackStackChangedListener {
 
     private static final String TAG = "PreferenceActivity";
@@ -54,7 +54,7 @@ public abstract class PreferenceActivityCompat extends AppCompatActivity impleme
         return mActivityLabel;
     }
 
-    boolean onCreatePreferences(PreferenceFragmentCompat f, String rootKey) {
+    boolean onCreatePreferences(PreferenceFragmentMaterial f, String rootKey) {
         if (rootKey != null && !ReplaceFragment.DEFAULT_ROOT_KEY.equals(rootKey)) {
             f.setPreferenceScreen((PreferenceScreen) f.findPreference(rootKey));
             return true;
@@ -62,7 +62,7 @@ public abstract class PreferenceActivityCompat extends AppCompatActivity impleme
         return false;
     }
 
-    protected abstract PreferenceFragmentCompat onBuildPreferenceFragment(String rootKey);
+    protected abstract PreferenceFragmentMaterial onBuildPreferenceFragment(String rootKey);
 
     /**
      * Called when the user has clicked on a PreferenceScreen item in order to navigate to a new
@@ -72,11 +72,11 @@ public abstract class PreferenceActivityCompat extends AppCompatActivity impleme
      * @param screen The preference screen to navigate to.
      * @return true if the screen navigation has been handled
      */
-    public boolean onPreferenceStartScreen(PreferenceFragmentCompat caller, PreferenceScreen screen) {
+    public boolean onPreferenceStartScreen(PreferenceFragmentMaterial caller, PreferenceScreen screen) {
         setTitle(screen.getTitle());
         String key = screen.getKey();
-        PreferenceFragmentCompat f = onBuildPreferenceFragment(key);
-        f.getArguments().putCharSequence(PreferenceFragmentCompat.PREFERENCE_TITLE, screen.getTitle());
+        PreferenceFragmentMaterial f = onBuildPreferenceFragment(key);
+        f.getArguments().putCharSequence(PreferenceFragmentMaterial.PREFERENCE_TITLE, screen.getTitle());
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (mReplaceFragmentStrategy != null) {
             ft.setCustomAnimations(mReplaceFragmentStrategy.mAnimEnter, mReplaceFragmentStrategy.mAnimExit,

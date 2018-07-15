@@ -77,7 +77,7 @@
     </declare-styleable>
 
     <!-- Base attributes available to PreferenceFragment. -->
-    <declare-styleable name="PreferenceFragmentCompat">
+    <declare-styleable name="PreferenceFragmentMaterial">
         <!-- The layout for the PreferenceFragment. This should rarely need to be changed. -->
         <attr name="android:layout" />
         <!-- List separator to draw between preference views -->

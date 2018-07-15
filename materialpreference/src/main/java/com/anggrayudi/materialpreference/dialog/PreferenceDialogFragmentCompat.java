@@ -39,7 +39,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.anggrayudi.materialpreference.PreferenceFragmentCompat;
+import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;
 
 import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
@@ -169,7 +169,7 @@ public abstract class PreferenceDialogFragmentCompat extends DialogFragment impl
 
     /**
      * Get the preference that requested this dialog. Available after {@link #onCreate(Bundle)} has
-     * been called on the {@link PreferenceFragmentCompat} which launched this dialog.
+     * been called on the {@link PreferenceFragmentMaterial} which launched this dialog.
      *
      * @return The {@link DialogPreference} associated with this
      * dialog.

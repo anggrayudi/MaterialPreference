@@ -50,7 +50,7 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * Represents the basic Preference UI building
- * block displayed by a {@link PreferenceFragmentCompat} in the form of a
+ * block displayed by a {@link PreferenceFragmentMaterial} in the form of a
  * {@link android.support.v7.widget.RecyclerView}. This class provides data for the
  * {@link View} to be displayed
  * in the list and associates with a {@link SharedPreferences} to
@@ -941,7 +941,7 @@ public class Preference implements Comparable<Preference> {
     /**
      * Sets whether this preference should be visible in the list. If false, it is excluded from
      * the adapter, but can still be retrieved using
-     * {@link PreferenceFragmentCompat#findPreference(CharSequence)}.
+     * {@link PreferenceFragmentMaterial#findPreference(CharSequence)}.
      *
      * @param visible Set false if this preference should be hidden from the list.
      */
@@ -1210,7 +1210,7 @@ public class Preference implements Comparable<Preference> {
      * Returns the {@link Context} of this Preference.
      * Each Preference in a Preference hierarchy can be
      * from different Context (for example, if multiple activities provide preferences into a single
-     * {@link PreferenceFragmentCompat}). This Context will be used to save the Preference values.
+     * {@link PreferenceFragmentMaterial}). This Context will be used to save the Preference values.
      *
      * @return The Context of this Preference.
      */

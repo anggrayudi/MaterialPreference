@@ -3,10 +3,10 @@ package com.anggrayudi.materialpreference.sample;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
-import com.anggrayudi.materialpreference.PreferenceActivityCompat;
-import com.anggrayudi.materialpreference.PreferenceFragmentCompat;
+import com.anggrayudi.materialpreference.PreferenceActivityMaterial;
+import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;
 
-public class SettingsActivity extends PreferenceActivityCompat {
+public class SettingsActivity extends PreferenceActivityMaterial {
 
     private static final String TAG = "SettingsActivity";
 
@@ -29,7 +29,7 @@ public class SettingsActivity extends PreferenceActivityCompat {
     }
 
     @Override
-    protected PreferenceFragmentCompat onBuildPreferenceFragment(String rootKey) {
+    protected PreferenceFragmentMaterial onBuildPreferenceFragment(String rootKey) {
         return SettingsFragment.newInstance(rootKey);
     }
 

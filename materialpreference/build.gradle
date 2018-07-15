@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+group = 'com.anggrayudi'
+version = '0.0.1'
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -8,7 +11,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName version
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -35,5 +38,15 @@ dependencies {
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
     api 'org.apache.directory.studio:org.apache.commons.io:2.4'
-//    api 'net.xpece.android:support-preference:2.2.0'
 }
+
+ext {
+    PUBLISH_GROUP_ID = group
+    PUBLISH_ARTIFACT_ID = 'materialpreference'
+    PUBLISH_VERSION = version
+    siteUrl = 'https://github.com/anggrayudi/MaterialPreference'
+    gitUrl = 'https://github.com/anggrayudi/MaterialPreference.git'
+    libsDesc = 'A library designed to replace default preferences on Android framework with something beauty.'
+}
+
+apply from: '../android-release-aar.gradle'

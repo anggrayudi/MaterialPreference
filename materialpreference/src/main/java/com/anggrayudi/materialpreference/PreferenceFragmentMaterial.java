@@ -31,7 +31,7 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
  * @author Anggrayudi on July 1st, 2018.
  */
 @SuppressLint({"RestrictedApi", "PrivateResource"})
-public abstract class PreferenceFragmentCompat extends Fragment implements
+public abstract class PreferenceFragmentMaterial extends Fragment implements
         PreferenceManager.OnPreferenceTreeClickListener,
         PreferenceManager.OnDisplayPreferenceDialogListener,
         PreferenceManager.OnNavigateToScreenListener,
@@ -42,7 +42,7 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
      * {@link PreferenceScreen} object.
      */
     public static final String ARG_PREFERENCE_ROOT =
-            "com.anggrayudi.materialpreference.PreferenceFragmentCompat.PREFERENCE_ROOT";
+            "com.anggrayudi.materialpreference.PreferenceFragmentMaterial.PREFERENCE_ROOT";
 
     private static final String PREFERENCES_TAG = "android:preferences";
 
@@ -93,11 +93,12 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
          * a fragment class name associated with it.  The implementation
          * should instantiate and switch to an instance of the given
          * fragment.
+         *
          * @param caller The fragment requesting navigation.
-         * @param pref The preference requesting the fragment.
+         * @param pref   The preference requesting the fragment.
          * @return true if the fragment creation has been handled
          */
-        boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref);
+        boolean onPreferenceStartFragment(PreferenceFragmentMaterial caller, Preference pref);
     }
 
     /**
@@ -109,22 +110,22 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
         /**
          * Called when the user has clicked on a PreferenceScreen item in order to navigate to a new
          * screen of preferences.
+         *
          * @param caller The fragment requesting navigation.
-         * @param pref The preference screen to navigate to.
+         * @param pref   The preference screen to navigate to.
          * @return true if the screen navigation has been handled
          */
-        boolean onPreferenceStartScreen(PreferenceFragmentCompat caller, PreferenceScreen pref);
+        boolean onPreferenceStartScreen(PreferenceFragmentMaterial caller, PreferenceScreen pref);
     }
 
     public interface OnPreferenceDisplayDialogCallback {
 
         /**
-         *
          * @param caller The fragment containing the preference requesting the dialog.
-         * @param pref The preference requesting the dialog.
+         * @param pref   The preference requesting the dialog.
          * @return true if the dialog creation has been handled.
          */
-        boolean onPreferenceDisplayDialog(@NonNull PreferenceFragmentCompat caller, Preference pref);
+        boolean onPreferenceDisplayDialog(@NonNull PreferenceFragmentMaterial caller, Preference pref);
     }
 
     @Override
@@ -137,7 +138,7 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
             throw new IllegalStateException("Must specify preferenceTheme in theme");
         }
         if (getArguments() == null) {
-            throw new IllegalStateException("Must specify non-null PreferenceFragmentCompat arguments");
+            throw new IllegalStateException("Must specify non-null PreferenceFragmentMaterial arguments");
         }
         mStyledContext = new ContextThemeWrapper(getActivity(), theme);
         mPreferenceManager = new PreferenceManager(mStyledContext);
@@ -145,10 +146,10 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
         String rootKey = getArguments().getString(ARG_PREFERENCE_ROOT);
         if (rootKey == null && savedInstanceState == null)
             getArguments().putCharSequence(PREFERENCE_TITLE,
-                    ((PreferenceActivityCompat) getActivity()).getActivityLabel());
+                    ((PreferenceActivityMaterial) getActivity()).getActivityLabel());
 
         onCreatePreferences(savedInstanceState, rootKey);
-        ((PreferenceActivityCompat) getActivity()).onCreatePreferences(this, rootKey);
+        ((PreferenceActivityMaterial) getActivity()).onCreatePreferences(this, rootKey);
     }
 
     public String getPreferenceFragmentTitle() {
@@ -162,15 +163,15 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
      *
      * @param savedInstanceState If the fragment is being re-created from
      *                           a previous saved state, this is the state.
-     * @param rootKey If non-null, this preference fragment should be rooted at the
-     *                {@link PreferenceScreen} with this key.
+     * @param rootKey            If non-null, this preference fragment should be rooted at the
+     *                           {@link PreferenceScreen} with this key.
      */
     public abstract void onCreatePreferences(Bundle savedInstanceState, String rootKey);
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         TypedArray a = mStyledContext.obtainStyledAttributes(null,
-                R.styleable.PreferenceFragmentCompat,
+                R.styleable.PreferenceFragmentMaterial,
                 R.attr.preferenceFragmentCompatStyle,
                 0);
 
@@ -258,6 +259,7 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
 
     /**
      * Returns the {@link PreferenceManager} used by this fragment.
+     *
      * @return The {@link PreferenceManager}.
      */
     public PreferenceManager getPreferenceManager() {
@@ -283,7 +285,7 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
      * Gets the root of the preference hierarchy that this fragment is showing.
      *
      * @return The {@link PreferenceScreen} that is the root of the preference
-     *         hierarchy.
+     * hierarchy.
      */
     public PreferenceScreen getPreferenceScreen() {
         return mPreferenceManager.getPreferenceScreen();
@@ -307,9 +309,9 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
      * the preference hierarchy rooted at {@code key}.
      *
      * @param preferencesResId The XML resource ID to inflate.
-     * @param key The preference key of the {@link PreferenceScreen}
-     *            to use as the root of the preference hierarchy, or null to use the root
-     *            {@link PreferenceScreen}.
+     * @param key              The preference key of the {@link PreferenceScreen}
+     *                         to use as the root of the preference hierarchy, or null to use the root
+     *                         {@link PreferenceScreen}.
      */
     public void setPreferencesFromResource(@XmlRes int preferencesResId, @Nullable String key) {
         requirePreferenceManager();
@@ -338,12 +340,12 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
     public boolean onPreferenceTreeClick(Preference preference) {
         if (preference.getFragment() != null) {
             boolean handled = false;
-            if (getCallbackFragment() instanceof PreferenceFragmentCompat.OnPreferenceStartFragmentCallback) {
-                handled = ((PreferenceFragmentCompat.OnPreferenceStartFragmentCallback) getCallbackFragment())
+            if (getCallbackFragment() instanceof PreferenceFragmentMaterial.OnPreferenceStartFragmentCallback) {
+                handled = ((PreferenceFragmentMaterial.OnPreferenceStartFragmentCallback) getCallbackFragment())
                         .onPreferenceStartFragment(this, preference);
             }
-            if (!handled && getActivity() instanceof PreferenceFragmentCompat.OnPreferenceStartFragmentCallback){
-                handled = ((PreferenceFragmentCompat.OnPreferenceStartFragmentCallback) getActivity())
+            if (!handled && getActivity() instanceof PreferenceFragmentMaterial.OnPreferenceStartFragmentCallback) {
+                handled = ((PreferenceFragmentMaterial.OnPreferenceStartFragmentCallback) getActivity())
                         .onPreferenceStartFragment(this, preference);
             }
             return handled;
@@ -355,21 +357,22 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
      * Called by
      * {@link PreferenceScreen#onClick()} in order to navigate to a
      * new screen of preferences. Calls
-     * {@link PreferenceFragmentCompat.OnPreferenceStartScreenCallback#onPreferenceStartScreen}
+     * {@link PreferenceFragmentMaterial.OnPreferenceStartScreenCallback#onPreferenceStartScreen}
      * if the target fragment or containing activity implements
-     * {@link PreferenceFragmentCompat.OnPreferenceStartScreenCallback}.
+     * {@link PreferenceFragmentMaterial.OnPreferenceStartScreenCallback}.
+     *
      * @param preferenceScreen The {@link PreferenceScreen} to
      *                         navigate to.
      */
     @Override
     public void onNavigateToScreen(PreferenceScreen preferenceScreen) {
         boolean handled = false;
-        if (getCallbackFragment() instanceof PreferenceFragmentCompat.OnPreferenceStartScreenCallback) {
-            handled = ((PreferenceFragmentCompat.OnPreferenceStartScreenCallback) getCallbackFragment())
+        if (getCallbackFragment() instanceof PreferenceFragmentMaterial.OnPreferenceStartScreenCallback) {
+            handled = ((PreferenceFragmentMaterial.OnPreferenceStartScreenCallback) getCallbackFragment())
                     .onPreferenceStartScreen(this, preferenceScreen);
         }
-        if (!handled && getActivity() instanceof PreferenceFragmentCompat.OnPreferenceStartScreenCallback) {
-            ((PreferenceFragmentCompat.OnPreferenceStartScreenCallback) getActivity())
+        if (!handled && getActivity() instanceof PreferenceFragmentMaterial.OnPreferenceStartScreenCallback) {
+            ((PreferenceFragmentMaterial.OnPreferenceStartScreenCallback) getActivity())
                     .onPreferenceStartScreen(this, preferenceScreen);
         }
     }
@@ -417,12 +420,16 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
         onUnbindPreferences();
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @RestrictTo(LIBRARY_GROUP)
     protected void onBindPreferences() {
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @RestrictTo(LIBRARY_GROUP)
     protected void onUnbindPreferences() {
     }
@@ -454,12 +461,12 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
     public void onDisplayPreferenceDialog(Preference preference) {
 
         boolean handled = false;
-        if (getCallbackFragment() instanceof PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback) {
-            handled = ((PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback) getCallbackFragment())
+        if (getCallbackFragment() instanceof PreferenceFragmentMaterial.OnPreferenceDisplayDialogCallback) {
+            handled = ((PreferenceFragmentMaterial.OnPreferenceDisplayDialogCallback) getCallbackFragment())
                     .onPreferenceDisplayDialog(this, preference);
         }
-        if (!handled && getActivity() instanceof PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback) {
-            handled = ((PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback) getActivity())
+        if (!handled && getActivity() instanceof PreferenceFragmentMaterial.OnPreferenceDisplayDialogCallback) {
+            handled = ((PreferenceFragmentMaterial.OnPreferenceDisplayDialogCallback) getActivity())
                     .onPreferenceDisplayDialog(this, preference);
         }
 
@@ -493,6 +500,7 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
 
     /**
      * Basically a wrapper for getParentFragment which is v17+. Used by the leanback preference lib.
+     *
      * @return Fragment to possibly use as a callback
      * @hide
      */
@@ -538,7 +546,7 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
 //                } else {
 //                    // Item not found, wait for an update and try again
 //                    adapter.registerAdapterDataObserver(
-//                            new PreferenceFragmentCompat.ScrollToPreferenceObserver(adapter, mList, preference, key));
+//                            new PreferenceFragmentMaterial.ScrollToPreferenceObserver(adapter, mList, preference, key));
 //                }
 //            }
 //        };

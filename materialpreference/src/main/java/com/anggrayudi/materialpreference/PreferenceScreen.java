@@ -26,12 +26,12 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * Represents a top-level {@link Preference} that
- * is the root of a Preference hierarchy. A {@link PreferenceFragmentCompat}
+ * is the root of a Preference hierarchy. A {@link PreferenceFragmentMaterial}
  * points to an instance of this class to show the preferences. To instantiate
  * this class, use {@link PreferenceManager#createPreferenceScreen(Context)}.
  * <ul>
  * This class can appear in two places:
- * <li> When a {@link PreferenceFragmentCompat} points to this, it is used as the root
+ * <li> When a {@link PreferenceFragmentMaterial} points to this, it is used as the root
  * and is not shown (only the contained preferences are shown).
  * <li> When it appears inside another preference hierarchy, it is shown and
  * serves as the gateway to another screen of preferences (either by showing
@@ -61,7 +61,7 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
  * <p>
  * In this example, the "first_preferencescreen" will be used as the root of the
  * hierarchy and given to a {@link android.support.v14.preference.PreferenceFragment}
- * or {@link PreferenceFragmentCompat}.
+ * or {@link PreferenceFragmentMaterial}.
  * The first screen will
  * show preferences "WiFi" (which can be used to quickly enable/disable WiFi)
  * and "WiFi settings". The "WiFi settings" is the "second_preferencescreen" and when
