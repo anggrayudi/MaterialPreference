@@ -80,7 +80,7 @@ public class SettingsActivity extends PreferenceActivityMaterial {
 
 ### RingtonePreference
 
-`RingtonePicker` will show only system ringtone sounds by default.
+`RingtonePreference` will show only system ringtone sounds by default.
 If you want to include sounds from the external storage your app needs to request
 `android.permission.READ_EXTERNAL_STORAGE` permission in its manifest.
 Don't forget to check this runtime permission before opening ringtone picker on API 23.
