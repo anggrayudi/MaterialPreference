@@ -23,6 +23,8 @@
             android:title="Wi-Fi only"
             android:dependency="auto_update" />
 
+        <!-- You can also use android:visible -->
+
         <ListPreference
             android:key="update_interval"
             android:title="Update interval"
@@ -107,6 +109,12 @@
             <intent android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
                 android:data="package:com.anggrayudi.materialpreference.sample"/>
         </Preference>
+
+        <IndicatorPreference
+            android:key="battery_indicator"
+            android:title="Battery indicator"
+            android:src="@drawable/baseline_check_circle_black_24"
+            app:tint="?colorAccent" />
     </PreferenceCategory>
 
     <!-- TODO: NExt   -->

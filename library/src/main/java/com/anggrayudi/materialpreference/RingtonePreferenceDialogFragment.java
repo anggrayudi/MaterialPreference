@@ -1,12 +1,9 @@
 package com.anggrayudi.materialpreference;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.Ringtone;
@@ -15,21 +12,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragmentCompat;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Eugen on 07.12.2015.
@@ -90,7 +83,7 @@ public class RingtonePreferenceDialogFragment extends PreferenceDialogFragmentCo
     /**
      * The number of static items in the list.
      */
-    private final ArrayList<XpHeaderViewListAdapter.FixedViewInfo> mStaticItems = new ArrayList<>();
+    private final ArrayList<CharSequence> mStaticItems = new ArrayList<>();
 
     /**
      * Whether this list has the 'Default' item.
@@ -123,24 +116,6 @@ public class RingtonePreferenceDialogFragment extends PreferenceDialogFragmentCo
      */
     private static Ringtone sPlayingRingtone;
 
-    private final DialogInterface.OnClickListener mRingtoneClickListener =
-            new DialogInterface.OnClickListener() {
-
-                /*
-                 * On item clicked
-                 */
-                public void onClick(DialogInterface dialog, int which) {
-                    // Save the position of most recently clicked item
-                    mClickedPos = which;
-
-                    // Play clip
-                    playRingtone(which, 0);
-                }
-
-            };
-
-    private boolean mActivityCreated = false;
-
     public static RingtonePreferenceDialogFragment newInstance(String key) {
         RingtonePreferenceDialogFragment fragment = new RingtonePreferenceDialogFragment();
         Bundle b = new Bundle(1);
@@ -152,37 +127,8 @@ public class RingtonePreferenceDialogFragment extends PreferenceDialogFragmentCo
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mHandler = new Handler();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        mActivityCreated = true;
-
         loadRingtoneManager(savedInstanceState);
-
-        if (getDialog() instanceof DummyAlertDialog) {
-            // Reinstall the real dialog now if we don't have custom view.
-            // The resulting layout inflater will be discarded. First call result is preserved.
-            // Fragment-Dialog listeners are attached in super.onActivityCreated. Do this before.
-            getDialog().dismiss();
-            onGetLayoutInflater(savedInstanceState);
-        }
-
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        if (mActivityCreated) {
-            return super.onCreateDialog(savedInstanceState);
-        } else {
-            // Dummy. Will be replaced with real dialog in onActivityCreated.
-            // LayoutInflater from the dialog builder will remain cached in this fragment.
-            return new DummyAlertDialog(getContext());
-        }
     }
 
     private void loadRingtoneManager(@Nullable Bundle savedInstanceState) {
@@ -286,20 +232,16 @@ public class RingtonePreferenceDialogFragment extends PreferenceDialogFragmentCo
         builder.title(title);
 
         final Context context = builder.getContext();
-        TypedArray a = context.obtainStyledAttributes(null, R.styleable.AlertDialog, R.attr.alertDialogStyle, 0);
-        int singleChoiceItemLayout = a.getResourceId(R.styleable.AlertDialog_singleChoiceItemLayout, 0);
-        a.recycle();
 
-        final LayoutInflater inflater = LayoutInflater.from(context);
         if (mHasDefaultItem) {
-            mDefaultRingtonePos = addDefaultRingtoneItem(inflater, singleChoiceItemLayout);
+            mDefaultRingtonePos = addDefaultRingtoneItem();
 
             if (mClickedPos == POS_UNKNOWN && RingtoneManager.isDefault(mExistingUri)) {
                 mClickedPos = mDefaultRingtonePos;
             }
         }
         if (mHasSilentItem) {
-            mSilentPos = addSilentItem(inflater, singleChoiceItemLayout);
+            mSilentPos = addSilentItem();
 
             // The 'Silent' item should use a null Uri
             if (mClickedPos == POS_UNKNOWN && mExistingUri == null) {
@@ -327,24 +269,28 @@ public class RingtonePreferenceDialogFragment extends PreferenceDialogFragmentCo
                 ringtone.stop();
             }
             if (ringtoneTitle == null) {
-                mUnknownPos = addUnknownItem(inflater, singleChoiceItemLayout);
+                mUnknownPos = addUnknownItem();
             } else {
-                mUnknownPos = addStaticItem(inflater, singleChoiceItemLayout, ringtoneTitle);
+                mUnknownPos = addStaticItem(ringtoneTitle);
             }
             mClickedPos = mUnknownPos;
         }
 
-        SimpleCursorAdapter ringtoneAdapter = new SimpleCursorAdapter(context, singleChoiceItemLayout, mCursor,
-                new String[]{MediaStore.Audio.Media.TITLE}, new int[]{android.R.id.text1});
-
-        XpHeaderViewListAdapter adapter = new XpHeaderViewListAdapter(mStaticItems, null, ringtoneAdapter);
+        List<CharSequence> titles = new ArrayList<>(mStaticItems);
+        if (mCursor.moveToFirst()) {
+            int index = mCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+            do {
+                titles.add(mCursor.getString(index));
+            } while (mCursor.moveToNext());
+        }
 
         builder.autoDismiss(false)
-                .items(mStaticItems)
+                .items(titles)
                 .alwaysCallSingleChoiceCallback()
                 .itemsCallbackSingleChoice(mClickedPos, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        mClickedPos = which;
                         playRingtone(which, DELAY_MS_SELECTION_PLAYED);
                         return true;
                     }
@@ -358,10 +304,10 @@ public class RingtonePreferenceDialogFragment extends PreferenceDialogFragmentCo
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        RingtonePreferenceDialogFragment.this.onClick(dialog, DialogAction.POSITIVE);
+                        dialog.dismiss();
                     }
                 });
-        // Put a checkmark next to an item.
-//        builder.setSingleChoiceItems(adapter, mClickedPos, mRingtoneClickListener);
     }
 
     /**
@@ -371,35 +317,28 @@ public class RingtonePreferenceDialogFragment extends PreferenceDialogFragmentCo
      * @param text Text for the item.
      * @return The position of the inserted item.
      */
-    private int addStaticItem(@NonNull LayoutInflater inflater, @LayoutRes int layout, @NonNull CharSequence text) {
-        TextView textView = (TextView) inflater.inflate(layout, null, false);
-        textView.setText(text);
-
-        XpHeaderViewListAdapter.FixedViewInfo item = new XpHeaderViewListAdapter.FixedViewInfo();
-        item.view = textView;
-        item.isSelectable = true;
-
-        mStaticItems.add(item);
+    private int addStaticItem(@NonNull CharSequence text) {
+        mStaticItems.add(text);
         return mStaticItems.size() - 1;
     }
 
-    private int addDefaultRingtoneItem(@NonNull LayoutInflater inflater, @LayoutRes int layout) {
+    private int addDefaultRingtoneItem() {
         switch (mType) {
             case RingtoneManager.TYPE_NOTIFICATION:
-                return addStaticItem(inflater, layout, RingtonePreference.getNotificationSoundDefaultString(getContext()));
+                return addStaticItem(RingtonePreference.getNotificationSoundDefaultString(getContext()));
             case RingtoneManager.TYPE_ALARM:
-                return addStaticItem(inflater, layout, RingtonePreference.getAlarmSoundDefaultString(getContext()));
+                return addStaticItem(RingtonePreference.getAlarmSoundDefaultString(getContext()));
             default:
-                return addStaticItem(inflater, layout, RingtonePreference.getRingtoneDefaultString(getContext()));
+                return addStaticItem(RingtonePreference.getRingtoneDefaultString(getContext()));
         }
     }
 
-    private int addSilentItem(LayoutInflater inflater, @LayoutRes int layout) {
-        return addStaticItem(inflater, layout, RingtonePreference.getRingtoneSilentString(getContext()));
+    private int addSilentItem() {
+        return addStaticItem(RingtonePreference.getRingtoneSilentString(getContext()));
     }
 
-    private int addUnknownItem(LayoutInflater inflater, @LayoutRes int layout) {
-        return addStaticItem(inflater, layout, RingtonePreference.getRingtoneUnknownString(getContext()));
+    private int addUnknownItem() {
+        return addStaticItem(RingtonePreference.getRingtoneUnknownString(getContext()));
     }
 
     private int getListPosition(int ringtoneManagerPos) {
@@ -576,11 +515,5 @@ public class RingtonePreferenceDialogFragment extends PreferenceDialogFragmentCo
 
     private int getRingtoneManagerPosition(int listPos) {
         return listPos - mStaticItems.size();
-    }
-
-    private static class DummyAlertDialog extends AlertDialog {
-        DummyAlertDialog(@NonNull Context context) {
-            super(context);
-        }
     }
 }

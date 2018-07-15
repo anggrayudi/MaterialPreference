@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.anggrayudi.materialpreference.widget.PreferenceImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@android:id/icon1"
+    android:layout_width="40dp"
+    android:layout_height="18dp"
+    android:paddingLeft="12dp"
+    tools:src="@drawable/baseline_navigate_next_black_24" />

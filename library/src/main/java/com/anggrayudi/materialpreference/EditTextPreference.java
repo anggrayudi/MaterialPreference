@@ -71,15 +71,14 @@ public class EditTextPreference extends DialogPreference {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.EditTextPreference, defStyleAttr, defStyleRes);
-
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EditTextPreference, defStyleAttr, defStyleRes);
         mCounterEnabled = a.getBoolean(R.styleable.EditTextPreference_counterEnabled, true);
         mHint = a.getString(R.styleable.EditTextPreference_android_hint);
         mMessage = a.getString(R.styleable.EditTextPreference_android_dialogMessage);
         mMaxLength = a.getInt(R.styleable.EditTextPreference_android_maxLength, 100);
         mMinLength = a.getInt(R.styleable.EditTextPreference_minLength, 0);
         mInputType = a.getInt(R.styleable.EditTextPreference_android_inputType, InputType.TYPE_CLASS_TEXT);
+        a.recycle();
     }
 
     public void setMessage(String message) {

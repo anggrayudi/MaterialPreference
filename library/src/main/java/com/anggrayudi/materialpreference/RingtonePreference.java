@@ -18,6 +18,7 @@ package com.anggrayudi.materialpreference;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -74,6 +75,14 @@ public class RingtonePreference extends DialogPreference {
         mShowDefault = a.getBoolean(R.styleable.RingtonePreference_android_showDefault, true);
         mShowSilent = a.getBoolean(R.styleable.RingtonePreference_android_showSilent, true);
         a.recycle();
+
+        if (isBindValueToSummary()) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            final String uriString = preferences.getString(getKey(),
+                    getDefaultValue() != null ? getDefaultValue().toString() : null);
+            setSummary(uriString == null ? context.getString(R.string.ringtone_silent)
+                    : getRingtoneTitle(getContext(), Uri.parse(uriString)));
+        }
     }
 
     public boolean canPlayDefaultRingtone(final Context context) {
@@ -191,6 +200,9 @@ public class RingtonePreference extends DialogPreference {
      */
     public void onSaveRingtone(Uri ringtoneUri) {
         persistString(ringtoneUri != null ? ringtoneUri.toString() : "");
+        if (isBindValueToSummary())
+            setSummary(ringtoneUri == null ? getContext().getString(R.string.ringtone_silent)
+                    : getRingtoneTitle(getContext(), ringtoneUri));
     }
 
     /**

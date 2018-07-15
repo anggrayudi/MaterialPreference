@@ -18,18 +18,21 @@ package com.anggrayudi.materialpreference;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.RestrictTo;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.afollestad.materialdialogs.util.DialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,9 +135,6 @@ public class PreferenceGroupAdapter implements
         syncMyPreferences();
     }
 
-    // TODO: 02/07/18 Preference visibility
-    // TODO: 02/07/18 perbaiki preference yang memakai dialog
-
     private void syncMyPreferences() {
         for (final Preference preference : mPreferenceListInternal) {
             // Clear out the listeners in anticipation of some items being removed. This listener
@@ -144,52 +144,10 @@ public class PreferenceGroupAdapter implements
         final List<Preference> fullPreferenceList = new ArrayList<>(mPreferenceListInternal.size());
         flattenPreferenceGroup(fullPreferenceList, mPreferenceGroup);
 
-        final List<Preference> visiblePreferenceList = new ArrayList<>(fullPreferenceList.size());
-        // Copy only the visible preferences to the active list
-        for (final Preference preference : fullPreferenceList) {
-            if (preference.isVisible()) {
-                visiblePreferenceList.add(preference);
-            }
-        }
-
-        final List<Preference> oldVisibleList = mPreferenceList;
-        mPreferenceList = visiblePreferenceList;
+        mPreferenceList = fullPreferenceList;
         mPreferenceListInternal = fullPreferenceList;
 
-        final PreferenceManager preferenceManager = mPreferenceGroup.getPreferenceManager();
-        if (preferenceManager != null && preferenceManager.getPreferenceComparisonCallback() != null) {
-            final PreferenceManager.PreferenceComparisonCallback comparisonCallback =
-                    preferenceManager.getPreferenceComparisonCallback();
-            final DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-                @Override
-                public int getOldListSize() {
-                    return oldVisibleList.size();
-                }
-
-                @Override
-                public int getNewListSize() {
-                    return visiblePreferenceList.size();
-                }
-
-                @Override
-                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                    return comparisonCallback.arePreferenceItemsTheSame(
-                            oldVisibleList.get(oldItemPosition),
-                            visiblePreferenceList.get(newItemPosition));
-                }
-
-                @Override
-                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                    return comparisonCallback.arePreferenceContentsTheSame(
-                            oldVisibleList.get(oldItemPosition),
-                            visiblePreferenceList.get(newItemPosition));
-                }
-            });
-
-            result.dispatchUpdatesTo(this);
-        } else {
-            notifyDataSetChanged();
-        }
+        notifyDataSetChanged();
 
         for (final Preference preference : fullPreferenceList) {
             preference.clearWasDetached();
@@ -264,36 +222,7 @@ public class PreferenceGroupAdapter implements
         if (!mPreferenceListInternal.contains(preference)) {
             return;
         }
-        if (preference.isVisible()) {
-            // The preference has become visible, we need to add it in the correct location.
-
-            // Index (inferred) in mPreferenceList of the item preceding the newly visible pref
-            int previousVisibleIndex = -1;
-            for (final Preference pref : mPreferenceListInternal) {
-                if (preference.equals(pref)) {
-                    break;
-                }
-                if (pref.isVisible()) {
-                    previousVisibleIndex++;
-                }
-            }
-            // Insert this preference into the active list just after the previous visible entry
-            mPreferenceList.add(previousVisibleIndex + 1, preference);
-
-//            notifyItemInserted(previousVisibleIndex + 1);
-        } else {
-            // The preference has become invisible. Find it in the list and remove it.
-
-            int removalIndex;
-            final int listSize = mPreferenceList.size();
-            for (removalIndex = 0; removalIndex < listSize; removalIndex++) {
-                if (preference.equals(mPreferenceList.get(removalIndex))) {
-                    break;
-                }
-            }
-            mPreferenceList.remove(removalIndex);
-//            notifyItemRemoved(removalIndex);
-        }
+        preference.mPreferenceViewHolder.itemView.setVisibility(preference.isVisible() ? View.VISIBLE : View.GONE);
     }
 
     private int getItemViewType(int position) {
@@ -345,11 +274,21 @@ public class PreferenceGroupAdapter implements
         if (preference != null) {
             if (preference.mPreferenceViewHolder == null) {
                 preference.mPreferenceViewHolder = createViewHolder(getItemViewType(position), preference);
+                if (preference instanceof PreferenceScreen) {
+                    ImageView summaryIcon = (ImageView) preference.mPreferenceViewHolder.findViewById(R.id.summary_icon);
+                    summaryIcon.getDrawable().mutate().setColorFilter(
+                            DialogUtils.resolveColor(preference.getContext(),
+                                    android.R.attr.textColorSecondary), PorterDuff.Mode.SRC_IN);
+                } else if (preference instanceof IndicatorPreference) {
+                    IndicatorPreference indicatorPreference = (IndicatorPreference) preference;
+                    indicatorPreference.setTint(indicatorPreference.getTint());
+                    indicatorPreference.mPreferenceViewHolder.itemView.findViewById(R.id.material_summary).setVisibility(View.GONE);
+                }
                 getParentView(preference).addView(preference.mPreferenceViewHolder.itemView);
+                preference.mPreferenceViewHolder.itemView.setVisibility(preference.isVisible() ? View.VISIBLE : View.GONE);
             }
 
             preference.onBindViewHolder(preference.mPreferenceViewHolder);
-            preference.mPreferenceViewHolder.itemView.setVisibility(preference.isVisible() ? View.VISIBLE : View.GONE);
         }
     }
 

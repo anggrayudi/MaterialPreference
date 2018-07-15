@@ -37,13 +37,10 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.AbsSavedState;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.afollestad.materialdialogs.util.DialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -306,6 +303,9 @@ public class Preference implements Comparable<Preference> {
         mPersistent = TypedArrayUtils.getBoolean(a, R.styleable.Preference_persistent,
                 R.styleable.Preference_android_persistent, true);
 
+        mVisible = TypedArrayUtils.getBoolean(a, R.styleable.Preference_android_visible,
+                R.styleable.Preference_android_visible, true);
+
         mDependencyKey = TypedArrayUtils.getString(a, R.styleable.Preference_dependency,
                 R.styleable.Preference_android_dependency);
 
@@ -314,8 +314,7 @@ public class Preference implements Comparable<Preference> {
         mTintIcon = a.getColor(R.styleable.Preference_tintIcon, Color.TRANSPARENT);
 
         mLegacySummary = a.getBoolean(R.styleable.Preference_legacySummary, true);
-        mLegacySummary = (this instanceof TwoStatePreference || this instanceof PreferenceGroup
-                || this instanceof RingtonePreference)
+        mLegacySummary = (this instanceof TwoStatePreference || this instanceof PreferenceGroup)
                 && mLegacySummary && !(this instanceof SeekBarPreference);
 
         if (a.hasValue(R.styleable.Preference_defaultValue)) {
@@ -499,8 +498,7 @@ public class Preference implements Comparable<Preference> {
      * @param enable <code>true</code> if you want to put the summary horizontally with this preference's title
      */
     public void setLegacySummary(boolean enable) {
-        mLegacySummary = (this instanceof TwoStatePreference || this instanceof PreferenceGroup
-                || this instanceof RingtonePreference)
+        mLegacySummary = (this instanceof TwoStatePreference || this instanceof PreferenceGroup)
                 && enable && !(this instanceof SeekBarPreference);
         notifyChanged();
     }
@@ -628,7 +626,7 @@ public class Preference implements Comparable<Preference> {
 
         TextView legacySummaryView = (TextView) holder.findViewById(android.R.id.summary);
         if (legacySummaryView != null) {
-            if (mLegacySummary && !TextUtils.isEmpty(getSummary())) {
+            if (isLegacySummary() && !TextUtils.isEmpty(getSummary())) {
                 legacySummaryView.setText(getSummary());
                 legacySummaryView.setVisibility(View.VISIBLE);
             } else {
@@ -638,7 +636,7 @@ public class Preference implements Comparable<Preference> {
 
         TextView materialSummaryView = (TextView) holder.findViewById(R.id.material_summary);
         if (materialSummaryView != null) {
-            if (!mLegacySummary && !TextUtils.isEmpty(getSummary())) {
+            if (!isLegacySummary() && !TextUtils.isEmpty(getSummary())) {
                 materialSummaryView.setText(getSummary());
                 materialSummaryView.setVisibility(View.VISIBLE);
             } else {
@@ -676,19 +674,6 @@ public class Preference implements Comparable<Preference> {
                 imageFrame.setVisibility(View.VISIBLE);
             } else {
                 imageFrame.setVisibility(mIconSpaceReserved ? View.INVISIBLE : View.GONE);
-            }
-        }
-
-        ViewGroup widgetFrame = (ViewGroup) holder.findViewById(android.R.id.widget_frame);
-        if (this instanceof PreferenceScreen) {
-            ImageView summaryIcon = widgetFrame.findViewById(R.id.summary_icon);
-            if (summaryIcon == null) {
-                summaryIcon = (ImageView) LayoutInflater.from(mContext).inflate(
-                        R.layout.preference_screen_summary_icon, widgetFrame, false);
-                summaryIcon.getDrawable().mutate().setColorFilter(
-                        DialogUtils.resolveColor(mContext, android.R.attr.textColorSecondary), PorterDuff.Mode.SRC_IN);
-                widgetFrame.addView(summaryIcon);
-                widgetFrame.setVisibility(View.VISIBLE);
             }
         }
 
@@ -1587,6 +1572,10 @@ public class Preference implements Comparable<Preference> {
      */
     public void setDefaultValue(Object defaultValue) {
         mDefaultValue = defaultValue;
+    }
+
+    public Object getDefaultValue() {
+        return mDefaultValue;
     }
 
     private void dispatchSetInitialValue() {

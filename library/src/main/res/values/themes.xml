@@ -36,5 +36,6 @@
         </item>
         <item name="folderPreferenceStyle">@style/Preference.DialogPreference.FolderPreference
         </item>
+        <item name="indicatorPreferenceStyle">@style/Preference.IndicatorPreference</item>
     </style>
 </resources>

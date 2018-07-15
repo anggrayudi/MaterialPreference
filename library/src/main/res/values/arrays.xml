@@ -8,4 +8,5 @@
         <item>Text</item>
     </string-array>
 
+    <string-array name="empty_array"></string-array>
 </resources>

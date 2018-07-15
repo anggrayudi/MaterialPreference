@@ -17,19 +17,16 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:minHeight="@dimen/preferenceMinHeight"
     android:gravity="center_vertical"
     android:paddingEnd="?android:attr/scrollbarSize"
     android:background="?android:attr/selectableItemBackground"
-    android:focusable="true" >
+    android:focusable="true">
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:visibility="invisible" />
+    <!-- TODO: DropDown -->
 
     <FrameLayout
         android:id="@+id/icon_frame"
@@ -56,10 +53,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="@style/preferenceSummaryTextAppearance"
             android:textColor="?android:attr/textColorPrimary"
             android:ellipsize="marquee"
-            android:fadingEdge="horizontal" />
+            android:fadingEdge="horizontal"
+            tools:text="as" />
 
         <TextView android:id="@android:id/summary"
             android:layout_width="wrap_content"
@@ -73,10 +71,19 @@
     </RelativeLayout>
 
     <!-- Preference should place its actual preference widget here. -->
-    <LinearLayout android:id="@android:id/widget_frame"
+    <!--<LinearLayout android:id="@android:id/widget_frame"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="vertical" />-->
+
+    <Spinner
+        android:id="@+id/spinner"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical" />
+        android:layout_height="wrap_content"
+        android:maxWidth="@dimen/preferenceSummaryMaxWidth"
+        android:textSize="15sp"
+        android:ellipsize="marquee"
+        android:singleLine="true" />
 
 </LinearLayout>

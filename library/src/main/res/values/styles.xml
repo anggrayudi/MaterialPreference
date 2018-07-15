@@ -60,6 +60,7 @@
     </style>
 
     <style name="Preference.PreferenceScreen">
+        <item name="android:widgetLayout">@layout/preference_widget_subscreen</item>
     </style>
 
     <style name="Preference.DialogPreference">
@@ -81,6 +82,10 @@
     </style>
 
     <style name="Preference.DialogPreference.FolderPreference"></style>
+
+    <style name="Preference.IndicatorPreference">
+        <item name="android:widgetLayout">@layout/preference_widget_indicator</item>
+    </style>
 
     <style name="PreferenceFragmentList">
         <item name="android:paddingLeft">16dp</item>

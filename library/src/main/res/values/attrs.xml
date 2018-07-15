@@ -73,6 +73,7 @@
         <attr name="seekBarDialogPreferenceStyle" format="reference" />
         <attr name="multiSelectListPreferenceStyle" format="reference"/>
         <attr name="folderPreferenceStyle" format="reference" />
+        <attr name="indicatorPreferenceStyle" format="reference" />
     </declare-styleable>
 
     <!-- Base attributes available to PreferenceFragment. -->
@@ -166,6 +167,7 @@
         <attr name="android:iconSpaceReserved" />
         <attr name="legacySummary" format="boolean" />
         <attr name="bindValueToSummary" format="boolean" />
+        <attr name="android:visible" format="boolean" />
     </declare-styleable>
 
     <!-- Base attributes available to CheckBoxPreference. -->
@@ -314,4 +316,9 @@
     </declare-styleable>
 
     <declare-styleable name="FolderPreference"></declare-styleable>
+
+    <declare-styleable name="IndicatorPreference">
+        <attr name="android:src" />
+        <attr name="tint" />
+    </declare-styleable>
 </resources>

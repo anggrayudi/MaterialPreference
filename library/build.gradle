@@ -35,4 +35,5 @@ dependencies {
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
     api 'org.apache.directory.studio:org.apache.commons.io:2.4'
+//    api 'net.xpece.android:support-preference:2.2.0'
 }
