@@ -124,6 +124,7 @@ public class Preference implements Comparable<Preference> {
 
     private OnPreferenceChangeListener mOnChangeListener;
     private OnPreferenceClickListener mOnClickListener;
+    private OnPreferenceLongClickListener mOnLongClickListener;
 
     private int mOrder = DEFAULT_ORDER;
     private int mViewId = 0;
@@ -134,6 +135,7 @@ public class Preference implements Comparable<Preference> {
      */
     private int mIconResId;
     private int mTintIcon;
+    private int mTitleTextColor;
     private Drawable mIcon;
     private String mKey;
     private Intent mIntent;
@@ -179,6 +181,13 @@ public class Preference implements Comparable<Preference> {
         }
     };
 
+    private final View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            return mOnLongClickListener != null && mOnLongClickListener.onPreferenceLongClick(Preference.this);
+        }
+    };
+
     /**
      * Interface definition for a callback to be invoked when the value of this
      * {@link Preference} has been changed by the user and is
@@ -196,6 +205,11 @@ public class Preference implements Comparable<Preference> {
          * @return True to update the state of the Preference with the new value.
          */
         boolean onPreferenceChange(Preference preference, Object newValue);
+    }
+
+    public interface OnPreferenceLongClickListener {
+
+        boolean onPreferenceLongClick(Preference preference);
     }
 
     /**
@@ -312,8 +326,9 @@ public class Preference implements Comparable<Preference> {
         mBindValueToSummary = a.getBoolean(R.styleable.Preference_bindValueToSummary, true);
 
         mTintIcon = a.getColor(R.styleable.Preference_tintIcon, Color.TRANSPARENT);
+        mTitleTextColor = a.getColor(R.styleable.Preference_titleTextColor, 0);
 
-        mLegacySummary = a.getBoolean(R.styleable.Preference_legacySummary, true);
+        mLegacySummary = a.getBoolean(R.styleable.Preference_legacySummary, false);
         mLegacySummary = (this instanceof TwoStatePreference || this instanceof PreferenceGroup)
                 && mLegacySummary && !(this instanceof SeekBarPreference);
 
@@ -609,6 +624,7 @@ public class Preference implements Comparable<Preference> {
      */
     public void onBindViewHolder(PreferenceViewHolder holder) {
         holder.itemView.setOnClickListener(mClickListener);
+        holder.itemView.setOnLongClickListener(mLongClickListener);
 
         TextView titleView = (TextView) holder.findViewById(android.R.id.title);
         if (titleView != null) {
@@ -619,6 +635,8 @@ public class Preference implements Comparable<Preference> {
                 if (mHasSingleLineTitleAttr) {
                     titleView.setSingleLine(mSingleLineTitle);
                 }
+                if (mTitleTextColor != 0)
+                    titleView.setTextColor(mTitleTextColor);
             } else {
                 titleView.setVisibility(View.GONE);
             }
@@ -1132,8 +1150,7 @@ public class Preference implements Comparable<Preference> {
      *
      * @param onPreferenceChangeListener The callback to be invoked.
      */
-    public void setOnPreferenceChangeListener(
-            OnPreferenceChangeListener onPreferenceChangeListener) {
+    public void setOnPreferenceChangeListener(OnPreferenceChangeListener onPreferenceChangeListener) {
         mOnChangeListener = onPreferenceChangeListener;
     }
 
@@ -1145,6 +1162,14 @@ public class Preference implements Comparable<Preference> {
      */
     public OnPreferenceChangeListener getOnPreferenceChangeListener() {
         return mOnChangeListener;
+    }
+
+    public void setLongClickListener(OnPreferenceLongClickListener listener) {
+        mOnLongClickListener = listener;
+    }
+
+    public OnPreferenceLongClickListener getLongClickListener() {
+        return mOnLongClickListener;
     }
 
     /**

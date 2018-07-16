@@ -222,7 +222,8 @@ public class PreferenceGroupAdapter implements
         if (!mPreferenceListInternal.contains(preference)) {
             return;
         }
-        preference.mPreferenceViewHolder.itemView.setVisibility(preference.isVisible() ? View.VISIBLE : View.GONE);
+        preference.mPreferenceViewHolder.itemView
+                .setVisibility(preference.isVisible() ? View.VISIBLE : View.GONE);
     }
 
     private int getItemViewType(int position) {
@@ -301,6 +302,10 @@ public class PreferenceGroupAdapter implements
     private ViewGroup getParentView(Preference preference) {
         if (preference.getParent() == null || preference instanceof PreferenceCategory)
             return mRootParent;
+
+        if (preference.getParent().mPreferenceViewHolder.itemView == null)
+            throw new IllegalStateException("Make sure that you wrap " + preference.getClass().getSimpleName()
+                    + " inside PreferenceCategory from the XML.");
 
         return preference.getParent().mPreferenceViewHolder.itemView.findViewById(android.R.id.content);
     }

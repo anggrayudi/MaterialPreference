@@ -83,6 +83,7 @@
             android:ellipsize="marquee"
             android:singleLine="true"
             android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
             tools:text="This is summary bitch!aasdfsdfsadfsadfsdfasdfasd" />
     </RelativeLayout>
 

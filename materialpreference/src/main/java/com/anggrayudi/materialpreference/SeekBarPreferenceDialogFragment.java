@@ -58,7 +58,8 @@ public class SeekBarPreferenceDialogFragment extends PreferenceDialogFragmentCom
         mTextMin.setText(String.format(Locale.US, "%d", min));
 
         mSeekBar.setMax(max - min);
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mSeekBar.setProgress(preference.getProgress() - min);
+        SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (preference.mFormatter != null)
@@ -74,8 +75,9 @@ public class SeekBarPreferenceDialogFragment extends PreferenceDialogFragmentCom
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
-        });
-        mSeekBar.setProgress(preference.getProgress() - min);
+        };
+        listener.onProgressChanged(mSeekBar, mSeekBar.getProgress(), false);
+        mSeekBar.setOnSeekBarChangeListener(listener);
         mKeyProgressIncrement = mSeekBar.getKeyProgressIncrement();
         mSeekBar.setOnKeyListener(this);
 

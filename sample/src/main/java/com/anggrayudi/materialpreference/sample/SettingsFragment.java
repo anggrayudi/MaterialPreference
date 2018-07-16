@@ -2,9 +2,11 @@ package com.anggrayudi.materialpreference.sample;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anggrayudi.materialpreference.BuildConfig;
+import com.anggrayudi.materialpreference.IndicatorPreference;
 import com.anggrayudi.materialpreference.Preference;
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;
 import com.anggrayudi.materialpreference.SeekBarDialogPreference;
@@ -45,13 +47,21 @@ public class SettingsFragment extends PreferenceFragmentMaterial implements
             }
         });
 
-        findPreference("account_status").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        IndicatorPreference indicatorPreference = (IndicatorPreference) findPreference("account_status");
+        indicatorPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 new MaterialDialog.Builder(getContext())
                         .content("Your account has been verified.")
                         .positiveText(android.R.string.ok)
                         .show();
+                return true;
+            }
+        });
+        indicatorPreference.setLongClickListener(new Preference.OnPreferenceLongClickListener() {
+            @Override
+            public boolean onPreferenceLongClick(Preference preference) {
+                Toast.makeText(preference.getContext(), "onLongClick: " + preference.getTitle(), Toast.LENGTH_SHORT).show();
                 return true;
             }
         });

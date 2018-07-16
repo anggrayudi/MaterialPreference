@@ -2,16 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Bagaimana jika di sini langsung PreferenceScreen?   -->
-    <!--<PreferenceScreen-->
-        <!--android:key="screen_downloads"-->
-        <!--android:title="Downloads">-->
-
-        <!--<Preference-->
-            <!--android:key="save_dir"-->
-            <!--android:title="Save directory"/>-->
-    <!--</PreferenceScreen>-->
-
     <PreferenceCategory android:title="Maintenance">
 
         <SwitchPreference
@@ -23,7 +13,10 @@
             android:title="Wi-Fi only"
             android:dependency="auto_update" />
 
-        <!-- You can also use android:visible="boolean" -->
+        <!-- You can also use:
+        android:visible="boolean"
+        app:titleTextColor
+        -->
 
         <ListPreference
             android:key="update_interval"

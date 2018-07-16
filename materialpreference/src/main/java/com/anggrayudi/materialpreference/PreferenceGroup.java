@@ -374,6 +374,11 @@ public abstract class PreferenceGroup extends Preference {
         }
     }
 
+    @Override
+    public final boolean isPersistent() {
+        return false;
+    }
+
     void sortPreferences() {
         synchronized (this) {
             Collections.sort(mPreferenceList);
