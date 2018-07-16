@@ -644,8 +644,9 @@ public class Preference implements Comparable<Preference> {
 
         TextView legacySummaryView = (TextView) holder.findViewById(android.R.id.summary);
         if (legacySummaryView != null) {
-            if (isLegacySummary() && !TextUtils.isEmpty(getSummary())) {
-                legacySummaryView.setText(getSummary());
+            CharSequence summary = getSummary();
+            if (isLegacySummary() && !TextUtils.isEmpty(summary)) {
+                legacySummaryView.setText(summary);
                 legacySummaryView.setVisibility(View.VISIBLE);
             } else {
                 legacySummaryView.setVisibility(View.GONE);
@@ -654,8 +655,9 @@ public class Preference implements Comparable<Preference> {
 
         TextView materialSummaryView = (TextView) holder.findViewById(R.id.material_summary);
         if (materialSummaryView != null) {
-            if (!isLegacySummary() && !TextUtils.isEmpty(getSummary())) {
-                materialSummaryView.setText(getSummary());
+            CharSequence summary = getSummary();
+            if (!isLegacySummary() && !TextUtils.isEmpty(summary)) {
+                materialSummaryView.setText(summary);
                 materialSummaryView.setVisibility(View.VISIBLE);
             } else {
                 materialSummaryView.setVisibility(View.GONE);

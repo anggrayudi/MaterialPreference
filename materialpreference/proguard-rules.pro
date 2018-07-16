@@ -19,10 +19,18 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keepclassmembernames class android.support.v7.preference.PreferenceManager {
-    void setNoCommit(boolean);
-}
 
--keepclassmembernames class android.support.v7.preference.PreferenceFragmentCompat {
-    android.support.v7.preference.PreferenceManager mPreferenceManager;
-}
+-keep public class com.anggrayudi.materialpreference.Preference { *; }
+-keep public class com.anggrayudi.materialpreference.PreferenceScreen { *; }
+-keep public class com.anggrayudi.materialpreference.PreferenceCategory { *; }
+-keep public class com.anggrayudi.materialpreference.SeekBarPreference { *; }
+-keep public class com.anggrayudi.materialpreference.SeekBarDialogPreference { *; }
+-keep public class com.anggrayudi.materialpreference.CheckBoxPreference { *; }
+-keep public class com.anggrayudi.materialpreference.SwitchPreference { *; }
+-keep public class com.anggrayudi.materialpreference.RingtonePreference { *; }
+-keep public class com.anggrayudi.materialpreference.ListPreference { *; }
+-keep public class com.anggrayudi.materialpreference.MultiSelectListPreference { *; }
+-keep public class com.anggrayudi.materialpreference.EditTextPreference { *; }
+-keep public class com.anggrayudi.materialpreference.IndicatorPreference { *; }
+-keep public class com.anggrayudi.materialpreference.FolderPreference { *; }
+-keep public class com.anggrayudi.materialpreference.FilePreference { *; }

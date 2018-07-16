@@ -379,6 +379,11 @@ public abstract class PreferenceGroup extends Preference {
         return false;
     }
 
+    @Override
+    public final boolean isLegacySummary() {
+        return true;
+    }
+
     void sortPreferences() {
         synchronized (this) {
             Collections.sort(mPreferenceList);
@@ -409,8 +414,8 @@ public abstract class PreferenceGroup extends Preference {
 
     /**
      * Interface for PreferenceGroup Adapters to implement so that
-     * {@link android.support.v14.preference.PreferenceFragment#scrollToPreference(String)} and
-     * {@link android.support.v14.preference.PreferenceFragment#scrollToPreference(Preference)} or
+     * {@link PreferenceFragmentMaterial#scrollToPreference(String)} and
+     * {@link PreferenceFragmentMaterial#scrollToPreference(Preference)} or
      * {@link PreferenceFragmentMaterial#scrollToPreference(String)} and
      * {@link PreferenceFragmentMaterial#scrollToPreference(Preference)}
      * can determine the correct scroll position to request.
