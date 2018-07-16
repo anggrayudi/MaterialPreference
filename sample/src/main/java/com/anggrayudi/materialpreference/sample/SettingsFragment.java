@@ -45,11 +45,11 @@ public class SettingsFragment extends PreferenceFragmentMaterial implements
             }
         });
 
-        findPreference("battery_indicator").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        findPreference("account_status").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 new MaterialDialog.Builder(getContext())
-                        .content("Your battery is in health condition.")
+                        .content("Your account has been verified.")
                         .positiveText(android.R.string.ok)
                         .show();
                 return true;

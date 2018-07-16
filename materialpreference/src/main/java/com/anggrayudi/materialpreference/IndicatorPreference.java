@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.res.TypedArrayUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
 
 @SuppressLint("RestrictedApi")
@@ -36,16 +35,6 @@ public class IndicatorPreference extends Preference {
 
     public IndicatorPreference(Context context) {
         this(context, null);
-    }
-
-    @Override
-    public final boolean isPersistent() {
-        return false;
-    }
-
-    @Override
-    public final void setPersistent(boolean persistent) {
-        Log.i(TAG, "IndicatorPreference.setPersistent() always false");
     }
 
     @Override

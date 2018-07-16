@@ -23,7 +23,7 @@
             android:title="Wi-Fi only"
             android:dependency="auto_update" />
 
-        <!-- You can also use android:visible -->
+        <!-- You can also use android:visible="boolean" -->
 
         <ListPreference
             android:key="update_interval"
@@ -93,6 +93,12 @@
             android:entryValues="@array/entries_friend"
             app:summaryNothing="@string/nothing"
             app:bindValueToSummary="true" />
+
+        <IndicatorPreference
+            android:key="account_status"
+            android:title="Verified"
+            android:src="@drawable/baseline_check_circle_black_24"
+            app:tint="?colorAccent" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Advanced">
@@ -109,12 +115,6 @@
             <intent android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
                 android:data="package:com.anggrayudi.materialpreference.sample"/>
         </Preference>
-
-        <IndicatorPreference
-            android:key="battery_indicator"
-            android:title="Battery indicator"
-            android:src="@drawable/baseline_check_circle_black_24"
-            app:tint="?colorAccent" />
     </PreferenceCategory>
 
     <!-- TODO: NExt   -->
