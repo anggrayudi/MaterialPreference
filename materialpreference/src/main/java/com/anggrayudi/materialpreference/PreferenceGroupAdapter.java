@@ -27,6 +27,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.util.ListUpdateCallback;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -303,9 +304,9 @@ public class PreferenceGroupAdapter implements
         if (preference.getParent() == null || preference instanceof PreferenceCategory)
             return mRootParent;
 
-        if (preference.getParent().mPreferenceViewHolder.itemView == null)
-            throw new IllegalStateException("Make sure that you wrap " + preference.getClass().getSimpleName()
-                    + " inside PreferenceCategory from the XML.");
+        if (preference.getParent().mPreferenceViewHolder == null)
+            throw new InflateException("Make sure that you wrap " + preference.getClass().getSimpleName()
+                    + " inside PreferenceCategory in the XML.");
 
         return preference.getParent().mPreferenceViewHolder.itemView.findViewById(android.R.id.content);
     }
