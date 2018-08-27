@@ -9,6 +9,10 @@ Available from API 17.
 ## Usage
 
 ```groovy
+repositories {
+    maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
+}
+
 dependencies {
     implementation 'com.anggrayudi:materialpreference:0.0.5'
 }
