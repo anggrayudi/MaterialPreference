@@ -10,7 +10,7 @@ Available from API 17.
 
 ```groovy
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:0.0.4'
+    implementation 'com.anggrayudi:materialpreference:0.0.5'
 }
 ```
 
