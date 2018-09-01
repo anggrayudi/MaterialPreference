@@ -42,6 +42,13 @@ public class IndicatorPreference extends Preference {
         return true;
     }
 
+    @Override
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+        ImageView imageView = (ImageView) holder.findViewById(android.R.id.icon1);
+        imageView.setImageDrawable(getDrawable());
+    }
+
     public void setDrawable(Drawable drawable) {
         mDrawable = drawable;
         setTint(getTint());
@@ -56,8 +63,7 @@ public class IndicatorPreference extends Preference {
         if (getDrawable() != null)
             getDrawable().mutate().setColorFilter(mTint, PorterDuff.Mode.SRC_IN);
 
-        ImageView imageView = mPreferenceViewHolder.itemView.findViewById(android.R.id.icon1);
-        imageView.setImageDrawable(getDrawable());
+        notifyChanged();
     }
 
     public int getTint() {

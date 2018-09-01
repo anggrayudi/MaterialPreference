@@ -24,8 +24,7 @@
             android:dependency="auto_update"
             android:entries="@array/entries_update_interval"
             android:entryValues="@array/entries_update_interval"
-            app:bindValueToSummary="true"
-            app:legacySummary="false" />
+            app:bindValueToSummary="true"/>
 
         <PreferenceScreen
             android:key="screen_notification"

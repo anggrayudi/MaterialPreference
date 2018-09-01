@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 group = 'com.anggrayudi'
-version = '0.0.5'
+version = '0.0.7'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -23,8 +23,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-//    resourcePrefix 'mp_'
 }
 
 dependencies {
@@ -37,7 +35,6 @@ dependencies {
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
     api 'commons-io:commons-io:2.6'
-
 }
 
 ext {

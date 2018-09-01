@@ -169,6 +169,7 @@
         <attr name="bindValueToSummary" format="boolean" />
         <attr name="android:visible" format="boolean" />
         <attr name="titleTextColor" />
+        <attr name="android:fontFamily"/>
     </declare-styleable>
 
     <!-- Base attributes available to CheckBoxPreference. -->

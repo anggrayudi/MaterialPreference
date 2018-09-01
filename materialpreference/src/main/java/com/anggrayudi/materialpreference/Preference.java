@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -32,6 +33,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.text.TextUtils;
@@ -155,6 +157,8 @@ public class Preference implements Comparable<Preference> {
     private boolean mIconSpaceReserved;
     private boolean mLegacySummary;
     private boolean mBindValueToSummary;
+    private Typeface mFontFamily;
+    private Object mTag;
 
     /**
      * @see #setShouldDisableView(boolean)
@@ -323,14 +327,19 @@ public class Preference implements Comparable<Preference> {
         mDependencyKey = TypedArrayUtils.getString(a, R.styleable.Preference_dependency,
                 R.styleable.Preference_android_dependency);
 
+        int fontResId = TypedArrayUtils.getResourceId(a, R.styleable.Preference_android_fontFamily,
+                R.styleable.Preference_android_fontFamily, 0);
+        mFontFamily = fontResId > 0 ? ResourcesCompat.getFont(getContext(), fontResId) : null;
+
         mBindValueToSummary = a.getBoolean(R.styleable.Preference_bindValueToSummary, true);
 
         mTintIcon = a.getColor(R.styleable.Preference_tintIcon, Color.TRANSPARENT);
         mTitleTextColor = a.getColor(R.styleable.Preference_titleTextColor, 0);
 
         mLegacySummary = a.getBoolean(R.styleable.Preference_legacySummary, false);
-        mLegacySummary = (this instanceof TwoStatePreference || this instanceof PreferenceGroup)
-                && mLegacySummary && !(this instanceof SeekBarPreference);
+        if (!getClass().equals(Preference.class))
+            mLegacySummary = this instanceof TwoStatePreference || this instanceof PreferenceGroup
+                    || mLegacySummary && !(this instanceof SeekBarPreference);
 
         if (a.hasValue(R.styleable.Preference_defaultValue)) {
             mDefaultValue = onGetDefaultValue(a, R.styleable.Preference_defaultValue);
@@ -513,9 +522,11 @@ public class Preference implements Comparable<Preference> {
      * @param enable <code>true</code> if you want to put the summary horizontally with this preference's title
      */
     public void setLegacySummary(boolean enable) {
-        mLegacySummary = (this instanceof TwoStatePreference || this instanceof PreferenceGroup)
-                && enable && !(this instanceof SeekBarPreference);
-        notifyChanged();
+        if (!getClass().equals(Preference.class)) {
+            mLegacySummary = this instanceof TwoStatePreference || this instanceof PreferenceGroup
+                    || enable && !(this instanceof SeekBarPreference);
+            notifyChanged();
+        }
     }
 
     public boolean isLegacySummary() {
@@ -534,6 +545,14 @@ public class Preference implements Comparable<Preference> {
 
     public boolean isBindValueToSummary() {
         return mBindValueToSummary;
+    }
+
+    public void setTag(Object tag) {
+        mTag = tag;
+    }
+
+    public Object getTag() {
+        return mTag;
     }
 
     /**
@@ -628,6 +647,9 @@ public class Preference implements Comparable<Preference> {
 
         TextView titleView = (TextView) holder.findViewById(android.R.id.title);
         if (titleView != null) {
+            if (mFontFamily != null)
+                titleView.setTypeface(mFontFamily);
+
             final CharSequence title = getTitle();
             if (!TextUtils.isEmpty(title)) {
                 titleView.setText(title);
@@ -644,6 +666,9 @@ public class Preference implements Comparable<Preference> {
 
         TextView legacySummaryView = (TextView) holder.findViewById(android.R.id.summary);
         if (legacySummaryView != null) {
+            if (mFontFamily != null)
+                legacySummaryView.setTypeface(mFontFamily);
+
             CharSequence summary = getSummary();
             if (isLegacySummary() && !TextUtils.isEmpty(summary)) {
                 legacySummaryView.setText(summary);
@@ -655,6 +680,9 @@ public class Preference implements Comparable<Preference> {
 
         TextView materialSummaryView = (TextView) holder.findViewById(R.id.material_summary);
         if (materialSummaryView != null) {
+            if (mFontFamily != null)
+                materialSummaryView.setTypeface(mFontFamily);
+
             CharSequence summary = getSummary();
             if (!isLegacySummary() && !TextUtils.isEmpty(summary)) {
                 materialSummaryView.setText(summary);
