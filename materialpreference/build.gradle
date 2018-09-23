@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 group = 'com.anggrayudi'
-version = '0.0.7'
+version = '0.0.8'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -12,7 +12,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName version
-
+        consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
