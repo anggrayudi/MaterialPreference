@@ -16,6 +16,8 @@
         <!-- You can also use:
         android:visible="boolean"
         app:titleTextColor
+
+        Use app:reverseDependencyState="true" to disable Preference when dependency's value is 'true'
         -->
 
         <ListPreference

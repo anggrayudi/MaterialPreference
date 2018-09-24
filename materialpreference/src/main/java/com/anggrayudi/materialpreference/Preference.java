@@ -149,6 +149,7 @@ public class Preference implements Comparable<Preference> {
     private boolean mPersistent = true;
     private String mDependencyKey;
     private Object mDefaultValue;
+    private boolean mReverseDependencyState;
     private boolean mDependencyMet = true;
     private boolean mParentDependencyMet = true;
     private boolean mVisible = true;
@@ -332,6 +333,7 @@ public class Preference implements Comparable<Preference> {
         mFontFamily = fontResId > 0 ? ResourcesCompat.getFont(getContext(), fontResId) : null;
 
         mBindValueToSummary = a.getBoolean(R.styleable.Preference_bindValueToSummary, true);
+        mReverseDependencyState = a.getBoolean(R.styleable.Preference_reverseDependencyState, false);
 
         mTintIcon = a.getColor(R.styleable.Preference_tintIcon, Color.TRANSPARENT);
         mTitleTextColor = a.getColor(R.styleable.Preference_titleTextColor, 0);
@@ -545,6 +547,18 @@ public class Preference implements Comparable<Preference> {
 
     public boolean isBindValueToSummary() {
         return mBindValueToSummary;
+    }
+
+    public void setReverseDependencyState(boolean reverse) {
+        if (reverse != mReverseDependencyState) {
+            mReverseDependencyState = reverse;
+            notifyDependencyChange(shouldDisableDependents());
+            notifyChanged();
+        }
+    }
+
+    public boolean isReverseDependencyState() {
+        return mReverseDependencyState;
     }
 
     public void setTag(Object tag) {
@@ -937,7 +951,7 @@ public class Preference implements Comparable<Preference> {
      * @return True if this Preference is enabled, false otherwise.
      */
     public boolean isEnabled() {
-        return mEnabled && mDependencyMet && mParentDependencyMet;
+        return mEnabled && (isReverseDependencyState() != mDependencyMet && mParentDependencyMet);
     }
 
     /**

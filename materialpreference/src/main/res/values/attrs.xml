@@ -140,6 +140,8 @@
              Preference is not set or is off, this Preference will be disabled. -->
         <attr name="dependency" format="string" />
         <attr name="android:dependency" />
+        <!-- False will enable, True will disable -->
+        <attr name="reverseDependencyState" format="boolean"/>
         <!-- Whether the Preference stores its value to the shared preferences. -->
         <attr name="persistent" format="boolean" />
         <attr name="android:persistent" />

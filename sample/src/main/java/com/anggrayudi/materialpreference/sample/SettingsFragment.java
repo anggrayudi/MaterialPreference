@@ -83,8 +83,8 @@ public class SettingsFragment extends PreferenceFragmentMaterial implements
     public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
         switch (key) {
             case "auto_update":
-                boolean visible = preferences.getBoolean(key, true);
-                findPreference("wifi_only").setVisible(visible);
+//                boolean visible = preferences.getBoolean(key, true);
+//                findPreference("wifi_only").setVisible(visible);
                 break;
         }
     }
