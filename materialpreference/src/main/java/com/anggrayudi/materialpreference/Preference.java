@@ -156,6 +156,27 @@ DOCS TEMPLATE
  </tr><tr>
  <td><code>android:iconSpaceReserved</code></td>
  <td>Boolean</td>
+ </tr><tr>
+ <td><code>android:fontFamily</code></td>
+ <td>Font</td>
+ </tr><tr>
+ <td><code>android:visible</code></td>
+ <td>Boolean</td>
+ </tr><tr>
+ <td><code>app:titleTextColor</code></td>
+ <td>Color</td>
+ </tr><tr>
+ <td><code>app:tintIcon</code></td>
+ <td>Color</td>
+ </tr><tr>
+ <td><code>app:reverseDependencyState</code></td>
+ <td>Boolean</td>
+ </tr><tr>
+ <td><code>app:legacySummary</code></td>
+ <td>Boolean</td>
+ </tr><tr>
+ <td><code>app:bindValueToSummary</code></td>
+ <td>Boolean</td>
  </tr>
  </table>
  */
