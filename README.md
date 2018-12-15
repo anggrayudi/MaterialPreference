@@ -1,7 +1,8 @@
 # MaterialPreference [ ![Download](https://api.bintray.com/packages/anggrayudi/maven/materialpreference/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference/_latestVersion)
-A library designed to replace default preferences on Android framework with something beauty.
-This library combines libraries from `android.support.v7.preference` and `net.xpece.android.support.preference`.
-Available from API 17.  
+A library designed to people who love simplicity. Hate the old preference style? Try this library.
+
+It combines libraries from `android.support.v7.preference` and `net.xpece.android.support.preference`.
+Available from API 17.
 
 ![Alt text](art/screenshot.png?raw=true "Material Preference")
 
@@ -14,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:0.0.9'
+    implementation 'com.anggrayudi:materialpreference:1.0.0'
 }
 ```
 
