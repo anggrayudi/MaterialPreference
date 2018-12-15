@@ -35,9 +35,21 @@ import com.anggrayudi.materialpreference.dialog.DialogPreference;
  * <p>
  * This preference will store a string into the SharedPreferences. This string will be the value
  * from the {@link #setEntryValues(CharSequence[])} array.
- *
- * @attr name android:entries
- * @attr name android:entryValues
+ * <hr>
+ <table>
+ <tr>
+ <th>Attribute</th>
+ <th>Value Type</th>
+ </tr><tr>
+ <td><code>android:entries</code></td>
+ <td>String array</td>
+ </tr><tr>
+ <td><code>android:entryValues</code></td>
+ <td>String array</td>
+ </tr><tr>
+ <td><code>app:entryIcons</code></td>
+ <td>Drawable array</td>
+ </tr>
  */
 @SuppressLint("RestrictedApi")
 public class ListPreference extends DialogPreference {
@@ -51,26 +63,16 @@ public class ListPreference extends DialogPreference {
 
     public ListPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-
-        TypedArray a = context.obtainStyledAttributes(
-                attrs, R.styleable.ListPreference, defStyleAttr, defStyleRes);
-
-        mEntries = TypedArrayUtils.getTextArray(a, R.styleable.ListPreference_entries,
-                R.styleable.ListPreference_android_entries);
-
-        mEntryValues = TypedArrayUtils.getTextArray(a, R.styleable.ListPreference_entryValues,
-                R.styleable.ListPreference_android_entryValues);
-
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ListPreference, defStyleAttr, defStyleRes);
+        mEntries = a.getTextArray(R.styleable.ListPreference_android_entries);
+        mEntryValues = a.getTextArray(R.styleable.ListPreference_android_entryValues);
         a.recycle();
 
         /* Retrieve the Preference summary attribute since it's private
          * in the Preference class.
          */
-        a = context.obtainStyledAttributes(attrs,
-                R.styleable.Preference, defStyleAttr, defStyleRes);
-
-        mSummary = TypedArrayUtils.getString(a, R.styleable.Preference_summary,
-                R.styleable.Preference_android_summary);
+        a = context.obtainStyledAttributes(attrs, R.styleable.Preference, defStyleAttr, defStyleRes);
+        mSummary = a.getString(R.styleable.Preference_android_summary);
         if (isBindValueToSummary() && TextUtils.isEmpty(mSummary))
             mSummary = "%s";
 

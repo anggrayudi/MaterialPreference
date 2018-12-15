@@ -49,7 +49,39 @@ import java.util.List;
 import java.util.Set;
 
 import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
-
+/*
+DOCS TEMPLATE
+ <table>
+ <tr>
+ <th>Attribute</th>
+ <th>Value Type</th>
+ </tr><tr>
+ <td><code></code></td>
+ <td></td>
+ </tr><tr>
+ <td><code></code></td>
+ <td></td>
+ </tr><tr>
+ <td><code></code></td>
+ <td></td>
+ </tr><tr>
+ <td><code></code></td>
+ <td></td>
+ </tr><tr>
+ <td><code></code></td>
+ <td></td>
+ </tr><tr>
+ <td><code></code></td>
+ <td></td>
+ </tr><tr>
+ <td><code></code></td>
+ <td></td>
+ </tr><tr>
+ <td><code></code></td>
+ <td></td>
+ </tr>
+ </table>
+ */
 /**
  * Represents the basic Preference UI building
  * block displayed by a {@link PreferenceFragmentMaterial} in the form of a
@@ -65,29 +97,67 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
  * {@link SharedPreferences}. It is up to the subclass to decide how to store
  * the value.
  *
- * <div class="special reference">
+ * <div>
  * <h3>Developer Guides</h3>
  * <p>For information about building a settings UI with Preferences,
  * read the <a href="{@docRoot}guide/topics/ui/settings.html">Settings</a>
  * guide.</p>
  * </div>
- *
- * @attr name android:icon
- * @attr name android:key
- * @attr name android:title
- * @attr name android:summary
- * @attr name android:order
- * @attr name android:fragment
- * @attr name android:layout
- * @attr name android:widgetLayout
- * @attr name android:enabled
- * @attr name android:selectable
- * @attr name android:dependency
- * @attr name android:persistent
- * @attr name android:defaultValue
- * @attr name android:shouldDisableView
- * @attr name android:singleLineTitle
- * @attr name android:iconSpaceReserved
+ *<hr>
+ <table>
+ <tr>
+ <th>Attribute</th>
+ <th>Value Type</th>
+ </tr><tr>
+ <td><code>android:key</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:title</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:summary</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:order</code></td>
+ <td>Int</td>
+ </tr><tr>
+ <td><code>android:fragment</code></td>
+ <td>{@link android.support.v4.app.Fragment}</td>
+ </tr><tr>
+ <td><code>android:layout</code></td>
+ <td>Layout</td>
+ </tr><tr>
+ <td><code>android:widgetLayout</code></td>
+ <td>Layout</td>
+ </tr><tr>
+ <td><code>android:icon</code></td>
+ <td>Drawable</td>
+ </tr><tr>
+ <td><code>android:enabled</code></td>
+ <td>Boolean</td>
+ </tr><tr>
+ <td><code>android:selectable</code></td>
+ <td>Boolean</td>
+ </tr><tr>
+ <td><code>android:dependency</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:persistent</code></td>
+ <td>Boolean</td>
+ </tr><tr>
+ <td><code>android:defaultValue</code></td>
+ <td>String, Int, Float, Boolean</td>
+ </tr><tr>
+ <td><code>android:shouldDisableView</code></td>
+ <td>Boolean</td>
+ </tr><tr>
+ <td><code>android:singleLineTitle</code></td>
+ <td>Boolean</td>
+ </tr><tr>
+ <td><code>android:iconSpaceReserved</code></td>
+ <td>Boolean</td>
+ </tr>
+ </table>
  */
 @SuppressLint("RestrictedApi")
 public class Preference implements Comparable<Preference> {
@@ -289,47 +359,21 @@ public class Preference implements Comparable<Preference> {
         final TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.Preference, defStyleAttr, defStyleRes);
 
-        mIconResId = TypedArrayUtils.getResourceId(a, R.styleable.Preference_icon,
-                R.styleable.Preference_android_icon, 0);
+        mIconResId = a.getResourceId(R.styleable.Preference_android_icon, 0);
+        mKey = a.getString(R.styleable.Preference_android_key);
+        mTitle = a.getText(R.styleable.Preference_android_title);
+        mSummary = a.getText(R.styleable.Preference_android_summary);
+        mOrder = a.getInt(R.styleable.Preference_android_order, DEFAULT_ORDER);
+        mFragment = a.getString(R.styleable.Preference_android_fragment);
+        mLayoutResId = a.getResourceId(R.styleable.Preference_android_layout, R.layout.preference);
+        mWidgetLayoutResId = a.getResourceId(R.styleable.Preference_android_widgetLayout, 0);
+        mEnabled = a.getBoolean(R.styleable.Preference_android_enabled, true);
+        mSelectable = a.getBoolean(R.styleable.Preference_android_selectable, true);
+        mPersistent = a.getBoolean(R.styleable.Preference_android_persistent, true);
+        mVisible = a.getBoolean(R.styleable.Preference_android_visible, true);
+        mDependencyKey = a.getString(R.styleable.Preference_android_dependency);
 
-        mKey = TypedArrayUtils.getString(a, R.styleable.Preference_key,
-                R.styleable.Preference_android_key);
-
-        mTitle = TypedArrayUtils.getText(a, R.styleable.Preference_title,
-                R.styleable.Preference_android_title);
-
-        mSummary = TypedArrayUtils.getText(a, R.styleable.Preference_summary,
-                R.styleable.Preference_android_summary);
-
-        mOrder = TypedArrayUtils.getInt(a, R.styleable.Preference_order,
-                R.styleable.Preference_android_order, DEFAULT_ORDER);
-
-        mFragment = TypedArrayUtils.getString(a, R.styleable.Preference_fragment,
-                R.styleable.Preference_android_fragment);
-
-        mLayoutResId = TypedArrayUtils.getResourceId(a, R.styleable.Preference_layout,
-                R.styleable.Preference_android_layout, R.layout.preference);
-
-        mWidgetLayoutResId = TypedArrayUtils.getResourceId(a, R.styleable.Preference_widgetLayout,
-                R.styleable.Preference_android_widgetLayout, 0);
-
-        mEnabled = TypedArrayUtils.getBoolean(a, R.styleable.Preference_enabled,
-                R.styleable.Preference_android_enabled, true);
-
-        mSelectable = TypedArrayUtils.getBoolean(a, R.styleable.Preference_selectable,
-                R.styleable.Preference_android_selectable, true);
-
-        mPersistent = TypedArrayUtils.getBoolean(a, R.styleable.Preference_persistent,
-                R.styleable.Preference_android_persistent, true);
-
-        mVisible = TypedArrayUtils.getBoolean(a, R.styleable.Preference_android_visible,
-                R.styleable.Preference_android_visible, true);
-
-        mDependencyKey = TypedArrayUtils.getString(a, R.styleable.Preference_dependency,
-                R.styleable.Preference_android_dependency);
-
-        int fontResId = TypedArrayUtils.getResourceId(a, R.styleable.Preference_android_fontFamily,
-                R.styleable.Preference_android_fontFamily, 0);
+        int fontResId = a.getResourceId(R.styleable.Preference_android_fontFamily, 0);
         mFontFamily = fontResId > 0 ? ResourcesCompat.getFont(getContext(), fontResId) : null;
 
         mBindValueToSummary = a.getBoolean(R.styleable.Preference_bindValueToSummary, true);
@@ -343,24 +387,20 @@ public class Preference implements Comparable<Preference> {
             mLegacySummary = this instanceof TwoStatePreference || this instanceof PreferenceGroup
                     || mLegacySummary && !(this instanceof SeekBarPreference);
 
-        if (a.hasValue(R.styleable.Preference_defaultValue)) {
-            mDefaultValue = onGetDefaultValue(a, R.styleable.Preference_defaultValue);
+        if (a.hasValue(R.styleable.Preference_android_defaultValue)) {
+            mDefaultValue = onGetDefaultValue(a, R.styleable.Preference_android_defaultValue);
         } else if (a.hasValue(R.styleable.Preference_android_defaultValue)) {
             mDefaultValue = onGetDefaultValue(a, R.styleable.Preference_android_defaultValue);
         }
 
-        mShouldDisableView =
-                TypedArrayUtils.getBoolean(a, R.styleable.Preference_shouldDisableView,
-                        R.styleable.Preference_android_shouldDisableView, true);
+        mShouldDisableView = a.getBoolean(R.styleable.Preference_android_shouldDisableView, true);
 
-        mHasSingleLineTitleAttr = a.hasValue(R.styleable.Preference_singleLineTitle);
+        mHasSingleLineTitleAttr = a.hasValue(R.styleable.Preference_android_singleLineTitle);
         if (mHasSingleLineTitleAttr) {
-            mSingleLineTitle = TypedArrayUtils.getBoolean(a, R.styleable.Preference_singleLineTitle,
-                R.styleable.Preference_android_singleLineTitle, true);
+            mSingleLineTitle = a.getBoolean(R.styleable.Preference_android_singleLineTitle, true);
         }
 
-        mIconSpaceReserved = TypedArrayUtils.getBoolean(a, R.styleable.Preference_iconSpaceReserved,
-                R.styleable.Preference_android_iconSpaceReserved, false);
+        mIconSpaceReserved = a.getBoolean(R.styleable.Preference_android_iconSpaceReserved, false);
 
         a.recycle();
     }

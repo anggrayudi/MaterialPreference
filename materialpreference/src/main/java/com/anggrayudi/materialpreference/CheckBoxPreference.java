@@ -30,14 +30,25 @@ import android.widget.CompoundButton;
 import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
- * A {@link Preference} that provides checkbox widget
- * functionality.
+ * A {@link Preference} that provides checkbox widget functionality.
  * <p>
  * This preference will store a boolean into the SharedPreferences.
- *
- * @attr name android:summaryOff
- * @attr name android:summaryOn
- * @attr name android:disableDependentsState
+ * <hr>
+ <table>
+ <tr>
+ <th>Attribute</th>
+ <th>Value Type</th>
+ </tr><tr>
+ <td><code>android:summaryOff</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:summaryOn</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:disableDependentsState</code></td>
+ <td>Boolean</td>
+ </tr>
+ </table>
  */
 @SuppressLint("RestrictedApi")
 public class CheckBoxPreference extends TwoStatePreference {
@@ -67,15 +78,13 @@ public class CheckBoxPreference extends TwoStatePreference {
         final TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.CheckBoxPreference, defStyleAttr, defStyleRes);
 
-        setSummaryOn(TypedArrayUtils.getString(a, R.styleable.CheckBoxPreference_summaryOn,
+        setSummaryOn(TypedArrayUtils.getString(a, R.styleable.CheckBoxPreference_android_summaryOn,
                 R.styleable.CheckBoxPreference_android_summaryOn));
 
-        setSummaryOff(TypedArrayUtils.getString(a, R.styleable.CheckBoxPreference_summaryOff,
+        setSummaryOff(TypedArrayUtils.getString(a, R.styleable.CheckBoxPreference_android_summaryOff,
                 R.styleable.CheckBoxPreference_android_summaryOff));
 
-        setDisableDependentsState(TypedArrayUtils.getBoolean(a,
-                R.styleable.CheckBoxPreference_disableDependentsState,
-                R.styleable.CheckBoxPreference_android_disableDependentsState, false));
+        setDisableDependentsState(a.getBoolean(R.styleable.CheckBoxPreference_android_disableDependentsState, false));
 
         a.recycle();
     }
@@ -98,9 +107,6 @@ public class CheckBoxPreference extends TwoStatePreference {
         syncSummaryView(holder);
     }
 
-    /**
-     * @hide
-     */
     @RestrictTo(LIBRARY_GROUP)
     @Override
     protected void performClick(View view) {

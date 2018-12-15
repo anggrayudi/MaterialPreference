@@ -40,6 +40,25 @@ import java.util.TreeSet;
  * This preference will store a set of strings into the SharedPreferences.
  * This set will contain one or more values from the
  * {@link #setEntryValues(CharSequence[])} array.
+ * <hr>
+ <table>
+ <tr>
+ <th>Attribute</th>
+ <th>Value Type</th>
+ </tr><tr>
+ <td><code>android:entries</code></td>
+ <td>String array</td>
+ </tr><tr>
+ <td><code>android:entryValues</code></td>
+ <td>String array</td>
+ </tr><tr>
+ <td><code>app:entryIcons</code></td>
+ <td>Drawable array</td>
+ </tr><tr>
+ <td><code>app:summaryNothing</code></td>
+ <td>String</td>
+ </tr>
+ </table>
  */
 public class MultiSelectListPreference extends DialogPreference {
     private CharSequence[] mEntries;

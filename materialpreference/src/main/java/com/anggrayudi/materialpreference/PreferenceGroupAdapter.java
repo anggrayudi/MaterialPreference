@@ -304,9 +304,14 @@ public class PreferenceGroupAdapter implements
         if (preference.getParent() == null || preference instanceof PreferenceCategory)
             return mRootParent;
 
-        if (preference.getParent().mPreferenceViewHolder == null)
-            throw new InflateException("Make sure that you wrap " + preference.getClass().getSimpleName()
-                    + " inside PreferenceCategory in the XML.");
+        if (preference.getParent().mPreferenceViewHolder == null) {
+            String message = "Make sure that you wrap " + preference.getClass().getSimpleName()
+                    + " inside PreferenceCategory in the XML.";
+            if (preference.getKey() != null)
+                message += " Key=\"" + preference.getKey() + "\"";
+
+            throw new InflateException(message);
+        }
 
         return preference.getParent().mPreferenceViewHolder.itemView.findViewById(android.R.id.content);
     }

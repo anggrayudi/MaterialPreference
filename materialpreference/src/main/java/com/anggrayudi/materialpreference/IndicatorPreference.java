@@ -9,6 +9,23 @@ import android.support.v4.content.res.TypedArrayUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+/**
+ * Used to indicate status of something, e.g. verified account is shown as check icon.
+ * <hr>
+ *  <table>
+ *  <tr>
+ *  <th>Attribute</th>
+ *  <th>Value Type</th>
+ *  </tr><tr>
+ *  <td><code>android:src</code></td>
+ *  <td>Drawable</td>
+ *  </tr><tr>
+ *  <td><code>app:tint</code></td>
+ *  <td>Color</td>
+ *  </tr><tr>
+ *  </tr>
+ *  </table>
+ */
 @SuppressLint("RestrictedApi")
 public class IndicatorPreference extends Preference {
 

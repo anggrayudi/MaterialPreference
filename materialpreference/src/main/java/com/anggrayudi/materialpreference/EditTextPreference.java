@@ -32,12 +32,39 @@ import com.anggrayudi.materialpreference.dialog.DialogPreference;
 
 /**
  * A {@link Preference} that allows for string
- * input.
- * <p>
- * It is a subclass of {@link DialogPreference} and shows the {@link EditText}
- * in a dialog.
- * <p>
- * This preference will store a string into the SharedPreferences.
+ * input. It is a subclass of {@link DialogPreference} and shows the {@link EditText}
+ * in a dialog. This preference will store a string into the SharedPreferences.
+ * <hr>
+<table>
+    <tr>
+      <th>Attribute</th>
+      <th>Value Type</th>
+    </tr>
+    <tr>
+        <td><code>android:hint</code></td>
+        <td>String</td>
+    </tr>
+    <tr>
+        <td><code>android:inputType</code></td>
+        <td>{@link InputType}</td>
+    </tr>
+    <tr>
+        <td><code>android:dialogMessage</code></td>
+        <td>String</td>
+    </tr>
+    <tr>
+        <td><code>android:maxLength</code></td>
+        <td>Int</td>
+    </tr>
+    <tr>
+       <td><code>app:minLength</code></td>
+        <td>Int</td>
+    </tr>
+    <tr>
+        <td><code>app:counterEnabled</code></td>
+        <td>Boolean</td>
+    </tr>
+  </table>
  */
 @SuppressLint("RestrictedApi")
 public class EditTextPreference extends DialogPreference {

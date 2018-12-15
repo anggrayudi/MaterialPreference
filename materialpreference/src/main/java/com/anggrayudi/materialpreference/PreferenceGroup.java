@@ -22,7 +22,6 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RestrictTo;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v4.util.SimpleArrayMap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -75,16 +74,9 @@ public abstract class PreferenceGroup extends Preference {
 
     public PreferenceGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-
         mPreferenceList = new ArrayList<>();
-
-        final TypedArray a = context.obtainStyledAttributes(
-                attrs, R.styleable.PreferenceGroup, defStyleAttr, defStyleRes);
-
-        mOrderingAsAdded =
-                TypedArrayUtils.getBoolean(a, R.styleable.PreferenceGroup_orderingFromXml,
-                        R.styleable.PreferenceGroup_orderingFromXml, true);
-
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PreferenceGroup, defStyleAttr, defStyleRes);
+        mOrderingAsAdded = a.getBoolean(R.styleable.PreferenceGroup_android_orderingFromXml, true);
         a.recycle();
     }
 

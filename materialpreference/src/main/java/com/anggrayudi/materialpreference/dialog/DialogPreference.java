@@ -32,13 +32,31 @@ import com.anggrayudi.materialpreference.R;
  * A base class for {@link Preference} objects that are
  * dialog-based. These preferences will, when clicked, open a dialog showing the
  * actual preference controls.
- *
- * @attr name android:dialogTitle
- * @attr name android:dialogMessage
- * @attr name android:dialogIcon
- * @attr name android:dialogLayout
- * @attr name android:positiveButtonText
- * @attr name android:negativeButtonText
+ * <hr>
+ <table>
+ <tr>
+ <th>Attribute</th>
+ <th>Value Type</th>
+ </tr><tr>
+ <td><code>android:dialogTitle</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:dialogMessage</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:dialogIcon</code></td>
+ <td>Drawable</td>
+ </tr><tr>
+ <td><code>android:dialogLayout</code></td>
+ <td>Layout</td>
+ </tr><tr>
+ <td><code>android:positiveButtonText</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:negativeButtonText</code></td>
+ <td>String</td>
+ </tr>
+ </table>
  */
 @SuppressLint("RestrictedApi")
 public abstract class DialogPreference extends Preference {
@@ -54,39 +72,22 @@ public abstract class DialogPreference extends Preference {
     private CharSequence mNegativeButtonText;
     private int mDialogLayoutResId;
 
-    public DialogPreference(
-            Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public DialogPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
 
-        final TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.DialogPreference, defStyleAttr, defStyleRes);
-
-        mDialogTitle = TypedArrayUtils.getString(a, R.styleable.DialogPreference_dialogTitle,
-                R.styleable.DialogPreference_android_dialogTitle);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DialogPreference, defStyleAttr, defStyleRes);
+        mDialogTitle = a.getString(R.styleable.DialogPreference_android_dialogTitle);
         if (mDialogTitle == null) {
             // Fall back on the regular title of the preference
             // (the one that is seen in the list)
             mDialogTitle = getTitle();
         }
 
-        mDialogMessage = TypedArrayUtils.getString(a, R.styleable.DialogPreference_dialogMessage,
-                R.styleable.DialogPreference_android_dialogMessage);
-
-        mDialogIcon = TypedArrayUtils.getDrawable(a, R.styleable.DialogPreference_dialogIcon,
-                R.styleable.DialogPreference_android_dialogIcon);
-
-        mPositiveButtonText = TypedArrayUtils.getString(a,
-                R.styleable.DialogPreference_positiveButtonText,
-                R.styleable.DialogPreference_android_positiveButtonText);
-
-        mNegativeButtonText = TypedArrayUtils.getString(a,
-                R.styleable.DialogPreference_negativeButtonText,
-                R.styleable.DialogPreference_android_negativeButtonText);
-
-        mDialogLayoutResId = TypedArrayUtils.getResourceId(a,
-                R.styleable.DialogPreference_dialogLayout,
-                R.styleable.DialogPreference_android_dialogLayout, 0);
-
+        mDialogMessage = a.getString(R.styleable.DialogPreference_android_dialogMessage);
+        mDialogIcon = a.getDrawable(R.styleable.DialogPreference_android_dialogIcon);
+        mPositiveButtonText = a.getString(R.styleable.DialogPreference_android_positiveButtonText);
+        mNegativeButtonText = a.getString(R.styleable.DialogPreference_android_negativeButtonText);
+        mDialogLayoutResId = a.getResourceId(R.styleable.DialogPreference_android_dialogLayout, 0);
         a.recycle();
     }
 

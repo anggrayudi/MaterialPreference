@@ -4,6 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * UNDER CONSTRUCTION. DO NOT USE!
+ *  <table>
+ *  <tr>
+ *  <th>Attribute</th>
+ *  <th>Value Type</th>
+ *  </tr><tr>
+ *  <td><code>app:defaultFolder</code></td>
+ *  <td>{@link FolderType} => external, download, dcim, alarm, movies, music, notifications, pictures, podcasts, ringtones, documents</td>
+ *  </tr>
+ *  </table>
+ */
 @SuppressLint("RestrictedApi")
 public class FolderPreference extends Preference implements Preference.OnPreferenceClickListener {
 

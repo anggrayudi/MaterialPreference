@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.RestrictTo;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
@@ -35,12 +34,28 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 * A {@link Preference} that provides a two-state toggleable option.
 * <p>
 * This preference will store a boolean into the SharedPreferences.
-*
-* @attr name android:summaryOff
-* @attr name android:summaryOn
-* @attr name android:switchTextOff
-* @attr name android:switchTextOn
-* @attr name android:disableDependentsState
+ * <hr>
+ <table>
+ <tr>
+ <th>Attribute</th>
+ <th>Value Type</th>
+ </tr><tr>
+ <td><code>android:summaryOff</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:summaryOn</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:switchTextOff</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:switchTextOn</code></td>
+ <td>String</td>
+ </tr><tr>
+ <td><code>android:disableDependentsState</code></td>
+ <td>Boolean</td>
+ </tr>
+ </table>
 */
 @SuppressLint("RestrictedApi")
 public class SwitchPreference extends TwoStatePreference {
@@ -77,31 +92,14 @@ public class SwitchPreference extends TwoStatePreference {
      *        defStyleAttr is 0 or can not be found in the theme. Can be 0
      *        to not look for defaults.
      */
-    public SwitchPreference(Context context, AttributeSet attrs, int defStyleAttr,
-                            int defStyleRes) {
+    public SwitchPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-
-        TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.SwitchPreference, defStyleAttr, defStyleRes);
-
-        setSummaryOn(TypedArrayUtils.getString(a, R.styleable.SwitchPreference_summaryOn,
-                R.styleable.SwitchPreference_android_summaryOn));
-
-        setSummaryOff(TypedArrayUtils.getString(a, R.styleable.SwitchPreference_summaryOff,
-                R.styleable.SwitchPreference_android_summaryOff));
-
-        setSwitchTextOn(TypedArrayUtils.getString(a,
-                R.styleable.SwitchPreference_switchTextOn,
-                R.styleable.SwitchPreference_android_switchTextOn));
-
-        setSwitchTextOff(TypedArrayUtils.getString(a,
-                R.styleable.SwitchPreference_switchTextOff,
-                R.styleable.SwitchPreference_android_switchTextOff));
-
-        setDisableDependentsState(TypedArrayUtils.getBoolean(a,
-                R.styleable.SwitchPreference_disableDependentsState,
-                R.styleable.SwitchPreference_android_disableDependentsState, false));
-
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwitchPreference, defStyleAttr, defStyleRes);
+        setSummaryOn(a.getString(R.styleable.SwitchPreference_android_summaryOn));
+        setSummaryOff(a.getString(R.styleable.SwitchPreference_android_summaryOff));
+        setSwitchTextOn(a.getString(R.styleable.SwitchPreference_android_switchTextOn));
+        setSwitchTextOff(a.getString(R.styleable.SwitchPreference_android_switchTextOff));
+        setDisableDependentsState(a.getBoolean(R.styleable.SwitchPreference_android_disableDependentsState, false));
         a.recycle();
     }
 

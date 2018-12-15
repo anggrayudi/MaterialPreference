@@ -39,6 +39,31 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
  * to true or false, respectively.
  * Other SeekBar specific attributes (e.g. {@code title, summary, defaultValue, min, max}) can be
  * set directly on the preference widget layout.
+ * <hr>
+ *  <table>
+ *  <tr>
+ *  <th>Attribute</th>
+ *  <th>Value Type</th>
+ *  </tr><tr>
+ *  <td><code>android:layout</code></td>
+ *  <td>Layout</td>
+ *  </tr><tr>
+ *  <td><code>android:max</code></td>
+ *  <td>Int</td>
+ *  </tr><tr>
+ *  <td><code>app:min</code></td>
+ *  <td>Int</td>
+ *  </tr><tr>
+ *  <td><code>app:seekBarIncrement</code></td>
+ *  <td>Int</td>
+ *  </tr><tr>
+ *  <td><code>app:adjustable</code></td>
+ *  <td>Boolean</td>
+ *  </tr><tr>
+ *  <td><code>app:showSeekBarValue</code></td>
+ *  <td>Boolean</td>
+ *  </tr>
+ *  </table>
  */
 public class SeekBarPreference extends Preference {
 

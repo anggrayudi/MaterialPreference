@@ -41,6 +41,22 @@ import com.anggrayudi.materialpreference.dialog.DialogPreference;
  * item, the saved string will be an empty string.
  * <p/>
  * See https://code.google.com/p/android/issues/detail?id=183255.
+ * <hr>
+ * <table>
+ *  <tr>
+ *  <th>Attribute</th>
+ *  <th>Value Type</th>
+ *  </tr><tr>
+ *  <td><code>android:ringtoneType</code></td>
+ *  <td>alarm, all, notification, ringtone</td>
+ *  </tr><tr>
+ *  <td><code>android:showDefault</code></td>
+ *  <td>Boolean</td>
+ *  </tr><tr>
+ *  <td><code>android:showSilent</code></td>
+ *  <td>Boolean</td>
+ *  </tr>
+ *  </table>
  */
 public class RingtonePreference extends DialogPreference {
     private static final String TAG = "RingtonePreference";

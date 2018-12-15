@@ -28,7 +28,19 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * Extension of ImageView that correctly applies maxWidth and maxHeight.
- * @hide
+ * <hr>
+ <table>
+ <tr>
+ <th>Attribute</th>
+ <th>Value Type</th>
+ </tr><tr>
+ <td><code>app:maxWidth</code></td>
+ <td>Dimension</td>
+ </tr><tr>
+ <td><code>app:maxHeight</code></td>
+ <td>Dimension</td>
+ </tr>
+ </table>
  */
 @RestrictTo(LIBRARY_GROUP)
 public class PreferenceImageView extends ImageView {
@@ -46,16 +58,9 @@ public class PreferenceImageView extends ImageView {
 
     public PreferenceImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        final TypedArray a = context.obtainStyledAttributes(
-                attrs, R.styleable.PreferenceImageView, defStyleAttr, 0);
-
-        setMaxWidth(a.getDimensionPixelSize(
-                R.styleable.PreferenceImageView_maxWidth, Integer.MAX_VALUE));
-
-        setMaxHeight(a.getDimensionPixelSize(
-                R.styleable.PreferenceImageView_maxHeight, Integer.MAX_VALUE));
-
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PreferenceImageView, defStyleAttr, 0);
+        setMaxWidth(a.getDimensionPixelSize(R.styleable.PreferenceImageView_maxWidth, Integer.MAX_VALUE));
+        setMaxHeight(a.getDimensionPixelSize(R.styleable.PreferenceImageView_maxHeight, Integer.MAX_VALUE));
         a.recycle();
     }
 
