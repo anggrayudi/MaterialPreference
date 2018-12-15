@@ -1,5 +1,5 @@
 # Material Preference [ ![Download](https://api.bintray.com/packages/anggrayudi/maven/materialpreference/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference/_latestVersion)
-A library designed to people who love simplicity. Hate the old preference style? Try this library.
+A library designed for people who love simplicity. Hate the old preference style? Try this library.
 
 It combines libraries from `android.support.v7.preference` and `net.xpece.android.support.preference`.
 Available from API 17.
