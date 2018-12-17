@@ -9,13 +9,19 @@ Available from API 17.
 
 ## Usage
 
+This library available in 2 versions:
+1. Version `1.0.0` that uses Support Library v28.0.0
+2. Version `2.0.0` that uses AndroidX Jetpack
+
+You can choose which version you want to use. But I recommend you to use v2.0.0 since v1.0.0 will not be supported for future release. Notice that Google announced where Support Library v28.0.0 is the final version and will be replaced with AndroidX Jetpack soon. So it is your decision whether to migrate to AndroidX Jetpack or not.
+
 ```groovy
 repositories {
     maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
 }
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:1.0.0'
+    implementation 'com.anggrayudi:materialpreference:2.0.0'
 }
 ```
 
@@ -82,6 +88,9 @@ public class SettingsActivity extends PreferenceActivityMaterial {
 - `SeekBarPreference`
 - `RingtonePreference`
 - `IndicatorPreference`
+- `FolderPreference`
+- `DatePreference`
+- `TimePreference`
 
 ### RingtonePreference
 
@@ -91,8 +100,6 @@ If you want to include sounds from the external storage your app needs to reques
 Don't forget to check this runtime permission before opening ringtone picker on API 23.
 
 ### TODO-list
-- `FolderPreference`
-- `FilePreference`
 - `app:entryIcons` to `ListPreference` and `MultiSelectListPreference`
 
 ## License
