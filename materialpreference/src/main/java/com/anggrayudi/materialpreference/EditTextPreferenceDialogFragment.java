@@ -17,9 +17,6 @@
 package com.anggrayudi.materialpreference;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -29,11 +26,15 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragmentCompat;
+import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragment;
+import com.google.android.material.textfield.TextInputLayout;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 
-public class EditTextPreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat {
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+
+public class EditTextPreferenceDialogFragment extends PreferenceDialogFragment {
 
     private static final String SAVE_STATE_TEXT = "EditTextPreferenceDialogFragment.text";
 
@@ -43,8 +44,8 @@ public class EditTextPreferenceDialogFragmentCompat extends PreferenceDialogFrag
 
     private CharSequence mText;
 
-    public static EditTextPreferenceDialogFragmentCompat newInstance(String key) {
-        final EditTextPreferenceDialogFragmentCompat fragment = new EditTextPreferenceDialogFragmentCompat();
+    public static EditTextPreferenceDialogFragment newInstance(String key) {
+        final EditTextPreferenceDialogFragment fragment = new EditTextPreferenceDialogFragment();
         final Bundle b = new Bundle(1);
         b.putString(ARG_KEY, key);
         fragment.setArguments(b);

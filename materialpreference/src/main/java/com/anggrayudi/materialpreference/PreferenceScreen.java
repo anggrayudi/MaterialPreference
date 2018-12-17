@@ -18,11 +18,12 @@ package com.anggrayudi.materialpreference;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.RestrictTo;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.util.AttributeSet;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import androidx.annotation.RestrictTo;
+import androidx.core.content.res.TypedArrayUtils;
+
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * Represents a top-level {@link Preference} that

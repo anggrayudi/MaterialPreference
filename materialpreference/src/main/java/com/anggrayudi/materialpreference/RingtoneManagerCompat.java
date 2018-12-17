@@ -5,18 +5,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.media.RingtoneManager;
-import android.support.annotation.RestrictTo;
 import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import androidx.annotation.RestrictTo;
 
 /**
  * Created by Eugen on 14.12.2015.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 @SuppressLint("PrivateApi")
-public final class RingtoneManagerCompat extends RingtoneManager {
+final class RingtoneManagerCompat extends RingtoneManager {
     private static final String TAG = RingtoneManagerCompat.class.getSimpleName();
 
     private static final Field FIELD_CURSOR;

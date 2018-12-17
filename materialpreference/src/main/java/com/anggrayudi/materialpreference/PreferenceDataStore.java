@@ -17,9 +17,10 @@
 package com.anggrayudi.materialpreference;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.Nullable;
 
 import java.util.Set;
+
+import androidx.annotation.Nullable;
 
 /**
  * A data store interface to be implemented and provided to the Preferences framework. This can be

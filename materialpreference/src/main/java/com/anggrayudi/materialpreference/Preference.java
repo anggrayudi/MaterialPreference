@@ -28,17 +28,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RestrictTo;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.content.res.TypedArrayUtils;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.AbsSavedState;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -48,7 +41,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.content.res.TypedArrayUtils;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 /*
 DOCS TEMPLATE
  <table>
@@ -85,7 +89,7 @@ DOCS TEMPLATE
 /**
  * Represents the basic Preference UI building
  * block displayed by a {@link PreferenceFragmentMaterial} in the form of a
- * {@link android.support.v7.widget.RecyclerView}. This class provides data for the
+ * {@link RecyclerView}. This class provides data for the
  * {@link View} to be displayed
  * in the list and associates with a {@link SharedPreferences} to
  * store/retrieve the preference data.
@@ -122,7 +126,7 @@ DOCS TEMPLATE
  <td>Int</td>
  </tr><tr>
  <td><code>android:fragment</code></td>
- <td>{@link android.support.v4.app.Fragment}</td>
+ <td>{@link Fragment}</td>
  </tr><tr>
  <td><code>android:layout</code></td>
  <td>Layout</td>
@@ -1752,6 +1756,17 @@ public class Preference implements Comparable<Preference> {
         if (mPreferenceManager.shouldCommit()) {
             editor.apply();
         }
+    }
+
+    /**
+     * @return {@link PreferenceFragmentMaterial} associated with this preference
+     */
+    public PreferenceFragmentMaterial getPreferenceFragment() {
+        Context base = ((ContextThemeWrapper) getContext()).getBaseContext();
+        return ((PreferenceActivityMaterial) base).getVisiblePreferenceFragment();
+    }
+
+    void onSetupFinished(PreferenceFragmentMaterial fragment) {
     }
 
     /**

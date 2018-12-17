@@ -1,7 +1,6 @@
 package com.anggrayudi.materialpreference.sample;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 
 import com.anggrayudi.materialpreference.PreferenceActivityMaterial;
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;
@@ -16,7 +15,7 @@ public class SettingsActivity extends PreferenceActivityMaterial {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {

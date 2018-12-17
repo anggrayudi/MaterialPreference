@@ -20,13 +20,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.anggrayudi.materialpreference.Preference;
 import com.anggrayudi.materialpreference.R;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.TypedArrayUtils;
 
 /**
  * A base class for {@link Preference} objects that are

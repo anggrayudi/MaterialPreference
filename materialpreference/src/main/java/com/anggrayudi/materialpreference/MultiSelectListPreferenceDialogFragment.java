@@ -17,36 +17,37 @@
 package com.anggrayudi.materialpreference;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragmentCompat;
+import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MultiSelectListPreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat {
+import androidx.annotation.NonNull;
+
+public class MultiSelectListPreferenceDialogFragment extends PreferenceDialogFragment {
 
     private static final String SAVE_STATE_VALUES =
-            "MultiSelectListPreferenceDialogFragmentCompat.values";
+            "MultiSelectListPreferenceDialogFragment.values";
     private static final String SAVE_STATE_CHANGED =
-            "MultiSelectListPreferenceDialogFragmentCompat.changed";
+            "MultiSelectListPreferenceDialogFragment.changed";
     private static final String SAVE_STATE_ENTRIES =
-            "MultiSelectListPreferenceDialogFragmentCompat.entries";
+            "MultiSelectListPreferenceDialogFragment.entries";
     private static final String SAVE_STATE_ENTRY_VALUES =
-            "MultiSelectListPreferenceDialogFragmentCompat.entryValues";
+            "MultiSelectListPreferenceDialogFragment.entryValues";
 
     private Set<String> mNewValues = new HashSet<>();
     private boolean mPreferenceChanged;
     private CharSequence[] mEntries;
     private CharSequence[] mEntryValues;
 
-    public static MultiSelectListPreferenceDialogFragmentCompat newInstance(String key) {
-        final MultiSelectListPreferenceDialogFragmentCompat fragment =
-                new MultiSelectListPreferenceDialogFragmentCompat();
+    public static MultiSelectListPreferenceDialogFragment newInstance(String key) {
+        final MultiSelectListPreferenceDialogFragment fragment =
+                new MultiSelectListPreferenceDialogFragment();
         final Bundle b = new Bundle(1);
         b.putString(ARG_KEY, key);
         fragment.setArguments(b);
@@ -144,7 +145,7 @@ public class MultiSelectListPreferenceDialogFragmentCompat extends PreferenceDia
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        MultiSelectListPreferenceDialogFragmentCompat.this.onClick(dialog, DialogAction.POSITIVE);
+                        MultiSelectListPreferenceDialogFragment.this.onClick(dialog, DialogAction.POSITIVE);
                         dialog.dismiss();
                     }
                 });

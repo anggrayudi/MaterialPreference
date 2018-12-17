@@ -11,10 +11,6 @@ import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.os.StatFs;
 import android.provider.DocumentsContract;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.v4.content.FileProvider;
-import android.support.v4.provider.DocumentFile;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.StructStatVfs;
@@ -40,6 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.core.content.FileProvider;
+import androidx.documentfile.provider.DocumentFile;
 
 public final class FileUtils {
     private static final String TAG = "FileUtils";

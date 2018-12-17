@@ -21,10 +21,6 @@ import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.support.annotation.RestrictTo;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.util.ListUpdateCallback;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.InflateException;
@@ -38,7 +34,12 @@ import com.afollestad.materialdialogs.util.DialogUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import androidx.annotation.RestrictTo;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.ListUpdateCallback;
+
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * An adapter that connects a RecyclerView to the {@link Preference} objects contained in the
@@ -81,12 +82,9 @@ public class PreferenceGroupAdapter implements
 
     private Handler mHandler = new Handler();
 
-    private Runnable mSyncRunnable = new Runnable() {
-        @Override
-        public void run() {
-            syncMyPreferences();
-        }
-    };
+    private Runnable mSyncRunnable = () -> syncMyPreferences();
+
+    private PreferenceFragmentMaterial fragment;
 
     private static class PreferenceLayout {
         private int resId;
@@ -123,7 +121,7 @@ public class PreferenceGroupAdapter implements
         }
     }
 
-    PreferenceGroupAdapter(PreferenceGroup preferenceGroup, ViewGroup parent) {
+    PreferenceGroupAdapter(PreferenceFragmentMaterial fragment, PreferenceGroup preferenceGroup, ViewGroup parent) {
         mRootParent = parent;
         mPreferenceGroup = preferenceGroup;
         // If this group gets or loses any children, let us know
@@ -132,6 +130,8 @@ public class PreferenceGroupAdapter implements
         mPreferenceList = new ArrayList<>();
         mPreferenceListInternal = new ArrayList<>();
         mPreferenceLayouts = new ArrayList<>();
+
+        this.fragment = fragment;
 
         syncMyPreferences();
     }
@@ -281,13 +281,10 @@ public class PreferenceGroupAdapter implements
                     summaryIcon.getDrawable().mutate().setColorFilter(
                             DialogUtils.resolveColor(preference.getContext(),
                                     android.R.attr.textColorSecondary), PorterDuff.Mode.SRC_IN);
-                } else if (preference instanceof IndicatorPreference) {
-                    IndicatorPreference indicatorPreference = (IndicatorPreference) preference;
-                    indicatorPreference.setTint(indicatorPreference.getTint());
-                    indicatorPreference.mPreferenceViewHolder.itemView.findViewById(R.id.material_summary).setVisibility(View.GONE);
                 }
-                getParentView(preference).addView(preference.mPreferenceViewHolder.itemView);
                 preference.mPreferenceViewHolder.itemView.setVisibility(preference.isVisible() ? View.VISIBLE : View.GONE);
+                getParentView(preference).addView(preference.mPreferenceViewHolder.itemView);
+                preference.onSetupFinished(fragment);
             }
 
             preference.onBindViewHolder(preference.mPreferenceViewHolder);

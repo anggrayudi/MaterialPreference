@@ -1,9 +1,10 @@
 package com.anggrayudi.materialpreference.widget;
 
 import android.content.Context;
-import android.support.annotation.RestrictTo;
-import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
+
+import androidx.annotation.RestrictTo;
+import androidx.appcompat.widget.SwitchCompat;
 
 /**
  * Works around https://code.google.com/p/android/issues/detail?id=196652.

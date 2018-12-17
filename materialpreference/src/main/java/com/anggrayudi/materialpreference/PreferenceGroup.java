@@ -21,8 +21,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RestrictTo;
-import android.support.v4.util.SimpleArrayMap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
@@ -30,7 +28,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import androidx.annotation.RestrictTo;
+import androidx.collection.SimpleArrayMap;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * A container for multiple
@@ -418,7 +420,7 @@ public abstract class PreferenceGroup extends Preference {
          * Return the adapter position of the first {@link Preference} with the specified key
          * @param key Key of {@link Preference} to find
          * @return Adapter position of the {@link Preference} or
-         *         {@link android.support.v7.widget.RecyclerView#NO_POSITION} if not found
+         *         {@link RecyclerView#NO_POSITION} if not found
          */
         int getPreferenceAdapterPosition(String key);
 
@@ -426,7 +428,7 @@ public abstract class PreferenceGroup extends Preference {
          * Return the adapter position of the specified {@link Preference} object
          * @param preference {@link Preference} object to find
          * @return Adapter position of the {@link Preference} or
-         *         {@link android.support.v7.widget.RecyclerView#NO_POSITION} if not found
+         *         {@link RecyclerView#NO_POSITION} if not found
          */
         int getPreferenceAdapterPosition(Preference preference);
     }

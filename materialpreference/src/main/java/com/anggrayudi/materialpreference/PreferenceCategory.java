@@ -18,10 +18,11 @@ package com.anggrayudi.materialpreference;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v4.content.res.TypedArrayUtils;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat.CollectionItemInfoCompat;
 import android.util.AttributeSet;
+
+import androidx.core.content.res.TypedArrayUtils;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.CollectionItemInfoCompat;
 
 /**
  * Used to group {@link Preference} objects and provide a disabled title above

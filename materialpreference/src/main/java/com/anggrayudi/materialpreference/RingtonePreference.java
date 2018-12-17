@@ -23,12 +23,13 @@ import android.content.res.TypedArray;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.provider.Settings.System;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.anggrayudi.materialpreference.dialog.DialogPreference;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * A {@link Preference} that allows the user to choose a ringtone from those on the device.

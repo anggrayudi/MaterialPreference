@@ -19,8 +19,6 @@ package com.anggrayudi.materialpreference;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Xml;
 import android.view.InflateException;
@@ -31,6 +29,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * The {@link PreferenceInflater} is used to inflate preference hierarchies from
@@ -354,7 +355,6 @@ class PreferenceInflater {
                 rInflate(parser, item, attrs);
             }
         }
-
     }
 
     private static void skipCurrentTag(XmlPullParser parser)

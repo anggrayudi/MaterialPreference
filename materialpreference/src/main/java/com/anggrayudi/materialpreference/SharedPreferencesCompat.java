@@ -1,7 +1,6 @@
 package com.anggrayudi.materialpreference;
 
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -9,6 +8,8 @@ import org.json.JSONException;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import androidx.annotation.NonNull;
 
 /**
  * We used to store string sets as JSON array {@link String} on Android 2.x.

@@ -28,6 +28,10 @@
             android:entryValues="@array/entries_update_interval"
             app:bindValueToSummary="true"/>
 
+        <TimePreference
+            android:key="syncTime"
+            android:title="Sync active hours"/>
+
         <PreferenceScreen
             android:key="screen_notification"
             android:title="Notification"
@@ -71,14 +75,9 @@
             app:counterEnabled="true"
             app:legacySummary="false" />
 
-        <ListPreference
-            android:key="country"
-            android:title="Country"
-            android:entries="@array/entries_country"
-            android:entryValues="@array/entry_values_country"
-            android:defaultValue="ID"
-            android:summary="%s"
-            app:legacySummary="false" />
+        <DatePreference
+            android:key="birthDate"
+            android:title="Birth date"/>
 
         <MultiSelectListPreference
             android:key="friend_list"
@@ -93,6 +92,15 @@
             android:title="Verified"
             android:src="@drawable/baseline_check_circle_black_24"
             app:tint="?colorAccent" />
+
+        <ListPreference
+            android:key="country"
+            android:title="Country"
+            android:entries="@array/entries_country"
+            android:entryValues="@array/entry_values_country"
+            android:defaultValue="ID"
+            android:summary="%s"
+            app:legacySummary="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Advanced">
@@ -109,15 +117,12 @@
             <intent android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
                 android:data="package:com.anggrayudi.materialpreference.sample"/>
         </Preference>
+
+        <FolderPreference
+            android:key="backupLocation"
+            android:title="Backup location"
+            app:defaultFolder="download"/>
     </PreferenceCategory>
-
-    <!-- TODO: NExt   -->
-    <!--<PreferenceCategory>-->
-
-    <!--<FolderPreference-->
-    <!--android:key="downloads_directory"-->
-    <!--android:title="Downloads directory"/>-->
-    <!--</PreferenceCategory>-->
 
     <!-- To make Preferences floating, you must wrap them inside PreferenceCategory -->
     <PreferenceCategory>

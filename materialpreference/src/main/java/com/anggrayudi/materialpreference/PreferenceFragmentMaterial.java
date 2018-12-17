@@ -8,24 +8,27 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RestrictTo;
-import android.support.annotation.XmlRes;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.anggrayudi.materialpreference.dialog.DialogPreference;
+import com.anggrayudi.materialpreference.util.FileUtils;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.XmlRes;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * @author Anggrayudi on July 1st, 2018.
@@ -37,18 +40,15 @@ public abstract class PreferenceFragmentMaterial extends Fragment implements
         PreferenceManager.OnNavigateToScreenListener,
         DialogPreference.TargetFragment {
 
+    private static final String TAG = "PreferenceFragment";
+
     /**
      * Fragment argument used to specify the tag of the desired root
      * {@link PreferenceScreen} object.
      */
-    public static final String ARG_PREFERENCE_ROOT =
-            "com.anggrayudi.materialpreference.PreferenceFragmentMaterial.PREFERENCE_ROOT";
-
+    public static final String ARG_PREFERENCE_ROOT = "com.anggrayudi.materialpreference.PreferenceFragmentMaterial.PREFERENCE_ROOT";
     private static final String PREFERENCES_TAG = "android:preferences";
-
-    static final String DIALOG_FRAGMENT_TAG =
-            "com.anggrayudi.materialpreference.PreferenceFragment.DIALOG";
-
+    static final String DIALOG_FRAGMENT_TAG = "com.anggrayudi.materialpreference.PreferenceFragment.DIALOG";
     static final String PREFERENCE_TITLE = "com.anggrayudi.materialpreference.PreferenceFragment.TITLE";
 
     private PreferenceManager mPreferenceManager;
@@ -57,6 +57,7 @@ public abstract class PreferenceFragmentMaterial extends Fragment implements
     //    private RecyclerView mList;
     private boolean mHavePrefs;
     private boolean mInitDone;
+    String preferenceKeyOnActivityResult;
 
     private Context mStyledContext;
 
@@ -208,8 +209,8 @@ public abstract class PreferenceFragmentMaterial extends Fragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         if (savedInstanceState != null) {
+            preferenceKeyOnActivityResult = savedInstanceState.getString("preferenceKeyOnActivityResult");
             Bundle container = savedInstanceState.getBundle(PREFERENCES_TAG);
             if (container != null) {
                 final PreferenceScreen preferenceScreen = getPreferenceScreen();
@@ -226,8 +227,6 @@ public abstract class PreferenceFragmentMaterial extends Fragment implements
         mPreferenceManager.setOnPreferenceTreeClickListener(this);
         mPreferenceManager.setOnDisplayPreferenceDialogListener(this);
     }
-
-    private static final String TAG = "PreferenceFragment";
 
     @Override
     public void onStop() {
@@ -249,6 +248,7 @@ public abstract class PreferenceFragmentMaterial extends Fragment implements
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString("preferenceKeyOnActivityResult", preferenceKeyOnActivityResult);
         final PreferenceScreen preferenceScreen = getPreferenceScreen();
         if (preferenceScreen != null) {
             Bundle container = new Bundle();
@@ -438,16 +438,40 @@ public abstract class PreferenceFragmentMaterial extends Fragment implements
 
     private void attachPreferences(PreferenceScreen screen) {
         // TODO: 01/07/18 Attach to cardviews
-        mAdapter = new PreferenceGroupAdapter(screen, mListContainer);
+        mAdapter = new PreferenceGroupAdapter(this, screen, mListContainer);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK)
+        if (resultCode != Activity.RESULT_OK) {
+            preferenceKeyOnActivityResult = null;
             return;
+        }
 
-        // TODO: 04/07/18 FolderPreference
+        if (requestCode == FileUtils.REQUEST_CODE_STORAGE_GET_FOLDER) {
+            String path = FileUtils.resolvePathFromUri(data);
+            if (path.startsWith("/") || FileUtils.isSdCardUriPermissionsGranted(getContext(), data)) {
+                if (preferenceKeyOnActivityResult != null) {
+                    FolderPreference preference = (FolderPreference) findPreference(preferenceKeyOnActivityResult);
+                    if (preference.callChangeListener(path)) {
+                        preference.persistString(path);
+                        preference.setSummary(path);
+                    }
+                }
+                preferenceKeyOnActivityResult = null;
+            } else {
+                Toast.makeText(getContext(), R.string.please_select_sdcard_root, Toast.LENGTH_LONG).show();
+                startActivityForResult(new Intent("android.intent.action.OPEN_DOCUMENT_TREE"),
+                        FileUtils.REQUEST_CODE_REQUIRE_SDCARD_ROOT_PATH_PERMISSIONS);
+            }
+        } else if (requestCode == FileUtils.REQUEST_CODE_REQUIRE_SDCARD_ROOT_PATH_PERMISSIONS && FileUtils.saveUriPermission(getContext(), data)) {
+            Toast.makeText(getContext(), R.string.you_can_select_sdcard, Toast.LENGTH_SHORT).show();
+            startActivityForResult(new Intent("android.intent.action.OPEN_DOCUMENT_TREE"),
+                    FileUtils.REQUEST_CODE_STORAGE_GET_FOLDER);
+        } else {
+            preferenceKeyOnActivityResult = null;
+        }
     }
 
     /**
@@ -481,11 +505,11 @@ public abstract class PreferenceFragmentMaterial extends Fragment implements
 
         final DialogFragment f;
         if (preference instanceof EditTextPreference) {
-            f = EditTextPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+            f = EditTextPreferenceDialogFragment.newInstance(preference.getKey());
         } else if (preference instanceof ListPreference) {
-            f = ListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+            f = ListPreferenceDialogFragment.newInstance(preference.getKey());
         } else if (preference instanceof MultiSelectListPreference) {
-            f = MultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+            f = MultiSelectListPreferenceDialogFragment.newInstance(preference.getKey());
         } else if (preference instanceof RingtonePreference) {
             f = RingtonePreferenceDialogFragment.newInstance(preference.getKey());
         } else if (preference instanceof SeekBarDialogPreference) {

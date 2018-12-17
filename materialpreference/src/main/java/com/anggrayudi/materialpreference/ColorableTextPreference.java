@@ -1,7 +1,8 @@
 package com.anggrayudi.materialpreference;
 
 import android.content.res.ColorStateList;
-import android.support.annotation.ColorInt;
+
+import androidx.annotation.ColorInt;
 
 /**
  * Created by Eugen on 08.03.2016.

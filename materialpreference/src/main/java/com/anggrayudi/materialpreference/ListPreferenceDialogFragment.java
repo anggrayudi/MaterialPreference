@@ -17,28 +17,28 @@
 package com.anggrayudi.materialpreference;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragmentCompat;
+import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragment;
 
 import java.util.ArrayList;
 
-public class ListPreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat {
+import androidx.annotation.NonNull;
+
+public class ListPreferenceDialogFragment extends PreferenceDialogFragment {
 
     private static final String SAVE_STATE_INDEX = "ListPreferenceDialogFragment.index";
     private static final String SAVE_STATE_ENTRIES = "ListPreferenceDialogFragment.entries";
-    private static final String SAVE_STATE_ENTRY_VALUES =
-            "ListPreferenceDialogFragment.entryValues";
+    private static final String SAVE_STATE_ENTRY_VALUES = "ListPreferenceDialogFragment.entryValues";
 
     private int mClickedDialogEntryIndex;
     private CharSequence[] mEntries;
     private CharSequence[] mEntryValues;
 
-    public static ListPreferenceDialogFragmentCompat newInstance(String key) {
-        final ListPreferenceDialogFragmentCompat fragment = new ListPreferenceDialogFragmentCompat();
+    public static ListPreferenceDialogFragment newInstance(String key) {
+        final ListPreferenceDialogFragment fragment = new ListPreferenceDialogFragment();
         final Bundle b = new Bundle(1);
         b.putString(ARG_KEY, key);
         fragment.setArguments(b);
@@ -127,5 +127,4 @@ public class ListPreferenceDialogFragmentCompat extends PreferenceDialogFragment
             }
         }
     }
-
 }

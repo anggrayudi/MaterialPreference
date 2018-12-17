@@ -10,14 +10,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.anggrayudi.materialpreference.dialog.DialogPreference;
-import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragmentCompat;
+import com.anggrayudi.materialpreference.dialog.PreferenceDialogFragment;
 
 import java.util.Locale;
 
 /**
  * @author Eugen on 7. 12. 2015.
  */
-public class SeekBarPreferenceDialogFragment extends PreferenceDialogFragmentCompat
+public class SeekBarPreferenceDialogFragment extends PreferenceDialogFragment
         implements View.OnKeyListener {
 
     private SeekBar mSeekBar;

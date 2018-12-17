@@ -17,11 +17,12 @@
 package com.anggrayudi.materialpreference;
 
 import android.content.Context;
-import android.support.annotation.RestrictTo;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import androidx.annotation.RestrictTo;
+
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * Custom LinearLayout that does not propagate the pressed state down to its children.

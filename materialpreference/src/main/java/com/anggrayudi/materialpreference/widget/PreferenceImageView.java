@@ -18,13 +18,14 @@ package com.anggrayudi.materialpreference.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.RestrictTo;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import com.anggrayudi.materialpreference.R;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import androidx.annotation.RestrictTo;
+
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * Extension of ImageView that correctly applies maxWidth and maxHeight.

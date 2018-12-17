@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Material Preference</string>
+    <string name="app_name" translatable="false">Material Preference</string>
     <string name="v7_preference_on">ON</string>
     <string name="v7_preference_off">OFF</string>
     <string name="ringtone_default">Default ringtone</string>
@@ -24,6 +24,5 @@
     <string name="share_file">Share file</string>
     <string name="file_not_found">File not found</string>
     <string name="open_as">Open as</string>
-
-
+    <string name="choose">Choose</string>
 </resources>

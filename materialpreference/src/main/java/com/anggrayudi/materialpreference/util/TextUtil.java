@@ -5,9 +5,10 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
-import android.support.annotation.StringRes;
-import android.support.annotation.WorkerThread;
 import android.widget.Toast;
+
+import androidx.annotation.StringRes;
+import androidx.annotation.WorkerThread;
 
 
 /**

@@ -24,12 +24,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +35,14 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
  * Abstract base class which presents a dialog associated with a
@@ -50,7 +51,7 @@ import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
  * is read once during the initial call to {@link #onCreate(Bundle)} and saved/restored in the saved
  * instance state. Custom subclasses should also follow this pattern.
  */
-public abstract class PreferenceDialogFragmentCompat extends DialogFragment implements MaterialDialog.SingleButtonCallback {
+public abstract class PreferenceDialogFragment extends DialogFragment implements MaterialDialog.SingleButtonCallback {
 
     protected static final String ARG_KEY = "key";
 
@@ -84,8 +85,7 @@ public abstract class PreferenceDialogFragmentCompat extends DialogFragment impl
                     " interface");
         }
 
-        final DialogPreference.TargetFragment fragment =
-                (DialogPreference.TargetFragment) rawFragment;
+        final DialogPreference.TargetFragment fragment = (DialogPreference.TargetFragment) rawFragment;
 
         final String key = getArguments().getString(ARG_KEY);
         if (savedInstanceState == null) {
@@ -171,8 +171,7 @@ public abstract class PreferenceDialogFragmentCompat extends DialogFragment impl
      * Get the preference that requested this dialog. Available after {@link #onCreate(Bundle)} has
      * been called on the {@link PreferenceFragmentMaterial} which launched this dialog.
      *
-     * @return The {@link DialogPreference} associated with this
-     * dialog.
+     * @return The {@link DialogPreference} associated with this dialog.
      */
     public DialogPreference getPreference() {
         if (mPreference == null) {
@@ -198,7 +197,6 @@ public abstract class PreferenceDialogFragmentCompat extends DialogFragment impl
      * Returns whether the preference needs to display a soft input method when the dialog
      * is displayed. Default is false. Subclasses should override this method if they need
      * the soft input method brought up automatically.
-     * @hide
      */
     @RestrictTo(LIBRARY_GROUP)
     protected boolean needInputMethod() {

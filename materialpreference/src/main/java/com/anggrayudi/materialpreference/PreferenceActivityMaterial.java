@@ -1,11 +1,13 @@
 package com.anggrayudi.materialpreference;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public abstract class PreferenceActivityMaterial extends AppCompatActivity implements
         PreferenceFragmentMaterial.OnPreferenceStartScreenCallback,
@@ -44,6 +46,14 @@ public abstract class PreferenceActivityMaterial extends AppCompatActivity imple
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public PreferenceFragmentMaterial getVisiblePreferenceFragment() {
+        for (Fragment f : getSupportFragmentManager().getFragments()) {
+            if (f instanceof PreferenceFragmentMaterial && f.isVisible())
+                return (PreferenceFragmentMaterial) f;
+        }
+        return null;
     }
 
     public void setReplaceFragmentStrategy(ReplaceFragment replaceFragment) {

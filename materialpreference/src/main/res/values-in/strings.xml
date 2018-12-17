@@ -1,0 +1,27 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="v7_preference_on">ON</string>
+    <string name="v7_preference_off">OFF</string>
+    <string name="ringtone_default">Default ringtone</string>
+    <string name="ringtone_default_with_actual">Default (<xliff:g id="actual_ringtone">%1$s</xliff:g>)</string>
+    <string name="ringtone_silent">Hening</string>
+    <string name="ringtone_picker_title">Ringtones</string>
+    <string name="ringtone_picker_title_alarm">Bunyi alarm</string>
+    <string name="ringtone_picker_title_notification">Bunyi notifikasi</string>
+    <string name="ringtone_unknown">Tidak diketahui</string>
+    <string name="notification_sound_default">Suara default notifikasi</string>
+    <string name="alarm_sound_default">Suara default alarm</string>
+    <string name="min_preference_input_chars_">Panjang minimal adalah %d</string>
+    <string name="nothing">Tidak ada</string>
+    <string name="clear">Bersihkan</string>
+    <string name="please_grant_storage_permission">Berikan izin baca dan tulis pada media penyimpanan.</string>
+    <string name="please_select_sdcard_root">Untuk pertama kali, kamu harus memberikan izin kartu SD dengan memilih direktori root-nya.</string>
+    <string name="not_root_path">Ini bukan jalur root.</string>
+    <string name="you_can_select_sdcard">Kamu sekarang bisa memilih apapun dari kartu SD.</string>
+    <string name="no_app_to_open_file">Tidak ada aplikasi terpasang untuk membuka jenis file ini.</string>
+    <string name="no_app_share_file">Tidak ditemukan aplikasi untuk berbagi file.</string>
+    <string name="share">Bagikan</string>
+    <string name="share_file">Bagikan file</string>
+    <string name="file_not_found">File tidak ditemukan</string>
+    <string name="open_as">Buka sebagai</string>
+    <string name="choose">Pilih</string>
+</resources>

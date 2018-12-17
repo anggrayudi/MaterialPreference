@@ -21,13 +21,14 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.ArrayRes;
-import android.support.annotation.NonNull;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.anggrayudi.materialpreference.dialog.DialogPreference;
+
+import androidx.annotation.ArrayRes;
+import androidx.annotation.NonNull;
+import androidx.core.content.res.TypedArrayUtils;
 
 /**
  * A {@link Preference} that displays a list of entries as

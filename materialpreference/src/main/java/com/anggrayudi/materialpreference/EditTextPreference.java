@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -29,6 +28,8 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 
 import com.anggrayudi.materialpreference.dialog.DialogPreference;
+
+import androidx.core.content.res.TypedArrayUtils;
 
 /**
  * A {@link Preference} that allows for string

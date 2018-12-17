@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
+
+import androidx.core.content.res.TypedArrayUtils;
 
 /**
  * Used to indicate status of something, e.g. verified account is shown as check icon.
@@ -64,6 +66,12 @@ public class IndicatorPreference extends Preference {
         super.onBindViewHolder(holder);
         ImageView imageView = (ImageView) holder.findViewById(android.R.id.icon1);
         imageView.setImageDrawable(getDrawable());
+    }
+
+    @Override
+    void onSetupFinished(PreferenceFragmentMaterial fragment) {
+        setTint(getTint());
+        mPreferenceViewHolder.itemView.findViewById(R.id.material_summary).setVisibility(View.GONE);
     }
 
     public void setDrawable(Drawable drawable) {
