@@ -22,9 +22,9 @@ public class SettingsActivity extends PreferenceActivityMaterial {
 
         if (savedInstanceState == null) {
             mSettingsFragment = SettingsFragment.newInstance(null);
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mSettingsFragment, "Settings").commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mSettingsFragment, TAG).commit();
         } else {
-            mSettingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag("Settings");
+            mSettingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag(TAG);
             setTitle(mSettingsFragment.getPreferenceFragmentTitle());
         }
     }
