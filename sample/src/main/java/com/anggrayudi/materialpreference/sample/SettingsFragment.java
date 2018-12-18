@@ -55,6 +55,18 @@ public class SettingsFragment extends PreferenceFragmentMaterial implements
         FolderPreference folderPreference = (FolderPreference) findPreference("backupLocation");
         folderPreference.setPermissionCallback((read, write) -> ActivityCompat.requestPermissions(getActivity(),
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1));
+
+        findPreference("restore_default").setOnPreferenceClickListener(preference -> {
+            new MaterialDialog.Builder(getContext())
+                    .content("Are you sure you want to restore default settings?")
+                    .positiveText(android.R.string.ok)
+                    .negativeText(android.R.string.cancel)
+                    .onPositive((dialog, which) -> {
+                        App.setDefaultPreferenceValues(getContext());
+                        getActivity().recreate();
+                    }).show();
+            return true;
+        });
     }
 
     @Override
