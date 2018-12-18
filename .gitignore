@@ -65,3 +65,4 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 /MaterialPreference.zip
+/sample/src/main/java/com/anggrayudi/materialpreference/sample/billing/Constants.java
