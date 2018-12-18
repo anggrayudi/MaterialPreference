@@ -93,14 +93,14 @@
             android:src="@drawable/baseline_check_circle_black_24"
             app:tint="?colorAccent" />
 
-        <ListPreference
-            android:key="country"
-            android:title="Country"
-            android:entries="@array/entries_country"
-            android:entryValues="@array/entry_values_country"
-            android:defaultValue="ID"
-            android:summary="%s"
-            app:legacySummary="false" />
+        <!--<ListPreference-->
+            <!--android:key="country"-->
+            <!--android:title="Country"-->
+            <!--android:entries="@array/entries_country"-->
+            <!--android:entryValues="@array/entry_values_country"-->
+            <!--android:defaultValue="ID"-->
+            <!--android:summary="%s"-->
+            <!--app:legacySummary="false" />-->
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Advanced">

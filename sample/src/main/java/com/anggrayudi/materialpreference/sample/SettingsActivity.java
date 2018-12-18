@@ -1,6 +1,8 @@
 package com.anggrayudi.materialpreference.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 
 import com.anggrayudi.materialpreference.PreferenceActivityMaterial;
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;
@@ -36,5 +38,12 @@ public class SettingsActivity extends PreferenceActivityMaterial {
     public void onBackStackChanged() {
         mSettingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag("Settings");
         setTitle(mSettingsFragment.getPreferenceFragmentTitle());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_donate).setIntent(new Intent(this, DonationActivity.class));
+        return super.onCreateOptionsMenu(menu);
     }
 }

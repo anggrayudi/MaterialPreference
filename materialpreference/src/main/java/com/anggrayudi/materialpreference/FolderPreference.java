@@ -34,7 +34,7 @@ public class FolderPreference extends Preference implements Preference.OnPrefere
     private static final String TAG = "FolderPreference";
 
     private int mDefaultFolderType;
-    StoragePermissionCallback callback;
+    private StoragePermissionCallback callback;
 
     public FolderPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);

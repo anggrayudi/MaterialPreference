@@ -16,6 +16,7 @@ out/
 # Gradle files
 .gradle/
 build/
+/sample/release
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -63,3 +64,4 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+/MaterialPreference.zip
