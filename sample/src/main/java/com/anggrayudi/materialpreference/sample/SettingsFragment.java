@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.anggrayudi.materialpreference.BuildConfig;
 import com.anggrayudi.materialpreference.FolderPreference;
 import com.anggrayudi.materialpreference.IndicatorPreference;
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;

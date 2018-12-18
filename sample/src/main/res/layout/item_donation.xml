@@ -34,20 +34,11 @@
                 android:maxLines="2"
                 tools:text="Buy me Nasi Padang"/>
 
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/itemTitle"
-                android:layout_marginTop="4dp"
-                android:textSize="14sp"
-                tools:text="Nasi Padang is the most delicious rice in Indonesia."/>
-
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnDonate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/description"
+                android:layout_below="@+id/itemTitle"
                 android:layout_marginTop="4dp"
                 android:layout_alignParentEnd="true"
                 android:textAllCaps="true"

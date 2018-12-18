@@ -20,8 +20,8 @@ android {
         applicationId "com.anggrayudi.materialpreference.sample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName version
+        versionCode rootProject.ext.appVersionCode
+        versionName "$libVersion"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

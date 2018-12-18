@@ -94,14 +94,13 @@ public class DonationActivity extends AppCompatActivity implements BillingManage
             View.OnClickListener {
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView title, price, description;
+            final TextView title, price;
             final Button btnDonate;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 title = itemView.findViewById(R.id.itemTitle);
                 price = itemView.findViewById(R.id.itemPrice);
-                description = itemView.findViewById(R.id.description);
                 btnDonate = itemView.findViewById(R.id.btnDonate);
                 btnDonate.setOnClickListener(DonationAdapter.this);
             }
@@ -127,7 +126,6 @@ public class DonationActivity extends AppCompatActivity implements BillingManage
             DonationItem item = Constants.DONATION_ITEMS[position];
             holder.title.setText(item.title);
             holder.price.setText(item.price);
-            holder.description.setText(item.description);
             holder.btnDonate.setTag(item.sku);
         }
 
