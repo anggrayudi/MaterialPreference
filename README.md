@@ -4,8 +4,13 @@ A library designed for people who love simplicity. Hate the old preference style
 It combines libraries from `android.support.v7.preference` and `net.xpece.android.support.preference`.
 Available from API 17.
 
-![Alt text](art/screenshot.png?raw=true "Material Preference")
+Want to **try** or **donate** to this library?
 
+![Alt text](assets/get-on-play-store.png?raw=true "Google Play")
+
+## Screenshots
+
+![Alt text](art/screenshot.png?raw=true "Material Preference")
 
 ## Usage
 
@@ -21,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:2.0.0'
+    implementation 'com.anggrayudi:materialpreference:2.1.0'
 }
 ```
 
