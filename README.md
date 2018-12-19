@@ -4,7 +4,9 @@ A library designed for people who love simplicity. Hate the old preference style
 It combines libraries from `android.support.v7.preference` and `net.xpece.android.support.preference`.
 Available from API 17.
 
-Want to **try** or **donate** to this library? [Get it on Google Play](https://play.google.com/store/apps/details?id=com.anggrayudi.materialpreference.sample).
+Want to **try** or **donate** to this library?
+
+<a href="https://play.google.com/store/apps/details?id=com.anggrayudi.materialpreference.sample" target="_blank"><img alt="Google Play" height="90" src="https://play.google.com/intl/en_US/badges/images/generic/en_badge_web_generic.png"/></a>
 
 ## Screenshots
 
