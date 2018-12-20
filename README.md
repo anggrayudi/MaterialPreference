@@ -3,8 +3,7 @@ A library designed for people who love simplicity. Hate the old preference style
 
 It combines libraries from `android.support.v7.preference` and `net.xpece.android.support.preference`.
 Available from API 17.
-
-<a href="https://play.google.com/store/apps/details?id=com.anggrayudi.materialpreference.sample" target="_blank"><img alt="Google Play" height="80" src="https://play.google.com/intl/en_US/badges/images/generic/en_badge_web_generic.png" align="right"/></a><br><br><br>
+<br><a href="https://play.google.com/store/apps/details?id=com.anggrayudi.materialpreference.sample" target="_blank"><img alt="Google Play" height="80" src="https://play.google.com/intl/en_US/badges/images/generic/en_badge_web_generic.png" align="right"/></a><br><br><br>
 
 ## Screenshots
 
@@ -109,6 +108,7 @@ Don't forget to check this runtime permission before opening ringtone picker on 
 - `app:entryIcons` to `ListPreference` and `MultiSelectListPreference`
 
 ## Donation
+Any donation you give is really helpful for us to develop this library. It feels like energy from power stone.
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TGPGSY66LKUMN&source=url" target="_blank"><img alt="Donate with PayPal" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0"/></a>
 
