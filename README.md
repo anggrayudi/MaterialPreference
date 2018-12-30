@@ -50,33 +50,32 @@ From your `preferences.xml`:
 
 From your `SettingsFragment`:
 
-```java
-public class SettingsFragment extends PreferenceFragmentMaterial {
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            addPreferencesFromResource(R.xml.preferences); 
-        }
+```kotlin
+class SettingsFragment : PreferenceFragmentMaterial() {
+
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        addPreferencesFromResource(R.xml.preferences)
+    }
 }
 ```
 
 From your `SettingsActivity`:
 
-```java
-public class SettingsActivity extends PreferenceActivityMaterial {
+```kotlin
+class SettingsActivity : PreferenceActivityMaterial() {
+
+    private var settingsFragment: SettingsFragment? = null
     
-    private SettingsFragment mSettingsFragment;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         
         if (savedInstanceState == null) {
-            mSettingsFragment = SettingsFragment.newInstance(null);
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mSettingsFragment, "Settings").commit();
+            settingsFragment = SettingsFragment.newInstance(null)
+            supportFragmentManager.beginTransaction().add(R.id.fragment_container, settingsFragment!!, TAG).commit()
         } else {
-            mSettingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag("Settings");
-            setTitle(mSettingsFragment.getPreferenceFragmentTitle());
+            settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
+            title = settingsFragment!!.preferenceFragmentTitle
         }
     }
 }
