@@ -105,9 +105,6 @@ If you want to include sounds from the external storage your app needs to reques
 `android.permission.READ_EXTERNAL_STORAGE` permission in its manifest.
 Don't forget to check this runtime permission before opening ringtone picker on API 23.
 
-### TODO-list
-- `app:entryIcons` to `ListPreference` and `MultiSelectListPreference`
-
 ## Donation
 Any donation you give is really helpful for us to develop this library. It feels like energy from power stone.
 
