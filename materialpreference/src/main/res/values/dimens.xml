@@ -6,7 +6,8 @@
     <dimen name="preference_seekbar_value_width">36dp</dimen>
 
     <dimen name="preferenceMinHeight">54dp</dimen>
-    <dimen name="preferenceIconMaxSize">50dp</dimen>
     <dimen name="preferenceHorizontalMargin">15dp</dimen>
     <dimen name="preferenceSummaryMaxWidth">100dp</dimen>
+
+    <dimen name="preferenceIconMaxSize">50dp</dimen>
 </resources>

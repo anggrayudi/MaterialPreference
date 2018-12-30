@@ -24,4 +24,5 @@
     <string name="file_not_found">File tidak ditemukan</string>
     <string name="open_as">Buka sebagai</string>
     <string name="choose">Pilih</string>
+    <string name="permission_denial_runtime">Beberapa izin hilang. Berilah izin baca dan tulis pada media penyimpanan.</string>
 </resources>

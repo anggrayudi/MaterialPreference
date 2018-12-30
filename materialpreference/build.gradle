@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 group = 'com.anggrayudi'
 version = "$libVersion"
@@ -18,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,14 +29,20 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    api 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    api 'androidx.cardview:cardview:1.0.0'
-    api 'com.google.android.material:material:1.1.0-alpha02'
-    api 'com.wdullaer:materialdatetimepicker:4.1.0'
-    api 'com.afollestad.material-dialogs:core:0.9.6.0'
-    api 'com.afollestad.material-dialogs:commons:0.9.6.0'
-    api 'commons-io:commons-io:2.6'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha02'
+    implementation 'com.wdullaer:materialdatetimepicker:4.1.0'
+    implementation "com.afollestad.material-dialogs:core:$dialogVersion"
+    implementation "com.afollestad.material-dialogs:files:$dialogVersion"
+    implementation "com.afollestad.material-dialogs:color:$dialogVersion"
+    implementation 'commons-io:commons-io:2.6'
 }
 
 ext {

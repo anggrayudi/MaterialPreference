@@ -25,6 +25,7 @@
 -keep public class com.anggrayudi.materialpreference.PreferenceCategory { *; }
 -keep public class com.anggrayudi.materialpreference.SeekBarPreference { *; }
 -keep public class com.anggrayudi.materialpreference.SeekBarDialogPreference { *; }
+-keep public class com.anggrayudi.materialpreference.TwoStatePreference { *; }
 -keep public class com.anggrayudi.materialpreference.CheckBoxPreference { *; }
 -keep public class com.anggrayudi.materialpreference.SwitchPreference { *; }
 -keep public class com.anggrayudi.materialpreference.RingtonePreference { *; }
@@ -36,3 +37,4 @@
 -keep public class com.anggrayudi.materialpreference.FilePreference { *; }
 -keep public class com.anggrayudi.materialpreference.TimePreference { *; }
 -keep public class com.anggrayudi.materialpreference.DatePreference { *; }
+-keep public class com.anggrayudi.materialpreference.ColorPreference { *; }

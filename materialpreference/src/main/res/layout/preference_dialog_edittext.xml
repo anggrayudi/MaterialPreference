@@ -19,6 +19,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/md_dialog_frame_margin_vertical"
+    android:paddingRight="@dimen/md_dialog_frame_margin_vertical"
     android:orientation="vertical">
 
     <TextView

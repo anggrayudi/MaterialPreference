@@ -25,4 +25,5 @@
     <string name="file_not_found">File not found</string>
     <string name="open_as">Open as</string>
     <string name="choose">Choose</string>
+    <string name="permission_denial_runtime">Storage permissions are missing. Please grant read and write permissions.</string>
 </resources>

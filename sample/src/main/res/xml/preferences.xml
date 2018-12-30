@@ -11,7 +11,7 @@
         <CheckBoxPreference
             android:key="wifi_only"
             android:title="Wi-Fi only"
-            android:dependency="auto_update" />
+            android:dependency="auto_update"/>
 
         <!-- You can also use:
         android:visible="boolean"
@@ -104,6 +104,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Advanced">
+
+        <ColorPreference
+            android:key="themeColor"
+            android:title="Theme color"
+            app:defaultColor="@color/colorPrimary"/>
 
         <Preference
             android:key="restore_default"
