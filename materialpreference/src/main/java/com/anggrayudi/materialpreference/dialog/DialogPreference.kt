@@ -29,34 +29,17 @@ import com.anggrayudi.materialpreference.Preference
 import com.anggrayudi.materialpreference.R
 
 /**
- * A base class for [Preference] objects that are
- * dialog-based. These preferences will, when clicked, open a dialog showing the
- * actual preference controls.
-<hr></hr>
-<table>
-<tr>
-<th>Attribute</th>
-<th>Value Type</th>
-</tr><tr>
- <td>`android:dialogTitle`</td>
- <td>String</td>
-</tr><tr>
- <td>`android:dialogMessage`</td>
- <td>String</td>
-</tr><tr>
- <td>`android:dialogIcon`</td>
- <td>Drawable</td>
-</tr><tr>
- <td>`android:dialogLayout`</td>
- <td>Layout</td>
-</tr><tr>
- <td>`android:positiveButtonText`</td>
- <td>String</td>
-</tr><tr>
- <td>`android:negativeButtonText`</td>
- <td>String</td>
-</tr>
-</table>
+ * A base class for [Preference] objects that are dialog-based.
+ * These preferences will, when clicked, open a dialog showing the actual preference controls.
+ *
+ *      |          Attribute         | Value Type |
+ *      |:--------------------------:|:----------:|
+ *      | android:dialogTitle        | Dimension  |
+ *      | android:dialogMessage      | Dimension  |
+ *      | android:dialogIcon         | Drawable   |
+ *      | android:dialogLayout       | Layout     |
+ *      | android:positiveButtonText | String     |
+ *      | android:negativeButtonText | String     |
  */
 @SuppressLint("RestrictedApi")
 abstract class DialogPreference @JvmOverloads constructor(

@@ -6,7 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 
 /**
+ * Your `Activity` should extends from this abstract class and uses [PreferenceFragmentMaterial]
+ * to display all preferences.
  *
+ * For more information, see [Material Preference Guide](https://github.com/anggrayudi/MaterialPreference)
+ *
+ * @see PreferenceFragmentMaterial
  * @author Anggrayudi H
  */
 abstract class PreferenceActivityMaterial : AppCompatActivity(),

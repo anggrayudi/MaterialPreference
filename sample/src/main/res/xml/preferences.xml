@@ -99,7 +99,6 @@
             <!--android:entries="@array/entries_country"-->
             <!--android:entryValues="@array/entry_values_country"-->
             <!--android:defaultValue="ID"-->
-            <!--android:summary="%s"-->
             <!--app:legacySummary="false" />-->
     </PreferenceCategory>
 

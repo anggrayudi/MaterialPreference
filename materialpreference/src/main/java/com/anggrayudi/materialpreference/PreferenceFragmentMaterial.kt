@@ -27,6 +27,11 @@ import com.anggrayudi.materialpreference.dialog.*
 import com.anggrayudi.materialpreference.util.FileUtils
 
 /**
+ * A fragment class to manage and display all preferences.
+ *
+ * For more information, see [Material Preference Guide](https://github.com/anggrayudi/MaterialPreference)
+ *
+ * @see PreferenceActivityMaterial
  * @author Anggrayudi H on July 1st, 2018.
  */
 @SuppressLint("RestrictedApi", "PrivateResource")

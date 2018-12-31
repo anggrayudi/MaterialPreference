@@ -111,8 +111,8 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
-        val preference = listPreference
         if (positiveResult && mPreferenceChanged) {
+            val preference = listPreference
             val values = mNewValues
             if (preference.callChangeListener(values)) {
                 preference.value = values

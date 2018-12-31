@@ -681,7 +681,8 @@ object FileUtils {
             intent.setType(mimeType ?: file.type).resolveActivity(context.packageManager) != null -> context.startActivity(intent)
             else -> MaterialDialog(context)
                     .title(R.string.open_as)
-                    .listItems(R.array.open_file_options, waitForPositiveButton = false) { _, index, _ ->
+                    .listItems(R.array.open_file_options, waitForPositiveButton = false) { dialog, index, _ ->
+                        dialog.dismiss()
                         val mimes = arrayOf("image/*", "audio/*", "video/*", "application/zip", "text/*")
                         if (intent.setType(mimes[index]).resolveActivity(context.packageManager) != null)
                             context.startActivity(intent)

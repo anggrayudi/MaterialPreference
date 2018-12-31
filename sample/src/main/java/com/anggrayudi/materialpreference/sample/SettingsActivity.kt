@@ -8,7 +8,7 @@ import com.anggrayudi.materialpreference.PreferenceFragmentMaterial
 
 class SettingsActivity : PreferenceActivityMaterial() {
 
-    private var mSettingsFragment: SettingsFragment? = null
+    private var settingsFragment: SettingsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,11 +17,11 @@ class SettingsActivity : PreferenceActivityMaterial() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         if (savedInstanceState == null) {
-            mSettingsFragment = SettingsFragment.newInstance(null)
-            supportFragmentManager.beginTransaction().add(R.id.fragment_container, mSettingsFragment!!, TAG).commit()
+            settingsFragment = SettingsFragment.newInstance(null)
+            supportFragmentManager.beginTransaction().add(R.id.fragment_container, settingsFragment!!, TAG).commit()
         } else {
-            mSettingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
-            title = mSettingsFragment!!.preferenceFragmentTitle
+            settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
+            title = settingsFragment!!.preferenceFragmentTitle
         }
     }
 
@@ -30,8 +30,8 @@ class SettingsActivity : PreferenceActivityMaterial() {
     }
 
     override fun onBackStackChanged() {
-        mSettingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
-        title = mSettingsFragment!!.preferenceFragmentTitle
+        settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
+        title = settingsFragment!!.preferenceFragmentTitle
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

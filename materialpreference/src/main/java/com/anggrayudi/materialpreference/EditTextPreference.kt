@@ -34,9 +34,9 @@ import com.anggrayudi.materialpreference.util.StringSummaryFormatter
  * [https://stackoverflow.com/q/53894870/3922207]
  */
 /**
- * A [Preference] that allows for string
- * input. It is a subclass of [DialogPreference] and shows the [EditText]
- * in a dialog. This preference will store a string into the SharedPreferences.
+ * A [Preference] that allows for string input.
+ * It is a subclass of [DialogPreference] and shows the [EditText] in a dialog.
+ * This preference will store a string into the SharedPreferences.
  *
  * All attributes from [DialogPreference] are usable here.
  *
