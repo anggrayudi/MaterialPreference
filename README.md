@@ -17,6 +17,7 @@ Available from API 17.
 This library available in 2 versions:
 1. Version `1.0.0` that uses Support Library v28.0.0
 2. Version `2.0.0` that uses AndroidX Jetpack
+3. Version `3.0.0` that have been migrated to Kotlin
 
 You can choose which version you want to use. But I recommend you to use v2.0.0 since v1.0.0 will not be supported for future release. Notice that [Google announced](https://android-developers.googleblog.com/2018/05/hello-world-androidx.html) where Support Library v28.0.0 is the final version and will be replaced with AndroidX Jetpack soon. So it is your decision whether to migrate to AndroidX Jetpack or not.
 
@@ -26,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:2.1.0'
+    implementation 'com.anggrayudi:materialpreference:3.0.1'
 }
 ```
 
@@ -49,33 +50,32 @@ From your `preferences.xml`:
 
 From your `SettingsFragment`:
 
-```java
-public class SettingsFragment extends PreferenceFragmentMaterial {
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            addPreferencesFromResource(R.xml.preferences); 
-        }
+```kotlin
+class SettingsFragment : PreferenceFragmentMaterial() {
+
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        addPreferencesFromResource(R.xml.preferences)
+    }
 }
 ```
 
 From your `SettingsActivity`:
 
-```java
-public class SettingsActivity extends PreferenceActivityMaterial {
+```kotlin
+class SettingsActivity : PreferenceActivityMaterial() {
+
+    private var settingsFragment: SettingsFragment? = null
     
-    private SettingsFragment mSettingsFragment;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         
         if (savedInstanceState == null) {
-            mSettingsFragment = SettingsFragment.newInstance(null);
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mSettingsFragment, "Settings").commit();
+            settingsFragment = SettingsFragment.newInstance(null)
+            supportFragmentManager.beginTransaction().add(R.id.fragment_container, settingsFragment!!, TAG).commit()
         } else {
-            mSettingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag("Settings");
-            setTitle(mSettingsFragment.getPreferenceFragmentTitle());
+            settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
+            title = settingsFragment!!.preferenceFragmentTitle
         }
     }
 }
@@ -96,6 +96,7 @@ public class SettingsActivity extends PreferenceActivityMaterial {
 - `FolderPreference`
 - `DatePreference`
 - `TimePreference`
+- `ColorPreference`
 
 ### RingtonePreference
 
@@ -104,9 +105,6 @@ If you want to include sounds from the external storage your app needs to reques
 `android.permission.READ_EXTERNAL_STORAGE` permission in its manifest.
 Don't forget to check this runtime permission before opening ringtone picker on API 23.
 
-### TODO-list
-- `app:entryIcons` to `ListPreference` and `MultiSelectListPreference`
-
 ## Donation
 Any donation you give is really helpful for us to develop this library. It feels like energy from power stone.
 
@@ -114,7 +112,7 @@ Any donation you give is really helpful for us to develop this library. It feels
 
 ## License
 
-    Copyright 2018 Anggrayudi Hardiannicko A.
+    Copyright 2018-2019 Anggrayudi Hardiannicko A.
  
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
