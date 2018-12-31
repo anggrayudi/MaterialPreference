@@ -17,7 +17,7 @@ Available from API 17.
 This library available in 2 versions:
 1. Version `1.0.0` that uses Support Library v28.0.0
 2. Version `2.0.0` that uses AndroidX Jetpack
-3. Version `3.0.0` that migrated to Kotlin
+3. Version `3.0.0` that have been migrated to Kotlin
 
 You can choose which version you want to use. But I recommend you to use v2.0.0 since v1.0.0 will not be supported for future release. Notice that [Google announced](https://android-developers.googleblog.com/2018/05/hello-world-androidx.html) where Support Library v28.0.0 is the final version and will be replaced with AndroidX Jetpack soon. So it is your decision whether to migrate to AndroidX Jetpack or not.
 
@@ -112,7 +112,7 @@ Any donation you give is really helpful for us to develop this library. It feels
 
 ## License
 
-    Copyright 2018 Anggrayudi Hardiannicko A.
+    Copyright 2018-2019 Anggrayudi Hardiannicko A.
  
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
