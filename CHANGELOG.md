@@ -1,4 +1,14 @@
 
+## 3.0.1 (2019-01-01)
+
+### Enhancements
+* Migrated to Kotlin
+* New `ColorPreference`
+* `FolderPreference` now supports API level 19 and lower
+
+### Fixed
+* Cannot extends from `PreferenceActivityMaterial` and `PreferenceFragmentMaterial`
+
 ## 2.1.0 (2018-12-16)
 
 ### Enhancements
