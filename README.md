@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.0.0'
+    implementation 'com.anggrayudi:materialpreference:3.0.1'
 }
 ```
 
