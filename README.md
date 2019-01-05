@@ -21,15 +21,21 @@ This library available in 2 versions:
 
 You can choose which version you want to use. But I recommend you to use v2.0.0 since v1.0.0 will not be supported for future release. Notice that [Google announced](https://android-developers.googleblog.com/2018/05/hello-world-androidx.html) where Support Library v28.0.0 is the final version and will be replaced with AndroidX Jetpack soon. So it is your decision whether to migrate to AndroidX Jetpack or not.
 
-```groovy
+### Basic
+
+```gradle
+dependencies {
+    implementation 'com.anggrayudi:materialpreference:3.1.0'
+}
+```
+
+**Note:** If you encounter error `Failed to resolve com.anggrayudi:materialpreference:x.x.x`, then add the following config:
+
+````gradle
 repositories {
     maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
 }
-
-dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.0.1'
-}
-```
+````
 
 From your `preferences.xml`:
 
@@ -80,6 +86,39 @@ class SettingsActivity : PreferenceActivityMaterial() {
     }
 }
 ```
+
+### Preference Key Constants Generator
+
+Material Preference has capability to generate your preference key in a constant class. By default, this class is named `PrefKey`. With this generator, you don't need to rewrite constant field each time you modify preference key from file `res/xml/preferences.xml`. It improves accuracy in writing constant values.
+
+To enable this feature, simply add the following configuration to your `build.gradle`:
+
+````gradle
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt' // Add this line
+
+dependencies {
+    implementation 'com.anggrayudi:materialpreference:3.1.0'
+    kapt 'com.anggrayudi:materialpreference-compiler:1.0.0'
+}
+````
+
+From your `SettingsFragment` class:
+
+````kotlin
+@PreferenceKeysConfig() // Add this annotation
+class SettingsFragment : PreferenceFragmentMaterial() {
+
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        addPreferencesFromResource(R.xml.preferences)
+        // You can access the constant values with auto-generated class named PrefKey
+        findPreference(PrefKey.ABOUT)!!.summary = BuildConfig.VERSION_NAME
+    }
+}
+````
+
+**Note:** If `PrefKey` does not update constant fields, click ![Alt text](art/make-project.png?raw=true "Make Project") Make Project in Android Studio.
 
 ## Preferences
 
