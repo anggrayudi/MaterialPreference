@@ -61,8 +61,7 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
         return dialog
                 .positiveButton(text = mPositiveButtonText ?: getString(android.R.string.ok)) {
                     mWhichButtonClicked = WhichButton.POSITIVE
-                }
-                .negativeButton(text = mNegativeButtonText ?: getString(android.R.string.cancel)) {
+                }.negativeButton(text = mNegativeButtonText ?: getString(android.R.string.cancel)) {
                     mWhichButtonClicked = WhichButton.NEGATIVE
                 }
     }
@@ -90,14 +89,13 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
 
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-
             override fun onTextChanged(text: CharSequence?, i: Int, i1: Int, i2: Int) {
                 val underMinChars = text == null || preference.minLength > 0 && text.length < preference.minLength
 
                 (dialog as MaterialDialog).getActionButton(WhichButton.POSITIVE).isEnabled =
                         !underMinChars && text!!.length <= preference.maxLength
 
-                mTextInputLayout!!.error = if (underMinChars)
+                mTextInputLayout!!.error = if (underMinChars && preference.minLength > 0)
                     getString(R.string.min_preference_input_chars_, preference.minLength)
                 else
                     null

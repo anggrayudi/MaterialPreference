@@ -1,0 +1,33 @@
+apply plugin: 'kotlin'
+
+group = 'com.anggrayudi'
+version = "$processorVersion"
+archivesBaseName = 'materialpreference-api'
+
+repositories {
+    mavenCentral()
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
+
+ext {
+    packagingMode = 'jar'
+    PUBLISH_ARTIFACT_ID = 'materialpreference-api'
+    siteUrl = 'https://github.com/anggrayudi/MaterialPreference'
+    gitUrl = 'https://github.com/anggrayudi/MaterialPreference.git'
+    libsDesc = 'Annotation processor for library MaterialPreference.'
+}
+
+apply from: '../android-release-aar.gradle'

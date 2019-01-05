@@ -1,1 +1,1 @@
-include ':sample', ':materialpreference'
+include ':sample', ':materialpreference', ':annotation', ':processor'

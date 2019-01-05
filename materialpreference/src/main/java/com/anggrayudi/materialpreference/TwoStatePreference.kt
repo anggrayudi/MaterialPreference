@@ -37,8 +37,6 @@ abstract class TwoStatePreference @JvmOverloads constructor(
         defStyleAttr: Int = 0, defStyleRes: Int = 0)
     : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
-    // TODO 26-Dec-18: Periksa modifier member variabel class preference
-
     /**
      * Sets the summary to be shown when checked.
      *

@@ -114,6 +114,7 @@ class BillingManager(
     /**
      * Start a purchase or subscription replace flow
      */
+    @Suppress("DEPRECATION")
     fun initiatePurchaseFlow(skuId: String, oldSkus: ArrayList<String>?, @SkuType billingType: String) {
         val purchaseFlowRequest = Runnable {
             Log.d(TAG, "Launching in-app purchase flow. Replace old SKU? " + (oldSkus != null))

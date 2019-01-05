@@ -1,4 +1,13 @@
 
+## 3.1.0 (2019-05-01)
+
+### Enhancements
+* Added preference key generator. With this feature, you don't need to save all preference keys into a constant class each time you modify `preferences.xml`
+
+### Fixed
+* `ListPreference` does not update summary correctly
+* `FolderPreference` now maintains current path on orientation change
+
 ## 3.0.1 (2019-01-01)
 
 ### Enhancements

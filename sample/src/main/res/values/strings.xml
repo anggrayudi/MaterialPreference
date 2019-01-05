@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Material Preference</string>
+    <string name="app_name" translatable="false">Material Preference</string>
+    <string name="about" translatable="false">about</string>
 </resources>

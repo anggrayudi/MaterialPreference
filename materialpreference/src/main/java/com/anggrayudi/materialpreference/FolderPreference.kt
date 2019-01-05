@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.folderChooser
+import com.afollestad.materialdialogs.files.selectedFolder
 import com.anggrayudi.materialpreference.util.FileUtils
 import com.anggrayudi.materialpreference.util.FolderType
 import java.io.File
@@ -49,9 +50,15 @@ class FolderPreference @JvmOverloads constructor(
     val defaultFolder: String
         get() = FolderType[defaultFolderType]
 
-    /** Get current value that is saved by `FolderPreference` */
-    val folder: String?
+    /** Get or set value that is saved by `FolderPreference` */
+    var folder: String?
         get() = getPersistedString(defaultFolder)
+        set(value) {
+            if (callChangeListener(value)) {
+                persistString(value)
+                summary = value
+            }
+        }
 
     override var summary: CharSequence?
         get() = folder
@@ -92,19 +99,22 @@ class FolderPreference @JvmOverloads constructor(
 
     class FolderPreferenceDialog : DialogFragment() {
 
+        private var dialog: MaterialDialog? = null
+
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            // TODO 30-Dec-18: FIXME restore current path after device orientation: https://github.com/afollestad/material-dialogs/issues/1684
-            return MaterialDialog(context!!)
+            dialog = MaterialDialog(context!!)
                     .negativeButton(android.R.string.cancel)
                     .folderChooser(File(arguments!!.getString("folder")), allowFolderCreation = true){ _, file ->
-                        val path = file.absolutePath
                         val preference = (activity as PreferenceActivityMaterial)
-                                .visiblePreferenceFragment!!.findPreference(tag!!)
-                        if (preference!!.callChangeListener(path)) {
-                            preference.persistString(path)
-                            preference.summary = path
-                        }
+                                .visiblePreferenceFragment!!.findPreference(tag!!) as FolderPreference
+                        preference.folder = file.absolutePath
                     }
+            return dialog as MaterialDialog
+        }
+
+        override fun onSaveInstanceState(outState: Bundle) {
+            super.onSaveInstanceState(outState)
+            arguments!!.putString("folder", dialog!!.selectedFolder()!!.absolutePath)
         }
     }
 }

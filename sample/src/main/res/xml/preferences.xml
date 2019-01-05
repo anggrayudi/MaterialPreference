@@ -131,7 +131,7 @@
     <!-- To make Preferences floating, you must wrap them inside PreferenceCategory -->
     <PreferenceCategory>
         <Preference
-            android:key="about"
+            android:key="@string/about"
             android:title="About"
             android:persistent="false"
             android:icon="@drawable/baseline_info_black_24"

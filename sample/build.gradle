@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -46,13 +47,11 @@ android {
 }
 
 repositories {
-    mavenCentral()
+//    maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation project(':materialpreference')
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
@@ -60,4 +59,12 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation "com.afollestad.material-dialogs:core:$dialogVersion"
+
+    implementation project(':materialpreference')
+    compileOnly project(':annotation')
+    kapt project(':processor')
+
+//    implementation 'com.anggrayudi:materialpreference:3.1.0'
+//    implementation 'com.anggrayudi:materialpreference-api:1.0.0'
+//    kapt 'com.anggrayudi:materialpreference-compiler:1.0.0'
 }

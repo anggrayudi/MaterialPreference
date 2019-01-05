@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MaterialPreference.iml" filepath="$PROJECT_DIR$/MaterialPreference.iml" />
+      <module fileurl="file://$PROJECT_DIR$/annotation/annotation.iml" filepath="$PROJECT_DIR$/annotation/annotation.iml" />
       <module fileurl="file://$PROJECT_DIR$/materialpreference/materialpreference.iml" filepath="$PROJECT_DIR$/materialpreference/materialpreference.iml" />
+      <module fileurl="file://$PROJECT_DIR$/processor/processor.iml" filepath="$PROJECT_DIR$/processor/processor.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
     </modules>
   </component>

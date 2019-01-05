@@ -1,0 +1,52 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
+
+group = 'com.anggrayudi'
+version = "$processorVersion"
+archivesBaseName = 'materialpreference-compiler'
+
+repositories {
+    mavenCentral()
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir.absolutePath}/generated/source/kaptKotlin/"
+        }
+    }
+}
+
+dependencies {
+    implementation project(':annotation')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'com.squareup:kotlinpoet:1.0.0'
+    implementation 'com.google.auto.service:auto-service:1.0-rc4'
+    kapt "com.google.auto.service:auto-service:1.0-rc4"
+    implementation 'xmlpull:xmlpull:1.1.3.1'
+    implementation 'org.ogce:xpp3:1.1.6'
+}
+
+ext {
+    packagingMode = 'jar'
+    PUBLISH_ARTIFACT_ID = 'materialpreference-compiler'
+    siteUrl = 'https://github.com/anggrayudi/MaterialPreference'
+    gitUrl = 'https://github.com/anggrayudi/MaterialPreference.git'
+    libsDesc = 'Annotation processor for library MaterialPreference.'
+}
+
+apply from: '../android-release-aar.gradle'

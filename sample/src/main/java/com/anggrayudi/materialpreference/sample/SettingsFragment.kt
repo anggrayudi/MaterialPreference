@@ -11,21 +11,36 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.anggrayudi.materialpreference.*
+import com.anggrayudi.materialpreference.annotation.PreferenceKeysConfig
 
+/**
+ * [PreferenceKeysConfig] annotation creates a constant class which contains all of your
+ * **Preference Keys** from file `/xml/preferences.xml`, .i.e [PrefKey] object class.
+ * So you don't need to make your own constant class.
+ *
+ * To use auto-generated [PrefKey] class, add the following configuration to your `build.gradle` in
+ * `dependencies` section:
+ *
+ *      dependencies {
+ *          implementation 'com.anggrayudi:materialpreference:3.1.0'
+ *          kapt 'com.anggrayudi:materialpreference-compiler:1.0.0'
+ *      }
+ */
+@PreferenceKeysConfig()
 class SettingsFragment : PreferenceFragmentMaterial(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
-        findPreference("about")!!.summary = BuildConfig.VERSION_NAME
+        findPreference(PrefKey.ABOUT)!!.summary = BuildConfig.VERSION_NAME
 
-        val volume = findPreference("notification_volume") as SeekBarPreference
+        val volume = findPreference(PrefKey.NOTIFICATION_VOLUME) as SeekBarPreference
         volume.summaryFormatter = { "$it%" }
 
-        val vibration = findPreference("vibrate_duration") as SeekBarDialogPreference
+        val vibration = findPreference(PrefKey.VIBRATE_DURATION) as SeekBarDialogPreference
         vibration.summaryFormatter = { "${it}ms" }
 
-        val indicatorPreference = findPreference("account_status") as IndicatorPreference
+        val indicatorPreference = findPreference(PrefKey.ACCOUNT_STATUS) as IndicatorPreference
         indicatorPreference.onPreferenceClickListener = {
             MaterialDialog(context!!)
                     .message(text = "Your account has been verified.")
@@ -33,13 +48,12 @@ class SettingsFragment : PreferenceFragmentMaterial(), SharedPreferences.OnShare
                     .show()
             true
         }
-
         indicatorPreference.onPreferenceLongClickListener = {
-            Toast.makeText(context, "onLongClick: " + it.title!!, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onLogClick: " + it.title!!, Toast.LENGTH_SHORT).show()
             true
         }
 
-        val colorPreference = findPreference("themeColor") as ColorPreference
+        val colorPreference = findPreference(PrefKey.THEME_COLOR) as ColorPreference
         colorPreference.allowArgb = true
         colorPreference.allowTransparency = true
 
@@ -59,7 +73,7 @@ class SettingsFragment : PreferenceFragmentMaterial(), SharedPreferences.OnShare
             }
         }
 
-        val folderPreference = findPreference("backupLocation") as FolderPreference
+        val folderPreference = findPreference(PrefKey.BACKUP_LOCATION) as FolderPreference
         folderPreference.permissionCallback = object : StoragePermissionCallback {
             override fun onPermissionTrouble(read: Boolean, write: Boolean) {
                 ActivityCompat.requestPermissions(activity!!,
@@ -67,7 +81,7 @@ class SettingsFragment : PreferenceFragmentMaterial(), SharedPreferences.OnShare
             }
         }
 
-        findPreference("restore_default")!!.onPreferenceClickListener = {
+        findPreference(PrefKey.RESTORE_DEFAULT)!!.onPreferenceClickListener = {
             MaterialDialog(context!!)
                     .message(text = "Are you sure you want to restore default settings?")
                     .negativeButton(android.R.string.cancel)
@@ -78,7 +92,7 @@ class SettingsFragment : PreferenceFragmentMaterial(), SharedPreferences.OnShare
             true
         }
 
-        findPreference("account_name")!!.onPreferenceChangeListener = { _, newValue ->
+        findPreference(PrefKey.ACCOUNT_NAME)!!.onPreferenceChangeListener = { _, newValue ->
             val name = newValue.toString()
             if (name.contains("shit")) {
                 Toast.makeText(context, "Use a polite name", Toast.LENGTH_SHORT).show()

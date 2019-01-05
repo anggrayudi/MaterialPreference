@@ -30,25 +30,25 @@ android {
 }
 
 repositories {
-    mavenCentral()
+    maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha02'
-    implementation 'com.wdullaer:materialdatetimepicker:4.1.0'
-    implementation "com.afollestad.material-dialogs:core:$dialogVersion"
-    implementation "com.afollestad.material-dialogs:files:$dialogVersion"
-    implementation "com.afollestad.material-dialogs:color:$dialogVersion"
-    implementation 'commons-io:commons-io:2.6'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    api 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    api 'androidx.cardview:cardview:1.0.0'
+    api 'com.google.android.material:material:1.1.0-alpha02'
+    api 'com.wdullaer:materialdatetimepicker:4.1.0'
+    api "com.afollestad.material-dialogs:core:$dialogVersion"
+    api "com.afollestad.material-dialogs:files:$dialogVersion"
+    api "com.afollestad.material-dialogs:color:$dialogVersion"
+    api 'commons-io:commons-io:2.6'
+    api "com.anggrayudi:materialpreference-api:$processorVersion"
 }
 
 ext {
-    PUBLISH_GROUP_ID = group
+    packagingMode = 'aar'
     PUBLISH_ARTIFACT_ID = 'materialpreference'
-    PUBLISH_VERSION = version
     siteUrl = 'https://github.com/anggrayudi/MaterialPreference'
     gitUrl = 'https://github.com/anggrayudi/MaterialPreference.git'
     libsDesc = 'A library designed to replace default preferences on Android framework with something beauty.'

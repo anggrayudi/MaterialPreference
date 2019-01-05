@@ -14,14 +14,5 @@ class ExampleUnitTest {
 //        println("Uji: $isLegacySummary")
 //        isLegacySummary = true
 //        println("Uji: $isLegacySummary")
-
-        val hexColor = String.format("#%06X", 0xFFFFFF and -16711936)
-        print(hexColor)
     }
-
-    var isLegacySummary: Boolean = false
-        set(value) {
-            field = value
-            println("Value $value")
-        }
 }

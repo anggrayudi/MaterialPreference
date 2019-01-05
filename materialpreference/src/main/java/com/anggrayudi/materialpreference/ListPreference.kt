@@ -49,7 +49,6 @@ class ListPreference @JvmOverloads constructor(
     override var entries: Array<CharSequence>? = null
     override var entryValues: Array<CharSequence>? = null
 
-    // TODO 27-Dec-18: Periksa field 'value' pada semua preference
     /**
      * Sets the value of the key. This should be one of the entries in [entryValues].
      *
@@ -63,8 +62,8 @@ class ListPreference @JvmOverloads constructor(
             if (changed && callChangeListener(v)) {
                 _value = v
                 persistString(v)
-                if (changed && isBindValueToSummary) {
-                    summary = summaryFormatter?.invoke(entry.toString(), v) ?: entry.toString()
+                if (isBindValueToSummary) {
+                    summary = summaryFormatter?.invoke(entry, v) ?: entry
                 }
             }
         }
@@ -84,35 +83,11 @@ class ListPreference @JvmOverloads constructor(
         set(f) {
             field = f
             if (isBindValueToSummary) {
-                summary = f?.invoke(entry.toString(), value) ?: entry.toString()
+                summary = f?.invoke(entry, value) ?: entry
             }
         }
 
     var disabledEntryValues: Array<CharSequence>? = null
-
-    /**
-     * Sets the summary for this Preference with a CharSequence.
-     * If the summary has a [String.format] marker in it (i.e. "%s" or "%1$s"),
-     * then the current entry value will be substituted in its place when it's retrieved.
-     */
-    override var summary: CharSequence?
-        get() {
-            val entry = entry
-            return if (_summary == null) {
-                super.summary
-            } else {
-                String.format(_summary!!, entry ?: "")
-            }
-        }
-        set(summary) {
-            super.summary = summary
-            if (summary == null && _summary != null) {
-                _summary = null
-            } else if (summary != null && summary != _summary) {
-                _summary = summary.toString()
-            }
-        }
-    private var _summary: String? = null
 
     /**
      * Returns the entry corresponding to the current value.
@@ -121,33 +96,14 @@ class ListPreference @JvmOverloads constructor(
      */
     val entry: CharSequence?
         get() {
-            val index = valueIndex
+            val index = findIndexOfValue(value)
             return if (index >= 0 && entries != null) entries!![index] else null
         }
 
-    /** Sets the value to the given index from the entry values. */
-    private var valueIndex: Int
-        get() = findIndexOfValue(value)
-        set(index) {
-            if (entryValues != null) {
-                value = entryValues!![index].toString()
-            }
-        }
-
     init {
-        var a = context.obtainStyledAttributes(attrs, R.styleable.ListPreference, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.ListPreference, defStyleAttr, defStyleRes)
         entries = a.getTextArray(R.styleable.ListPreference_android_entries)
         entryValues = a.getTextArray(R.styleable.ListPreference_android_entryValues)
-        a.recycle()
-
-        /* Retrieve the Preference summary attribute since it's private
-         * in the Preference class.
-         */
-        a = context.obtainStyledAttributes(attrs, R.styleable.Preference, defStyleAttr, defStyleRes)
-        _summary = a.getString(R.styleable.Preference_android_summary)
-        if (isBindValueToSummary && TextUtils.isEmpty(_summary))
-            _summary = "%s"
-
         a.recycle()
 
         negativeButtonText = null
@@ -166,7 +122,7 @@ class ListPreference @JvmOverloads constructor(
     override fun onSetInitialValue() {
         _value = getPersistedString(value)
         if (isBindValueToSummary)
-            summary = summaryFormatter?.invoke(entry.toString(), _value) ?: entry.toString()
+            summary = summaryFormatter?.invoke(entry, _value) ?: entry
     }
 
     override fun onSaveInstanceState(): Parcelable? {

@@ -23,6 +23,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
         maven { url "https://dl.bintray.com/drummer-aidan/maven/" }
     }
 }
@@ -33,10 +34,11 @@ task clean(type: Delete) {
 
 ext {
     appVersionCode = 5
-    libVersion = "3.0.1"
+    libVersion = '3.1.0'
+    processorVersion = '1.0.0'
     minSdkVersion = 17
     targetSdkVersion = 28
     compileSdkVersion = 28
-    buildToolsVersion = "28.0.3"
-    dialogVersion = '2.0.0-rc5'
+    buildToolsVersion = '28.0.3'
+    dialogVersion = '2.0.0-rc6'
 }
