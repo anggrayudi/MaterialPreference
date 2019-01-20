@@ -24,11 +24,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 sourceSets {
-    main {
-        java {
-            srcDir "${buildDir.absolutePath}/generated/source/kaptKotlin/"
-        }
-    }
+    main.java.srcDir "${buildDir.absolutePath}/generated/source/kaptKotlin/"
 }
 
 dependencies {
@@ -43,9 +39,7 @@ dependencies {
 
 ext {
     packagingMode = 'jar'
-    PUBLISH_ARTIFACT_ID = 'materialpreference-compiler'
-    siteUrl = 'https://github.com/anggrayudi/MaterialPreference'
-    gitUrl = 'https://github.com/anggrayudi/MaterialPreference.git'
+    PUBLISH_ARTIFACT_ID = archivesBaseName
     libsDesc = 'Annotation processor for library MaterialPreference.'
 }
 

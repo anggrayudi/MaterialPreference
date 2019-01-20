@@ -1,4 +1,9 @@
 
+## 3.1.1 (2019-20-01)
+
+### Enhancements
+* Updated dependencies
+
 ## 3.1.0 (2019-05-01)
 
 ### Enhancements

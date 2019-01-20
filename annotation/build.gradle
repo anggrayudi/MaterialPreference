@@ -24,9 +24,7 @@ dependencies {
 
 ext {
     packagingMode = 'jar'
-    PUBLISH_ARTIFACT_ID = 'materialpreference-api'
-    siteUrl = 'https://github.com/anggrayudi/MaterialPreference'
-    gitUrl = 'https://github.com/anggrayudi/MaterialPreference.git'
+    PUBLISH_ARTIFACT_ID = archivesBaseName
     libsDesc = 'Annotation processor for library MaterialPreference.'
 }
 

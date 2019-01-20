@@ -2,8 +2,8 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 def pub_artifactId = project.PUBLISH_ARTIFACT_ID
-def siteUrl = project.siteUrl
-def gitUrl = project.gitUrl
+def siteUrl = 'https://github.com/anggrayudi/MaterialPreference'
+def gitUrl = 'https://github.com/anggrayudi/MaterialPreference.git'
 def pkgOpts = project.packagingMode
 def libsDesc = project.libsDesc
 
@@ -95,7 +95,6 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
-
     configurations = ['archives']
     pkg {
         repo = 'maven'

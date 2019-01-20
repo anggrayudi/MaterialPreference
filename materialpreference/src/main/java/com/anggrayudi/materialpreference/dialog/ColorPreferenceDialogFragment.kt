@@ -18,7 +18,7 @@ class ColorPreferenceDialogFragment : PreferenceDialogFragment() {
                         subColors = colorPreference.subColorList,
                         initialSelection = colorPreference.color,
                         allowCustomArgb = colorPreference.allowArgb,
-                        showAlphaSelector = colorPreference.allowTransparency) { _, color->
+                        showAlphaSelector = colorPreference.allowTransparency) { _, color ->
                     mWhichButtonClicked = WhichButton.POSITIVE
                     colorPreference.color = color
                 }

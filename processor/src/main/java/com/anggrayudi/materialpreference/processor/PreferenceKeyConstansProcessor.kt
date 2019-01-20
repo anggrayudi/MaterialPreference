@@ -39,7 +39,7 @@ class PreferenceKeyConstansProcessor : AbstractProcessor() {
             val xmlRes = if (a.xmlResName.endsWith(".xml")) a.xmlResName else a.xmlResName + ".xml"
             val xmlFile = File(rootFile, "xml${File.separator}$xmlRes")
             if (!xmlFile.isFile) {
-                processingEnv.messager.errorMessage { "Can't find file $xmlRes in path ${xmlFile.absolutePath}" }
+                processingEnv.messager.warningMessage { "Can't find file $xmlRes in path ${xmlFile.absolutePath}" }
                 return false
             }
             val strRes = if (a.stringResName.endsWith(".xml")) a.stringResName else a.stringResName + ".xml"

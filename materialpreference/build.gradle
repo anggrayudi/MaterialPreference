@@ -49,8 +49,6 @@ dependencies {
 ext {
     packagingMode = 'aar'
     PUBLISH_ARTIFACT_ID = 'materialpreference'
-    siteUrl = 'https://github.com/anggrayudi/MaterialPreference'
-    gitUrl = 'https://github.com/anggrayudi/MaterialPreference.git'
     libsDesc = 'A library designed to replace default preferences on Android framework with something beauty.'
 }
 

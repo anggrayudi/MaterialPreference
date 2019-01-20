@@ -22,7 +22,7 @@ import com.anggrayudi.materialpreference.annotation.PreferenceKeysConfig
  * `dependencies` section:
  *
  *      dependencies {
- *          implementation 'com.anggrayudi:materialpreference:3.1.0'
+ *          implementation 'com.anggrayudi:materialpreference:3.1.1'
  *          kapt 'com.anggrayudi:materialpreference-compiler:1.0.0'
  *      }
  */
