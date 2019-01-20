@@ -1,7 +1,7 @@
 # Material Preference [ ![Download](https://api.bintray.com/packages/anggrayudi/maven/materialpreference/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference/_latestVersion)
 A library designed for people who love simplicity. Hate the old preference style? Try this library.
 
-It combines libraries from `android.support.v7.preference` and `net.xpece.android.support.preference`.
+It combines libraries from `androidx.preference` and `net.xpece.android.support.preference`.
 Available from API 17.
 <br><a href="https://play.google.com/store/apps/details?id=com.anggrayudi.materialpreference.sample" target="_blank"><img alt="Google Play" height="80" src="https://play.google.com/intl/en_US/badges/images/generic/en_badge_web_generic.png" align="right"/></a><br><br><br>
 
@@ -14,18 +14,11 @@ Available from API 17.
 
 ## Usage
 
-This library available in 2 versions:
-1. Version `1.0.0` that uses Support Library v28.0.0
-2. Version `2.0.0` that uses AndroidX Jetpack
-3. Version `3.0.0` that have been migrated to Kotlin
-
-You can choose which version you want to use. But I recommend you to use v3.+ since v1.0.0 will not be supported for future release. Notice that [Google announced](https://android-developers.googleblog.com/2018/05/hello-world-androidx.html) where Support Library v28.0.0 is the final version and will be replaced with AndroidX Jetpack soon. So it is your decision whether to migrate to AndroidX Jetpack or not.
-
 ### Basic
 
 ```gradle
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.1.0'
+    implementation 'com.anggrayudi:materialpreference:3.1.1'
 }
 ```
 
@@ -99,7 +92,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.1.0'
+    implementation 'com.anggrayudi:materialpreference:3.1.1'
     kapt 'com.anggrayudi:materialpreference-compiler:1.0.0'
 }
 ````
