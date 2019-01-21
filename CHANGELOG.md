@@ -3,6 +3,7 @@
 
 ### Enhancements
 * Updated dependencies
+* Version `3.1.0` and lower are no longer available to download
 
 ## 3.1.0 (2019-05-01)
 
