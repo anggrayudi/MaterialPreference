@@ -25,7 +25,7 @@ dependencies {
 ext {
     packagingMode = 'jar'
     PUBLISH_ARTIFACT_ID = archivesBaseName
-    libsDesc = 'Annotation processor for library MaterialPreference.'
+    libsDesc = 'Annotation processor API for library MaterialPreference.'
 }
 
 apply from: '../android-release-aar.gradle'

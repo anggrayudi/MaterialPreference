@@ -1,7 +1,6 @@
 package com.anggrayudi.materialpreference.sample
 
 import android.Manifest
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -27,7 +26,7 @@ import com.anggrayudi.materialpreference.annotation.PreferenceKeysConfig
  *      }
  */
 @PreferenceKeysConfig()
-class SettingsFragment : PreferenceFragmentMaterial(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment : PreferenceFragmentMaterial() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
@@ -101,23 +100,9 @@ class SettingsFragment : PreferenceFragmentMaterial(), SharedPreferences.OnShare
                 true
             }
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        preferenceManager!!.sharedPreferences!!.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        preferenceManager!!.sharedPreferences!!.unregisterOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
-        when (key) {
-            "auto_update" -> {
-            }
-        }
+        // TODO 22-Jan-19: Wait until Color Picker is fixed
+        findPreference(PrefKey.THEME_COLOR)!!.isVisible = BuildConfig.DEBUG
     }
 
     companion object {
