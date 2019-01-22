@@ -84,7 +84,7 @@ class SettingsActivity : PreferenceActivityMaterial() {
 
 ### Preference Key Constants Generator
 
-Material Preference has capability to auto-generate your preference key in a constant class. By default, this class is named `PrefKey`. With this generator, you don't need to rewrite constant field each time you modify preference key from file `res/xml/preferences.xml`. It improves accuracy in writing constant values.
+Material Preference has a capability to auto-generate your preference keys in a constant class. By default, this class is named `PrefKey`. With this generator, you don't need to rewrite constant field each time you modify preference key from file `res/xml/preferences.xml`. It improves accuracy in writing constant values.
 
 To enable this feature, simply add the following configuration to your `build.gradle`:
 
