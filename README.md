@@ -18,7 +18,7 @@ Available from API 17.
 
 ```gradle
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.1.1'
+    implementation 'com.anggrayudi:materialpreference:3.1.2'
 }
 ```
 
@@ -94,7 +94,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.1.1'
+    implementation 'com.anggrayudi:materialpreference:3.1.2'
     kapt 'com.anggrayudi:materialpreference-compiler:1.0.0'
 }
 ````
