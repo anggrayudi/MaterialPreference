@@ -27,6 +27,8 @@ dependencies {
 ````gradle
 repositories {
     maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
+    // If error "Failed to resolve com.afollestad.material-dialogs" appears, add the following line
+    maven { url "https://dl.bintray.com/drummer-aidan/maven/" }
 }
 ````
 
