@@ -27,6 +27,8 @@ dependencies {
 ````gradle
 repositories {
     maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
+    // If error "Failed to resolve com.afollestad.material-dialogs" appears, add the following line
+    maven { url "https://dl.bintray.com/drummer-aidan/maven/" }
 }
 ````
 
@@ -80,9 +82,9 @@ class SettingsActivity : PreferenceActivityMaterial() {
 }
 ```
 
-### Preference Key Constants Generator
+### Preference Key Constants Generator [ ![Download](https://api.bintray.com/packages/anggrayudi/maven/materialpreference-compiler/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference-compiler/_latestVersion)
 
-Material Preference has capability to auto-generate your preference key in a constant class. By default, this class is named `PrefKey`. With this generator, you don't need to rewrite constant field each time you modify preference key from file `res/xml/preferences.xml`. It improves accuracy in writing constant values.
+Material Preference has a capability to auto-generate your preference keys in a constant class. By default, this class is named `PrefKey`. With this generator, you don't need to rewrite constant field each time you modify preference key from file `res/xml/preferences.xml`. It improves accuracy in writing constant values.
 
 To enable this feature, simply add the following configuration to your `build.gradle`:
 
@@ -111,7 +113,9 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 }
 ````
 
-**Note:** If `PrefKey` does not update constant fields, click ![Alt text](art/make-project.png?raw=true "Make Project") Make Project in Android Studio.
+**Note:**
+* If `PrefKey` does not update constant fields, click ![Alt text](art/make-project.png?raw=true "Make Project") Make Project in Android Studio.
+* This generator wont work with Android Studio 3.3.0 since Google does not fix [this bug](https://issuetracker.google.com/issues/122883561) yet.
 
 ## Preferences
 
