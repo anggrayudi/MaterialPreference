@@ -82,7 +82,7 @@ class SettingsActivity : PreferenceActivityMaterial() {
 }
 ```
 
-### Preference Key Constants Generator
+### Preference Key Constants Generator [ ![Download](https://api.bintray.com/packages/anggrayudi/maven/materialpreference-compiler/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference-compiler/_latestVersion)
 
 Material Preference has a capability to auto-generate your preference keys in a constant class. By default, this class is named `PrefKey`. With this generator, you don't need to rewrite constant field each time you modify preference key from file `res/xml/preferences.xml`. It improves accuracy in writing constant values.
 
