@@ -101,7 +101,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
             }
         }
 
-        // TODO 22-Jan-19: Wait until Color Picker is fixed
+        // TODO 22-Jan-19: Wait until Color Picker is fixed by Aidan
         findPreference(PrefKey.THEME_COLOR)!!.isVisible = BuildConfig.DEBUG
     }
 

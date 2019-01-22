@@ -1506,8 +1506,7 @@ open class Preference @JvmOverloads constructor(
             baseMethodCalled = false
             val state = onSaveInstanceState()
             if (!baseMethodCalled) {
-                throw IllegalStateException(
-                        "Derived class did not call super.onSaveInstanceState()")
+                throw IllegalStateException("Derived class did not call super.onSaveInstanceState()")
             }
             if (state != null) {
                 container.putParcelable(key, state)

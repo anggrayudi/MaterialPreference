@@ -18,6 +18,7 @@ package com.anggrayudi.materialpreference
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.XmlResourceParser
 import android.util.AttributeSet
 import android.util.Xml
 import android.view.InflateException
@@ -56,8 +57,15 @@ internal class PreferenceInflater(val context: Context, private val preferenceMa
      * this is the root item; otherwise it is the root of the inflated XML file.
      */
     fun inflate(resource: Int, root: PreferenceGroup?): Preference {
-        context.resources.getXml(resource).use { parser ->
-            return inflate(parser, root)
+        // DO NOT USE "use" extension from Kotlin. It will cause this runtime error on some devices:
+        // java.lang.ClassCastException: android.content.res.XmlBlock$Parser cannot be cast to java.lang.AutoCloseable
+        // I don't know why.
+        val parser = context.resources.getXml(resource)
+        @Suppress("ConvertTryFinallyToUseCall")
+        return try {
+            inflate(parser, root)
+        } finally {
+            parser.close()
         }
     }
 
@@ -77,7 +85,7 @@ internal class PreferenceInflater(val context: Context, private val preferenceMa
      * @return The root of the inflated hierarchy. If root was supplied,
      * this is root; otherwise it is the root of the inflated XML file.
      */
-    fun inflate(parser: XmlPullParser, root: PreferenceGroup?): Preference {
+    fun inflate(parser: XmlResourceParser, root: PreferenceGroup?): Preference {
         synchronized(mConstructorArgs) {
             val attrs = Xml.asAttributeSet(parser)
             mConstructorArgs[0] = context

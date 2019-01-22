@@ -1,4 +1,9 @@
 
+## 3.1.2 (2019-21-01)
+
+### Fixed
+* Inflating `preferences.xml` causes `java.lang.ClassCastException: android.content.res.XmlBlock$Parser cannot be cast to java.lang.AutoCloseable`
+
 ## 3.1.1 (2019-20-01)
 
 ### Enhancements
