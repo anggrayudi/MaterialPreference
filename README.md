@@ -115,7 +115,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 
 **Note:**
 * If `PrefKey` does not update constant fields, click ![Alt text](art/make-project.png?raw=true "Make Project") Make Project in Android Studio.
-* This generator does not work with Android Studio 3.3.0 since Google does not fix [this bug](https://issuetracker.google.com/issues/122883561) yet.
+* This generator wont work with Android Studio 3.3.0 since Google does not fix [this bug](https://issuetracker.google.com/issues/122883561) yet.
 
 ## Preferences
 
