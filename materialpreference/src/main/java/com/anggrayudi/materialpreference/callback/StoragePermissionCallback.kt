@@ -1,4 +1,4 @@
-package com.anggrayudi.materialpreference
+package com.anggrayudi.materialpreference.callback
 
 interface StoragePermissionCallback {
 

@@ -20,8 +20,7 @@ class SettingsActivity : PreferenceActivityMaterial() {
             settingsFragment = SettingsFragment.newInstance(null)
             supportFragmentManager.beginTransaction().add(R.id.fragment_container, settingsFragment!!, TAG).commit()
         } else {
-            settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
-            title = settingsFragment!!.preferenceFragmentTitle
+            onBackStackChanged()
         }
     }
 

@@ -1,4 +1,9 @@
 
+## 3.1.3 (2019-27-01)
+
+### Fixed
+* `ColorPreference` crash on rotation changed
+
 ## 3.1.2 (2019-21-01)
 
 ### Fixed

@@ -18,6 +18,8 @@ abstract class PreferenceActivityMaterial : AppCompatActivity(),
         PreferenceFragmentMaterial.OnPreferenceStartScreenCallback,
         FragmentManager.OnBackStackChangedListener {
 
+    // TODO 24-Jan-19: Create preference header for tablet in two columns mode
+
     var replaceFragmentStrategy: ReplaceFragment? = null
 
     var activityLabel: CharSequence? = null

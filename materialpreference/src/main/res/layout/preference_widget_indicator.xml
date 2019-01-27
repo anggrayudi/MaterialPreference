@@ -5,5 +5,5 @@
     android:id="@android:id/icon1"
     android:layout_width="40dp"
     android:layout_height="18dp"
-    android:paddingLeft="12dp"
+    android:paddingStart="12dp"
     tools:src="@drawable/baseline_navigate_next_black_24" />

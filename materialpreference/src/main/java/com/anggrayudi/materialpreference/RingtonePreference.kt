@@ -23,6 +23,7 @@ import android.net.Uri
 import android.provider.Settings.System
 import android.text.TextUtils
 import android.util.AttributeSet
+import com.anggrayudi.materialpreference.callback.StoragePermissionCallback
 import com.anggrayudi.materialpreference.dialog.DialogPreference
 
 /**

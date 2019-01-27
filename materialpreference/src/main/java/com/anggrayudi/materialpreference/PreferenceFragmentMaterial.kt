@@ -42,9 +42,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         DialogPreference.TargetFragment {
 
     /**
-     * Returns the [PreferenceManager] used by this fragment.
-     *
-     * @return The [PreferenceManager].
+     * @return The [PreferenceManager] used by this fragment.
      */
     var preferenceManager: PreferenceManager? = null
         private set
@@ -146,7 +144,8 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         activity!!.theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
         val theme = tv.resourceId
         if (theme == 0) {
-            throw IllegalStateException("Must specify preferenceTheme in theme")
+            throw IllegalStateException("Must specify preferenceTheme in theme. " +
+                    "Read this sample project: https://github.com/anggrayudi/MaterialPreference/tree/master/sample")
         }
         if (arguments == null) {
             throw IllegalStateException("Must specify non-null PreferenceFragmentMaterial arguments")

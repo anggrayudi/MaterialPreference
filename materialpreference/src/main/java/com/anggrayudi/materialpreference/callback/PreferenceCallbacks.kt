@@ -1,4 +1,6 @@
-package com.anggrayudi.materialpreference
+package com.anggrayudi.materialpreference.callback
+
+import com.anggrayudi.materialpreference.Preference
 
 /**
  * Called when a Preference has been clicked.

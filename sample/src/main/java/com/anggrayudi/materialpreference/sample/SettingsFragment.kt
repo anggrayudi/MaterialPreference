@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.anggrayudi.materialpreference.*
 import com.anggrayudi.materialpreference.annotation.PreferenceKeysConfig
+import com.anggrayudi.materialpreference.callback.StoragePermissionCallback
 
 /**
  * [PreferenceKeysConfig] annotation creates a constant class which contains all of your
@@ -21,11 +22,11 @@ import com.anggrayudi.materialpreference.annotation.PreferenceKeysConfig
  * `dependencies` section:
  *
  *      dependencies {
- *          implementation 'com.anggrayudi:materialpreference:3.1.1'
- *          kapt 'com.anggrayudi:materialpreference-compiler:1.0.0'
+ *          implementation 'com.anggrayudi:materialpreference:3.1.3'
+ *          kapt 'com.anggrayudi:materialpreference-compiler:1.0'
  *      }
  */
-@PreferenceKeysConfig()
+@PreferenceKeysConfig
 class SettingsFragment : PreferenceFragmentMaterial() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -100,9 +101,6 @@ class SettingsFragment : PreferenceFragmentMaterial() {
                 true
             }
         }
-
-        // TODO 22-Jan-19: Wait until Color Picker is fixed by Aidan
-        findPreference(PrefKey.THEME_COLOR)!!.isVisible = BuildConfig.DEBUG
     }
 
     companion object {

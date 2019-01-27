@@ -1,4 +1,4 @@
-package com.anggrayudi.materialpreference.util
+package com.anggrayudi.materialpreference.callback
 
 import android.content.Context
 import com.anggrayudi.materialpreference.R

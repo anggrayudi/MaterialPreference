@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.files.selectedFolder
+import com.anggrayudi.materialpreference.callback.StoragePermissionCallback
 import com.anggrayudi.materialpreference.util.FileUtils
 import com.anggrayudi.materialpreference.util.FolderType
 import java.io.File

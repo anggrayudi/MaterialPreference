@@ -43,6 +43,9 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.res.TypedArrayUtils
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.anggrayudi.materialpreference.callback.OnPreferenceChangeListener
+import com.anggrayudi.materialpreference.callback.OnPreferenceClickListener
+import com.anggrayudi.materialpreference.callback.OnPreferenceLongClickListener
 import java.util.*
 
 /**

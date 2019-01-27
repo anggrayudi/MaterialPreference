@@ -32,12 +32,12 @@ class PreferenceKeyConstansProcessor : AbstractProcessor() {
             }
 
             // D:\YourProjectDirs\app\build\generated\source\kaptKotlin\debug
-            val rootFile = File(File(generatedSourcesRoot).parentFile.parentFile.parentFile.parentFile.parentFile,
+            val resFile = File(File(generatedSourcesRoot).parentFile.parentFile.parentFile.parentFile.parentFile,
                     "src${File.separator}main${File.separator}res${File.separator}")
 
             val a = it.getAnnotation(PreferenceKeysConfig::class.java)
             val xmlRes = if (a.xmlResName.endsWith(".xml")) a.xmlResName else a.xmlResName + ".xml"
-            val xmlFile = File(rootFile, "xml${File.separator}$xmlRes")
+            val xmlFile = File(resFile, "xml${File.separator}$xmlRes")
             if (!xmlFile.isFile) {
                 processingEnv.messager.warningMessage { "Can't find file $xmlRes in path ${xmlFile.absolutePath}" }
                 return false
@@ -45,7 +45,7 @@ class PreferenceKeyConstansProcessor : AbstractProcessor() {
             val strRes = if (a.stringResName.endsWith(".xml")) a.stringResName else a.stringResName + ".xml"
 
             val o = TypeSpec.objectBuilder(a.className)
-            getPreferenceKeys(xmlFile, File(rootFile, "values${File.separator}$strRes"), a.capitalStyle).forEach { map ->
+            getPreferenceKeys(xmlFile, File(resFile, "values${File.separator}$strRes"), a.capitalStyle).forEach { map ->
                 o.addProperty(PropertySpec.builder(map.value, String::class, KModifier.CONST)
                         .initializer("%S", map.key)
                         .build())
