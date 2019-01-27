@@ -57,6 +57,16 @@ class SettingsFragment : PreferenceFragmentMaterial() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
     }
+    
+    companion object {
+        fun newInstance(rootKey: String?): SettingsFragment {
+            val args = Bundle()
+            args.putString(PreferenceFragmentMaterial.ARG_PREFERENCE_ROOT, rootKey)
+            val fragment = SettingsFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
 }
 ```
 
@@ -66,18 +76,26 @@ From your `SettingsActivity`:
 class SettingsActivity : PreferenceActivityMaterial() {
 
     private var settingsFragment: SettingsFragment? = null
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_settings)
         
         if (savedInstanceState == null) {
             settingsFragment = SettingsFragment.newInstance(null)
             supportFragmentManager.beginTransaction().add(R.id.fragment_container, settingsFragment!!, TAG).commit()
         } else {
-            settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
-            title = settingsFragment!!.preferenceFragmentTitle
+            onBackStackChanged()
         }
+    }
+
+    override fun onBuildPreferenceFragment(rootKey: String?): PreferenceFragmentMaterial {
+        return SettingsFragment.newInstance(rootKey)
+    }
+
+    override fun onBackStackChanged() {
+        settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
+        title = settingsFragment!!.preferenceFragmentTitle
     }
 }
 ```
@@ -95,14 +113,14 @@ apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
     implementation 'com.anggrayudi:materialpreference:3.1.2'
-    kapt 'com.anggrayudi:materialpreference-compiler:1.0.0'
+    kapt 'com.anggrayudi:materialpreference-compiler:1.0'
 }
 ````
 
 From your `SettingsFragment` class:
 
 ````kotlin
-@PreferenceKeysConfig() // Add this annotation
+@PreferenceKeysConfig // Add this annotation
 class SettingsFragment : PreferenceFragmentMaterial() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -115,7 +133,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 
 **Note:**
 * If `PrefKey` does not update constant fields, click ![Alt text](art/make-project.png?raw=true "Make Project") Make Project in Android Studio.
-* This generator wont work with Android Studio 3.3.0 since Google does not fix [this bug](https://issuetracker.google.com/issues/122883561) yet.
+* This generator wont work with Android Studio 3.3.0 Stable, 3.4 Beta 3, and 3.5 Canary 3 because of [this bug](https://issuetracker.google.com/issues/122883561). The fixes will be available in the next version of Android Studio.
 
 ## Preferences
 
