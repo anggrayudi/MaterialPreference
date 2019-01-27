@@ -57,6 +57,16 @@ class SettingsFragment : PreferenceFragmentMaterial() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
     }
+    
+    companion object {
+        fun newInstance(rootKey: String?): SettingsFragment {
+            val args = Bundle()
+            args.putString(PreferenceFragmentMaterial.ARG_PREFERENCE_ROOT, rootKey)
+            val fragment = SettingsFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
 }
 ```
 
@@ -110,7 +120,7 @@ dependencies {
 From your `SettingsFragment` class:
 
 ````kotlin
-@PreferenceKeysConfig() // Add this annotation
+@PreferenceKeysConfig // Add this annotation
 class SettingsFragment : PreferenceFragmentMaterial() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
