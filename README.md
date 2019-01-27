@@ -66,18 +66,26 @@ From your `SettingsActivity`:
 class SettingsActivity : PreferenceActivityMaterial() {
 
     private var settingsFragment: SettingsFragment? = null
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_settings)
         
         if (savedInstanceState == null) {
             settingsFragment = SettingsFragment.newInstance(null)
             supportFragmentManager.beginTransaction().add(R.id.fragment_container, settingsFragment!!, TAG).commit()
         } else {
-            settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
-            title = settingsFragment!!.preferenceFragmentTitle
+            onBackStackChanged()
         }
+    }
+
+    override fun onBuildPreferenceFragment(rootKey: String?): PreferenceFragmentMaterial {
+        return SettingsFragment.newInstance(rootKey)
+    }
+
+    override fun onBackStackChanged() {
+        settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
+        title = settingsFragment!!.preferenceFragmentTitle
     }
 }
 ```
