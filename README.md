@@ -95,7 +95,7 @@ apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
     implementation 'com.anggrayudi:materialpreference:3.1.2'
-    kapt 'com.anggrayudi:materialpreference-compiler:1.0.0'
+    kapt 'com.anggrayudi:materialpreference-compiler:1.0'
 }
 ````
 
@@ -115,7 +115,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 
 **Note:**
 * If `PrefKey` does not update constant fields, click ![Alt text](art/make-project.png?raw=true "Make Project") Make Project in Android Studio.
-* This generator wont work with Android Studio 3.3.0 since Google does not fix [this bug](https://issuetracker.google.com/issues/122883561) yet.
+* This generator wont work with Android Studio 3.3.0 Stable, 3.4 Beta 3, and 3.5 Canary 3 because of [this bug](https://issuetracker.google.com/issues/122883561). The fixes will be available in the next version of Android Studio.
 
 ## Preferences
 
