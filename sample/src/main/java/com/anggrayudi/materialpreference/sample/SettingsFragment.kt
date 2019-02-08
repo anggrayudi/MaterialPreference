@@ -23,7 +23,7 @@ import com.anggrayudi.materialpreference.callback.StoragePermissionCallback
  *
  *      dependencies {
  *          implementation 'com.anggrayudi:materialpreference:3.1.3'
- *          kapt 'com.anggrayudi:materialpreference-compiler:1.0'
+ *          kapt 'com.anggrayudi:materialpreference-compiler:1.1'
  *      }
  */
 @PreferenceKeysConfig

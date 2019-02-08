@@ -1,4 +1,9 @@
 
+## 3.1.4 (2019-08-02)
+
+### Enhancements
+* Updated dependencies
+
 ## 3.1.3 (2019-27-01)
 
 ### Fixed

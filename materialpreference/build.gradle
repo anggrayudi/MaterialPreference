@@ -37,7 +37,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api 'androidx.appcompat:appcompat:1.1.0-alpha01'
     api 'androidx.cardview:cardview:1.0.0'
-    api 'com.google.android.material:material:1.1.0-alpha02'
+    api 'com.google.android.material:material:1.1.0-alpha03'
     api 'com.wdullaer:materialdatetimepicker:4.1.0'
     api "com.afollestad.material-dialogs:core:$dialogVersion"
     api "com.afollestad.material-dialogs:files:$dialogVersion"

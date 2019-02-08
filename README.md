@@ -1,4 +1,4 @@
-# Material Preference [ ![Download](https://api.bintray.com/packages/anggrayudi/maven/materialpreference/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference/_latestVersion)
+# Material Preference [ ![jcenter](https://api.bintray.com/packages/anggrayudi/maven/materialpreference/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference/_latestVersion)
 A library designed for people who love simplicity. Hate the old preference style? Try this library.
 
 It combines libraries from `androidx.preference` and `net.xpece.android.support.preference`.
@@ -100,7 +100,7 @@ class SettingsActivity : PreferenceActivityMaterial() {
 }
 ```
 
-### Preference Key Constants Generator [ ![Download](https://api.bintray.com/packages/anggrayudi/maven/materialpreference-compiler/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference-compiler/_latestVersion)
+### Preference Key Constants Generator [ ![jcenter](https://api.bintray.com/packages/anggrayudi/maven/materialpreference-compiler/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference-compiler/_latestVersion)
 
 Material Preference has a capability to auto-generate your preference keys in a constant class. By default, this class is named `PrefKey`. With this generator, you don't need to rewrite constant field each time you modify preference key from file `res/xml/preferences.xml`. It improves accuracy in writing constant values.
 
@@ -113,7 +113,7 @@ apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
     implementation 'com.anggrayudi:materialpreference:3.1.3'
-    kapt 'com.anggrayudi:materialpreference-compiler:1.0'
+    kapt 'com.anggrayudi:materialpreference-compiler:1.1'
 }
 ````
 
