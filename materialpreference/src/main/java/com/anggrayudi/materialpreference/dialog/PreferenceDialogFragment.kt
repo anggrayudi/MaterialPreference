@@ -23,7 +23,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -220,7 +219,7 @@ abstract class PreferenceDialogFragment : DialogFragment() {
             val message = mDialogMessage
             var newVisibility = View.GONE
 
-            if (!TextUtils.isEmpty(message)) {
+            if (!message.isNullOrEmpty()) {
                 if (dialogMessageView is TextView) {
                     dialogMessageView.text = message
                 }

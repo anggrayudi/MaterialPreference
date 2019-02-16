@@ -1,7 +1,6 @@
 package com.anggrayudi.materialpreference.dialog
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
@@ -104,7 +103,7 @@ class SeekBarPreferenceDialogFragment : PreferenceDialogFragment(), View.OnKeyLi
         val preference = preference
         var dialogTitle = preference!!.dialogTitle
         if (dialogTitle == null) dialogTitle = preference.title
-        return !TextUtils.isEmpty(dialogTitle)
+        return !dialogTitle.isNullOrEmpty()
     }
 
     override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {

@@ -16,7 +16,6 @@
 
 package com.anggrayudi.materialpreference.sample.billing
 
-import android.text.TextUtils
 import android.util.Base64
 import com.android.billingclient.util.BillingHelper
 import java.io.IOException
@@ -35,19 +34,15 @@ object Security {
     private const val SIGNATURE_ALGORITHM = "SHA1withRSA"
 
     /**
-     * Verifies that the data was signed with the given signature, and returns the verified
-     * purchase.
+     * Verifies that the data was signed with the given signature, and returns the verified purchase.
      * @param base64PublicKey the base64-encoded public key to use for verifying.
      * @param signedData the signed JSON string (signed, not encrypted)
      * @param signature the signature for the data, signed with the private key
-     * @throws IOException if encoding algorithm is not supported or key specification
-     * is invalid
+     * @throws IOException if encoding algorithm is not supported or key specification is invalid
      */
     @Throws(IOException::class)
-    fun verifyPurchase(base64PublicKey: String, signedData: String,
-                       signature: String): Boolean {
-        if (TextUtils.isEmpty(signedData) || TextUtils.isEmpty(base64PublicKey)
-                || TextUtils.isEmpty(signature)) {
+    fun verifyPurchase(base64PublicKey: String, signedData: String, signature: String): Boolean {
+        if (signedData.isEmpty() || base64PublicKey.isEmpty() || signature.isEmpty()) {
             BillingHelper.logWarn(TAG, "Purchase verification failed: missing data.")
             return false
         }
@@ -60,8 +55,7 @@ object Security {
      * Generates a PublicKey instance from a string containing the Base64-encoded public key.
      *
      * @param encodedPublicKey Base64-encoded public key
-     * @throws IOException if encoding algorithm is not supported or key specification
-     * is invalid
+     * @throws IOException if encoding algorithm is not supported or key specification is invalid
      */
     @Throws(IOException::class)
     fun generatePublicKey(encodedPublicKey: String): PublicKey {

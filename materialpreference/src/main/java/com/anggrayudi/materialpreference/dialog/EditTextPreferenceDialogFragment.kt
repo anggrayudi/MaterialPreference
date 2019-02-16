@@ -18,7 +18,6 @@ package com.anggrayudi.materialpreference.dialog
 
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
@@ -74,7 +73,7 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
         mEditText = view.findViewById(android.R.id.edit)
 
         mTextMessage!!.text = preference.message
-        if (TextUtils.isEmpty(preference.message))
+        if (preference.message.isNullOrEmpty())
             mTextMessage!!.visibility = View.GONE
 
         mTextInputLayout!!.isCounterEnabled = preference.isCounterEnabled

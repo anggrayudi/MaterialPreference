@@ -22,7 +22,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.text.InputFilter
 import android.text.InputType
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.widget.EditText
 import androidx.core.content.res.TypedArrayUtils
@@ -124,7 +123,7 @@ class EditTextPreference @JvmOverloads constructor(
     }
 
     override fun shouldDisableDependents(): Boolean {
-        return TextUtils.isEmpty(value) || super.shouldDisableDependents()
+        return value.isNullOrEmpty() || super.shouldDisableDependents()
     }
 
     override fun onSaveInstanceState(): Parcelable? {

@@ -602,11 +602,11 @@ open class Preference @JvmOverloads constructor(
         get() {
             val sb = StringBuilder()
             val title = title
-            if (!TextUtils.isEmpty(title)) {
+            if (!title.isNullOrEmpty()) {
                 sb.append(title).append(' ')
             }
             val summary = summary
-            if (!TextUtils.isEmpty(summary)) {
+            if (!summary.isNullOrEmpty()) {
                 sb.append(summary).append(' ')
             }
             if (sb.isNotEmpty()) {
@@ -732,7 +732,7 @@ open class Preference @JvmOverloads constructor(
                 titleView.typeface = fontFamily
 
             val title = title
-            if (!TextUtils.isEmpty(title)) {
+            if (!title.isNullOrEmpty()) {
                 titleView.text = title
                 titleView.visibility = View.VISIBLE
                 if (hasSingleLineTitleAttr) {
@@ -751,7 +751,7 @@ open class Preference @JvmOverloads constructor(
                 legacySummaryView.typeface = fontFamily
 
             val s = summary
-            if (isLegacySummary && !TextUtils.isEmpty(s)) {
+            if (isLegacySummary && !s.isNullOrEmpty()) {
                 legacySummaryView.text = s
                 legacySummaryView.visibility = View.VISIBLE
             } else {
@@ -765,7 +765,7 @@ open class Preference @JvmOverloads constructor(
                 materialSummaryView.typeface = fontFamily
 
             val s = summary
-            if (!isLegacySummary && !TextUtils.isEmpty(s)) {
+            if (!isLegacySummary && !s.isNullOrEmpty()) {
                 materialSummaryView.text = s
                 materialSummaryView.visibility = View.VISIBLE
             } else {
@@ -868,7 +868,7 @@ open class Preference @JvmOverloads constructor(
      * @throws IllegalStateException If there is no key assigned.
      */
     internal fun requireKey() {
-        if (TextUtils.isEmpty(key)) {
+        if (key.isNullOrEmpty()) {
             throw IllegalStateException("Preference does not have a key assigned.")
         }
         _requiresKey = true
@@ -881,7 +881,7 @@ open class Preference @JvmOverloads constructor(
      * @return True if the key exists and is not a blank string, false otherwise.
      */
     fun hasKey(): Boolean {
-        return !TextUtils.isEmpty(key)
+        return !key.isNullOrEmpty()
     }
 
     /**
@@ -1062,7 +1062,7 @@ open class Preference @JvmOverloads constructor(
      * @return The Preference that uses the given key.
      */
     protected fun findPreferenceInHierarchy(key: String): Preference? {
-        return if (TextUtils.isEmpty(key) || preferenceManager == null) {
+        return if (key.isEmpty() || preferenceManager == null) {
             null
         } else preferenceManager!!.findPreference(key)
 

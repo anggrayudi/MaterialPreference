@@ -19,7 +19,6 @@ package com.anggrayudi.materialpreference
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
@@ -165,16 +164,16 @@ abstract class TwoStatePreference @JvmOverloads constructor(
         }
         val summaryView = view as TextView?
         var useDefaultSummary = true
-        if (mChecked && !TextUtils.isEmpty(summaryOn)) {
+        if (mChecked && !summaryOn.isNullOrEmpty()) {
             summaryView!!.text = summaryOn
             useDefaultSummary = false
-        } else if (!mChecked && !TextUtils.isEmpty(summaryOff)) {
+        } else if (!mChecked && !summaryOff.isNullOrEmpty()) {
             summaryView!!.text = summaryOff
             useDefaultSummary = false
         }
         if (useDefaultSummary) {
             val summary = summary
-            if (!TextUtils.isEmpty(summary)) {
+            if (!summary.isNullOrEmpty()) {
                 summaryView!!.text = summary
                 useDefaultSummary = false
             }

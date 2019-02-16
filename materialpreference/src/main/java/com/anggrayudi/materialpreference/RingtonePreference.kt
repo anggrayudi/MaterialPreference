@@ -21,7 +21,6 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
 import android.provider.Settings.System
-import android.text.TextUtils
 import android.util.AttributeSet
 import com.anggrayudi.materialpreference.callback.StoragePermissionCallback
 import com.anggrayudi.materialpreference.dialog.DialogPreference
@@ -100,16 +99,16 @@ class RingtonePreference @JvmOverloads constructor(
             if (title == null) {
                 title = super.title
             }
-            if (TextUtils.isEmpty(title)) {
+            if (title.isNullOrEmpty()) {
                 when (ringtoneType) {
                     RingtoneManager.TYPE_NOTIFICATION -> title = getRingtonePickerTitleNotificationString(context)
                     RingtoneManager.TYPE_ALARM -> title = getRingtonePickerTitleAlarmString(context)
                 }
             }
-            if (TextUtils.isEmpty(title)) {
+            if (title.isNullOrEmpty()) {
                 title = getRingtonePickerTitleString(context)
             }
-            return title!!
+            return title
         }
 
     init {
@@ -160,7 +159,7 @@ class RingtonePreference @JvmOverloads constructor(
      */
     fun onRestoreRingtone(): Uri? {
         val uriString = getPersistedString(null)
-        return if (!TextUtils.isEmpty(uriString)) Uri.parse(uriString) else null
+        return if (!uriString.isNullOrEmpty()) Uri.parse(uriString) else null
     }
 
     /** Creates system ringtone picker intent for manual use. */
