@@ -18,7 +18,7 @@ This library is available in 2 versions:
 1. [Version `2.x.x`](https://github.com/anggrayudi/MaterialPreference/tree/java), built in Java
 2. [Version `3.x.x` and higher](https://github.com/anggrayudi/MaterialPreference), built in Kotlin
 
-This Java library will be the second priority. So I will be more active in Kotlin library. You can fork this Java branch and build your own version if you feel it is slow in maintenance.
+The Java library will be the second priority. So I will be more active in Kotlin library. You can fork the Java branch and build your own version if you feel it is slow in maintenance.
 
 Writing code in Java is slow, and that's why I decided to migrate to Kotlin.
 
@@ -37,8 +37,6 @@ dependencies {
 ````gradle
 repositories {
     maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
-    // If error "Failed to resolve com.afollestad.material-dialogs" appears, add the following line
-    maven { url "https://dl.bintray.com/drummer-aidan/maven/" }
 }
 ````
 
