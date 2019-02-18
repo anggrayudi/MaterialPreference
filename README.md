@@ -12,6 +12,16 @@ Available from API 17.
 ![Alt text](art/3-generic.png?raw=true "DatePreference")
 ![Alt text](art/4-generic.png?raw=true "ListPreference")
 
+## Note
+
+This library is available in 2 versions:
+1. [Version `2.x.x`](https://github.com/anggrayudi/MaterialPreference/tree/java), built in Java
+2. [Version `3.x.x` and higher](https://github.com/anggrayudi/MaterialPreference), built in Kotlin
+
+This Java library will be the second priority. So I will be more active in Kotlin library. You can fork this Java branch and build your own version if you feel it is slow in maintenance.
+
+Writing code in Java is slow, and that's why I decided to migrate to Kotlin.
+
 ## Usage
 
 ### Basic
@@ -32,7 +42,7 @@ repositories {
 }
 ````
 
-From your `preferences.xml`:
+From your [`preferences.xml`](https://github.com/anggrayudi/MaterialPreference/blob/master/sample/src/main/res/xml/preferences.xml):
 
 ```xml
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
@@ -49,7 +59,7 @@ From your `preferences.xml`:
 </PreferenceScreen>
 ```
 
-From your `SettingsFragment`:
+From your [`SettingsFragment`](https://github.com/anggrayudi/MaterialPreference/blob/master/sample/src/main/java/com/anggrayudi/materialpreference/sample/SettingsFragment.kt):
 
 ```kotlin
 class SettingsFragment : PreferenceFragmentMaterial() {
@@ -70,7 +80,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 }
 ```
 
-From your `SettingsActivity`:
+From your [`SettingsActivity`](https://github.com/anggrayudi/MaterialPreference/blob/master/sample/src/main/java/com/anggrayudi/materialpreference/sample/SettingsActivity.kt):
 
 ```kotlin
 class SettingsActivity : PreferenceActivityMaterial() {
@@ -133,7 +143,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 
 **Note:**
 * If `PrefKey` does not update constant fields, click ![Alt text](art/make-project.png?raw=true "Make Project") Make Project in Android Studio.
-* This generator wont work with Android Studio 3.3.0 Stable, 3.4 Beta 3, and 3.5 Canary 3 because of [this bug](https://issuetracker.google.com/issues/122883561). The fixes will be available in the next version of Android Studio.
+* This generator wont work with Android Studio 3.3.0 Stable, 3.4 Beta 3, and 3.5 Canary 3 because of [this bug](https://issuetracker.google.com/issues/122883561). The fixes is available in the next version of Android Studio.
 
 ## Preferences
 
