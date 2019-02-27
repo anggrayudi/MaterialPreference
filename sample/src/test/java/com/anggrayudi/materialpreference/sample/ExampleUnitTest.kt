@@ -11,8 +11,5 @@ class ExampleUnitTest {
 
     @Test
     fun uji() {
-//        println("Uji: $isLegacySummary")
-//        isLegacySummary = true
-//        println("Uji: $isLegacySummary")
     }
 }

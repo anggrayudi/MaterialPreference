@@ -42,7 +42,7 @@ object FolderType {
             DOCUMENTS -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 dir = Environment.DIRECTORY_DOCUMENTS
             } else
-                return Environment.getExternalStorageDirectory().absolutePath + "/Documents"
+                return SaveDir.EXTERNAL + "/Documents"
         }
         return if (dir == null)
             Environment.getExternalStorageDirectory().absolutePath

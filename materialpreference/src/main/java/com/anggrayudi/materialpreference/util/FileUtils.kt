@@ -30,9 +30,9 @@ import java.util.*
 object FileUtils {
     private const val TAG = "FileUtils"
 
-    const val STORAGE_PERMISSION_GRANTED = 0
-    const val STORAGE_PERMISSION_NOT_GRANTED = 1
-    const val SDCARD_URI_PERMISSION_NOT_GRANTED = 2
+    const val STORAGE_PERMISSION_GRANTED = 120
+    const val STORAGE_PERMISSION_NOT_GRANTED = 121
+    const val SDCARD_URI_PERMISSION_NOT_GRANTED = 122
 
     const val REQUEST_CODE_STORAGE_GET_FOLDER = 111
     const val REQUEST_CODE_STORAGE_GET_SINGLE_FILE = 112
@@ -49,7 +49,7 @@ object FileUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             when (data.data!!.authority) {
                 "com.android.externalstorage.documents" -> {
-                    val withoutUri = TextUtil.getStringBetween(decodedPath!!, '/', ':') + decodedPath.substring(decodedPath.indexOf(':'), decodedPath.length)
+                    val withoutUri = getStringBetween(decodedPath!!, '/', ':') + decodedPath.substring(decodedPath.indexOf(':'), decodedPath.length)
                     var sdcardId = withoutUri.substring(0, withoutUri.indexOf(':') + 1)
                     val subFolder = withoutUri.substring(withoutUri.indexOf(':') + 1, withoutUri.length)
                     if (sdcardId == "primary:") {
@@ -66,7 +66,7 @@ object FileUtils {
 
     fun resolveSdCardPath(data: Intent): String {
         val decodedPath = decodeUri(data.data!!.path)
-        val withoutUri = TextUtil.getStringBetween(decodedPath!!, '/', ':') + decodedPath.substring(decodedPath.indexOf(':'), decodedPath.length)
+        val withoutUri = getStringBetween(decodedPath!!, '/', ':') + decodedPath.substring(decodedPath.indexOf(':'), decodedPath.length)
         var sdcardId = withoutUri.substring(0, withoutUri.indexOf(':') + 1)
         val subFolder = withoutUri.substring(withoutUri.indexOf(':') + 1, withoutUri.length)
         if (sdcardId == "primary:") {
@@ -80,7 +80,7 @@ object FileUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && path!!.startsWith("/tree/")
                 && !path.startsWith("/tree/primary")) {
             val root = Uri.parse("content://com.android.externalstorage.documents/tree/" +
-                    TextUtil.getStringBetween(data.data?.path!!, '/', ':') + "%3A")
+                    getStringBetween(data.data?.path!!, '/', ':') + "%3A")
             if (data.data == root) {
                 try {
                     val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
@@ -89,7 +89,6 @@ object FileUtils {
                 } catch (e: SecurityException) {
                     Toast.makeText(context, R.string.please_grant_storage_permission, Toast.LENGTH_SHORT).show()
                 }
-
             } else {
                 Toast.makeText(context, R.string.not_root_path, Toast.LENGTH_SHORT).show()
             }
@@ -100,10 +99,9 @@ object FileUtils {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     fun isSdCardUriPermissionsGranted(context: Context, data: Intent): Boolean {
         val root = Uri.parse("content://com.android.externalstorage.documents/tree/" +
-                TextUtil.getStringBetween(data.data?.path!!, '/', ':') + "%3A")
-        for (permission in context.contentResolver.persistedUriPermissions) {
-            if (permission.isReadPermission && permission.isWritePermission &&
-                    permission.uri == root)
+                getStringBetween(data.data?.path!!, '/', ':') + "%3A")
+        context.contentResolver.persistedUriPermissions.forEach {
+            if (it.isReadPermission && it.isWritePermission && it.uri == root)
                 return true
         }
         if (root == data.data) {
@@ -113,17 +111,15 @@ object FileUtils {
                 return true
             } catch (ignore: SecurityException) {
             }
-
         }
         return false
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    fun isSdCardUriPermissionsGranted(context: Context, sdcardId: String?): Boolean {
+    fun isSdCardUriPermissionsGranted(context: Context, sdcardId: String): Boolean {
         val root = Uri.parse("content://com.android.externalstorage.documents/tree/$sdcardId%3A")
-        for (permission in context.contentResolver.persistedUriPermissions) {
-            if (permission.isReadPermission && permission.isWritePermission &&
-                    permission.uri == root)
+        context.contentResolver.persistedUriPermissions.forEach {
+            if (it.isReadPermission && it.isWritePermission && it.uri == root)
                 return true
         }
         return false
@@ -219,8 +215,8 @@ object FileUtils {
         val tree = file.substring(file.indexOf(':') + 1, file.length)
         var resolvedPath = StringBuilder()
         val directories = tree.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        for (directory in directories) {
-            val dir = directory.trim{ it <= ' ' }
+        directories.forEach { directory ->
+            val dir = directory.trim { it <= ' ' }
             if (!dir.isEmpty()) {
                 resolvedPath.append(dir).append("/")
             }
@@ -243,17 +239,17 @@ object FileUtils {
             val cleanedPath = cleanSdCardPath(folder)
             if (!cleanedPath.isEmpty()) {
                 val s = if (cleanedPath.contains("/")) cleanedPath.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() else arrayOf(cleanedPath)
-                for (dir in s) {
+                s.forEach {
                     if (currentDirectory != null) {
-                        val documentFile = currentDirectory.findFile(dir)
+                        val documentFile = currentDirectory?.findFile(it)
                         if (documentFile == null || documentFile.isFile)
-                            currentDirectory = currentDirectory.createDirectory(dir)
+                            currentDirectory = currentDirectory?.createDirectory(it)
                         else if (documentFile.isDirectory)
                             currentDirectory = documentFile
                     }
                 }
             }
-            if (currentDirectory != null && currentDirectory.uri.path!!.endsWith(cleanedPath))
+            if (currentDirectory != null && currentDirectory!!.uri.path!!.endsWith(cleanedPath))
                 return currentDirectory
         }
         return null
@@ -622,9 +618,7 @@ object FileUtils {
         }
         if (!files.isEmpty()) {
             val uris = ArrayList<Uri>(files.size)
-            for (file in files)
-                uris.add(file.uri)
-
+            files.forEach { uris.add(it.uri) }
             val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
                     .setType("*/*")
                     .putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
@@ -755,6 +749,23 @@ object FileUtils {
             e.printStackTrace()
         }
         return u.substring(u.lastIndexOf('/') + 1)
+    }
+
+    fun getStringBetween(str: String, start: Char, end: Char): String {
+        if (start != end) {
+            for (i in str.indexOf(end) - 1 downTo 0) {
+                if (str[i] == start) {
+                    return str.substring(i + 1, str.indexOf(end))
+                }
+            }
+        } else {
+            for (i in str.indexOf(end) + 1 until str.length) {
+                if (str[i] == start) {
+                    return str.substring(str.indexOf(start) + 1, i)
+                }
+            }
+        }
+        return ""
     }
 
     interface FileMoveCallback {

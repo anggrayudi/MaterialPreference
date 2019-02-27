@@ -13,7 +13,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.anggrayudi.materialpreference.sample.billing.BillingManager
-import com.anggrayudi.materialpreference.sample.billing.Constants
+import com.anggrayudi.materialpreference.sample.billing.DonationItem
 
 class DonationActivity : AppCompatActivity(), BillingManager.BillingUpdatesListener {
 
@@ -49,7 +49,7 @@ class DonationActivity : AppCompatActivity(), BillingManager.BillingUpdatesListe
     override fun onBackPressed() {
         super.onBackPressed()
         if (isFinishing) {
-            mBillingManager!!.destroy()
+            mBillingManager?.destroy()
         }
     }
 
@@ -75,9 +75,7 @@ class DonationActivity : AppCompatActivity(), BillingManager.BillingUpdatesListe
     }
 
     override fun onPurchasesUpdated(purchases: List<Purchase>) {
-        for (purchase in purchases) {
-            mBillingManager!!.consumeAsync(purchase.purchaseToken)
-        }
+        purchases.forEach { mBillingManager!!.consumeAsync(it.purchaseToken) }
     }
 
     private inner class DonationAdapter : RecyclerView.Adapter<DonationAdapter.ViewHolder>(), View.OnClickListener {
@@ -104,12 +102,12 @@ class DonationActivity : AppCompatActivity(), BillingManager.BillingUpdatesListe
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val item = Constants.DONATION_ITEMS[position]
+            val item = DonationItem.items[position]
             holder.title.text = item.title
             holder.price.text = item.price
             holder.btnDonate.tag = item.sku
         }
 
-        override fun getItemCount() = Constants.DONATION_ITEMS.size
+        override fun getItemCount() = DonationItem.items.size
     }
 }

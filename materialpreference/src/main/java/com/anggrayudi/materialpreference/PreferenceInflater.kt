@@ -165,20 +165,19 @@ internal class PreferenceInflater(val context: Context, private val preferenceMa
                     clazz = classLoader.loadClass(name)
                 } else {
                     var notFoundException: ClassNotFoundException? = null
-                    for (prefix in prefixes) {
+                    prefixes.forEach {
                         try {
-                            clazz = classLoader.loadClass(prefix + name)
-                            break
+                            clazz = classLoader.loadClass(it + name)
+                            return@forEach
                         } catch (e: ClassNotFoundException) {
                             notFoundException = e
                         }
-
                     }
                     if (clazz == null) {
                         if (notFoundException == null) {
                             throw InflateException(attrs.positionDescription + ": Error inflating class " + name)
                         } else {
-                            throw notFoundException
+                            throw notFoundException as ClassNotFoundException
                         }
                     }
                 }

@@ -69,9 +69,9 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
         val integers = ArrayList<Int>(mEntryValues!!.size)
-        for (i in mEntryValues!!.indices) {
-            if (mNewValues.contains(mEntryValues!![i].toString()))
-                integers.add(i)
+        mEntryValues!!.indices.forEach {
+            if (mNewValues.contains(mEntryValues!![it].toString()))
+                integers.add(it)
         }
         val checkedItems = IntArray(integers.size) {integers[it]}
 

@@ -21,7 +21,7 @@ import android.util.Log
 import com.android.billingclient.api.*
 import com.android.billingclient.api.BillingClient.*
 import com.android.billingclient.api.Purchase.PurchasesResult
-import com.anggrayudi.materialpreference.sample.billing.Constants.BASE_64_ENCODED_PUBLIC_KEY
+import com.anggrayudi.materialpreference.sample.BuildConfig
 import java.io.IOException
 import java.util.*
 
@@ -302,22 +302,14 @@ class BillingManager(
      *
      * Note: It's strongly recommended to perform such check on your backend since hackers can
      * replace this method with "constant true" if they decompile/rebuild your app.
-     *
      */
     private fun verifyValidSignature(signedData: String, signature: String): Boolean {
-        // Some sanity checks to see if the developer (that's you!) really followed the
-        // instructions to run this sample (don't put these checks on your app!)
-        if (BASE_64_ENCODED_PUBLIC_KEY.contains("CONSTRUCT_YOUR")) {
-            throw RuntimeException("Please update your app's public key at: " + "BASE_64_ENCODED_PUBLIC_KEY")
-        }
-
         return try {
-            Security.verifyPurchase(BASE_64_ENCODED_PUBLIC_KEY, signedData, signature)
+            Security.verifyPurchase(BuildConfig.BASE_64_ENCODED_PUBLIC_KEY, signedData, signature)
         } catch (e: IOException) {
             Log.e(TAG, "Got an exception trying to validate a purchase: $e")
             false
         }
-
     }
 
     companion object {

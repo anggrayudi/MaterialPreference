@@ -105,10 +105,10 @@ internal class PreferenceGroupAdapter internal constructor(
     }
 
     private fun syncMyPreferences() {
-        for (preference in mPreferenceListInternal!!) {
+        mPreferenceListInternal!!.forEach {
             // Clear out the listeners in anticipation of some items being removed. This listener
             // will be (re-)added to the remaining prefs when we flatten.
-            preference.onPreferenceChangeInternalListener = null
+            it.onPreferenceChangeInternalListener = null
         }
         val fullPreferenceList = ArrayList<Preference>(mPreferenceListInternal!!.size)
         flattenPreferenceGroup(fullPreferenceList, mPreferenceGroup)
@@ -247,9 +247,7 @@ internal class PreferenceGroupAdapter internal constructor(
     }
 
     private fun notifyDataSetChanged() {
-        for (i in mPreferenceList!!.indices) {
-            onItemChanged(i)
-        }
+        mPreferenceList?.indices?.forEach { onItemChanged(it) }
     }
 
     private fun getParentView(preference: Preference): ViewGroup {

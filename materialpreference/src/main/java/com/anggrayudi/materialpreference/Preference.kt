@@ -1065,7 +1065,6 @@ open class Preference @JvmOverloads constructor(
         return if (key.isEmpty() || preferenceManager == null) {
             null
         } else preferenceManager!!.findPreference(key)
-
     }
 
     /**

@@ -27,9 +27,9 @@ abstract class PreferenceActivityMaterial : AppCompatActivity(),
 
     val visiblePreferenceFragment: PreferenceFragmentMaterial?
         get() {
-            for (f in supportFragmentManager.fragments) {
-                if (f is PreferenceFragmentMaterial && f.isVisible())
-                    return f
+            supportFragmentManager.fragments.forEach {
+                if (it is PreferenceFragmentMaterial && it.isVisible())
+                    return it
             }
             return null
         }

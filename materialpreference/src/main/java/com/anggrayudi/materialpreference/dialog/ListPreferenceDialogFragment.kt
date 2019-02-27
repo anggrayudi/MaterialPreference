@@ -103,11 +103,7 @@ class ListPreferenceDialogFragment : PreferenceDialogFragment() {
 
         private fun putCharSequenceArray(out: Bundle, key: String, entries: Array<CharSequence>) {
             val stored = ArrayList<String>(entries.size)
-
-            for (cs in entries) {
-                stored.add(cs.toString())
-            }
-
+            entries.forEach { stored.add(it.toString()) }
             out.putStringArrayList(key, stored)
         }
 

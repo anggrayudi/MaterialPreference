@@ -1,5 +1,6 @@
 package com.anggrayudi.materialpreference.util
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Environment
 import java.io.File
@@ -10,28 +11,29 @@ import java.io.IOException
  *
  * Memngambil direktori path berdasarkan tipe.
  */
+@SuppressLint("SdCardPath")
 object SaveDir {
     // 0
-    val EXTERNAL = Environment.getExternalStorageDirectory().absolutePath!!
+    val EXTERNAL: String = Environment.getExternalStorageDirectory().absolutePath ?: "/mnt/sdcard"
     // 1
-    val ALARM = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS).absolutePath!!
+    val ALARM: String = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS).absolutePath ?: "/mnt/sdcard/Alarms"
     // 2
-    val DCIM = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath!!
+    val DCIM: String = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath ?: "/mnt/sdcard/DCIM"
     // 3
-    val DOWNLOADS = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath!!
+    val DOWNLOADS: String = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath ?: "/mnt/sdcard/Downloads"
     //    public static final String DOWNLOADS    = "/mnt/shared";
     // 4
-    val MOVIES = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath!!
+    val MOVIES: String = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath ?: "/mnt/sdcard/Movies"
     // 5
-    val MUSIC = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath!!
+    val MUSIC: String = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath ?: "/mnt/sdcard/Music"
     // 6
-    val NOTIFICATIONS = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS).absolutePath!!
+    val NOTIFICATIONS = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS).absolutePath ?: "/mnt/sdcard/Notifications"
     // 7
-    val PICTURES = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath!!
+    val PICTURES: String = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath ?: "/mnt/sdcard/Pictures"
     // 8
-    val PODCASTS = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS).absolutePath!!
+    val PODCASTS: String = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS).absolutePath ?: "/mnt/sdcard/Podcasts"
     // 9
-    val RINGTONES = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).absolutePath!!
+    val RINGTONES: String = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).absolutePath ?: "/mnt/sdcard/Ringtones"
     // 10
     val DOCUMENTS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath!!
