@@ -194,10 +194,8 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         super.onViewCreated(view, savedInstanceState)
         if (mHavePrefs) {
             bindPreferences()
-            if (mSelectPreferenceRunnable != null) {
-                mSelectPreferenceRunnable!!.run()
-                mSelectPreferenceRunnable = null
-            }
+            mSelectPreferenceRunnable?.run()
+            mSelectPreferenceRunnable = null
         }
         mInitDone = true
     }

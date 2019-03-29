@@ -16,7 +16,6 @@
 
 package com.anggrayudi.materialpreference
 
-import android.graphics.PorterDuff
 import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
@@ -30,7 +29,8 @@ import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.ListUpdateCallback
-import com.afollestad.materialdialogs.utils.MDUtil.resolveColor
+import com.anggrayudi.materialpreference.util.applyTint
+import com.anggrayudi.materialpreference.util.getAttrColor
 import java.util.*
 
 /**
@@ -81,9 +81,10 @@ internal class PreferenceGroupAdapter internal constructor(
         }
 
         override fun equals(other: Any?): Boolean {
-            return other is PreferenceLayout && (resId == other.resId
+            return other is PreferenceLayout
+                    && resId == other.resId
                     && widgetResId == other.widgetResId
-                    && TextUtils.equals(name, other.name))
+                    && TextUtils.equals(name, other.name)
         }
 
         override fun hashCode(): Int {
@@ -227,22 +228,20 @@ internal class PreferenceGroupAdapter internal constructor(
     }
 
     private fun onItemChanged(position: Int) {
-        val preference = getItem(position)
-        if (preference != null) {
-            if (preference.preferenceViewHolder == null) {
-                preference.preferenceViewHolder = createViewHolder(getItemViewType(position), preference)
-                if (preference is PreferenceScreen) {
-                    val summaryIcon = preference.preferenceViewHolder!!.findViewById(R.id.summary_icon) as ImageView
-                    summaryIcon.drawable.mutate().setColorFilter(resolveColor(
-                            preference.context, attr = android.R.attr.textColorSecondary), PorterDuff.Mode.SRC_IN)
+        getItem(position)?.run {
+            if (preferenceViewHolder == null) {
+                preferenceViewHolder = createViewHolder(getItemViewType(position), this)
+                if (this is PreferenceScreen) {
+                    val summaryIcon = preferenceViewHolder!!.findViewById(R.id.summary_icon) as ImageView
+                    summaryIcon.drawable.applyTint(context.getAttrColor(android.R.attr.textColorSecondary))
                 }
-                preference.preferenceViewHolder!!.itemView.visibility = if (preference.isVisible) View.VISIBLE else View.GONE
-                getParentView(preference).addView(preference.preferenceViewHolder!!.itemView)
-                preference.onBindViewHolder(preference.preferenceViewHolder!!)
-                preference.onSetupFinished(fragment)
+                preferenceViewHolder!!.itemView.visibility = if (isVisible) View.VISIBLE else View.GONE
+                getParentView(this).addView(preferenceViewHolder!!.itemView)
+                onBindViewHolder(preferenceViewHolder!!)
+                onSetupFinished(this@PreferenceGroupAdapter.fragment)
                 return
             }
-            preference.onBindViewHolder(preference.preferenceViewHolder!!)
+            onBindViewHolder(preferenceViewHolder!!)
         }
     }
 

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
 import android.os.StatFs
 import android.provider.DocumentsContract
 import android.system.ErrnoException
@@ -20,6 +19,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.anggrayudi.materialpreference.R
 import com.anggrayudi.materialpreference.callback.StoragePermissionDenialException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.io.*
 import java.net.URLDecoder
 import java.util.*
@@ -314,8 +315,7 @@ object FileUtils {
     }
 
     fun resolveParentFile(file: String): String {
-        val parent = File(file).parent
-        return parent ?: file.substring(0, file.indexOf(':') + 1)
+        return File(file).parent ?: file.substring(0, file.indexOf(':') + 1)
     }
 
     @Throws(StoragePermissionDenialException::class)
@@ -596,12 +596,15 @@ object FileUtils {
         return "$folder/$fileName"
     }
 
-    fun shareFile(context: Context, file: DocumentFile?, mimeType: String? = null) {
+    fun shareFile(context: Context, file: DocumentFile?, mimeType: String?, authority: String) {
         if (file != null && file.isFile) {
             val intent = Intent(Intent.ACTION_SEND)
                     .setType(mimeType ?: "*/*")
                     .putExtra(Intent.EXTRA_SUBJECT, file.name)
-                    .putExtra(Intent.EXTRA_STREAM, file.uri)
+                    .putExtra(Intent.EXTRA_STREAM, if (file.uri.scheme == "file")
+                        FileProvider.getUriForFile(context, authority, File(file.uri.path!!))
+                    else
+                        file.uri)
             if (intent.resolveActivity(context.packageManager) != null)
                 context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_file)))
             else
@@ -611,14 +614,20 @@ object FileUtils {
         }
     }
 
-    fun shareFile(context: Context, files: MutableList<DocumentFile>) {
-        for (i in files.indices.reversed()) {
-            if (!files[i].isFile)
-                files.removeAt(i)
+    fun shareFile(context: Context, files: MutableList<DocumentFile>, authority: String) {
+        files.indices.reversed().forEach {
+            if (!files[it].isFile)
+                files.removeAt(it)
         }
         if (!files.isEmpty()) {
             val uris = ArrayList<Uri>(files.size)
-            files.forEach { uris.add(it.uri) }
+            files.forEach {
+                uris.add(if (it.uri.scheme == "file")
+                    FileProvider.getUriForFile(context, authority, File(it.uri.path!!))
+                else
+                    it.uri)
+            }
+
             val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
                     .setType("*/*")
                     .putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
@@ -641,31 +650,30 @@ object FileUtils {
                     file.uri)
     }
 
-    private fun openDocumentFile(context: Context, file: String, callback: FileDocumentFindCallback) {
-        val handler = Handler()
-        Thread(Runnable {
+    private fun openDocumentFile(context: Context, ioScope: CoroutineScope, uiScope: CoroutineScope,
+                                 file: String, callback: FileDocumentFindCallback) {
+        ioScope.launch {
             try {
-                val documentFile = asDocumentFile(context, file)
-                if (documentFile != null) {
-                    handler.post { callback.onDocumentFileFound(documentFile) }
+                asDocumentFile(context, file)?.let {
+                    uiScope.launch { callback.onDocumentFileFound(it) }
                 }
             } catch (e: StoragePermissionDenialException) {
-                handler.post { Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show() }
+                uiScope.launch { Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show() }
             }
-        }).start()
+        }
     }
 
-    @UiThread
-    fun openFile(context: Context, file: String, authority: String, mimeType: String? = null) {
-        openDocumentFile(context, file, object : FileDocumentFindCallback {
-            override fun onDocumentFileFound(file: DocumentFile?) {
-                openFile(context, file, authority, mimeType)
+    fun openFile(context: Context, ioScope: CoroutineScope, uiScope: CoroutineScope,
+                 file: String, mimeType: String, authority: String) {
+        openDocumentFile(context, ioScope, uiScope, file, object : FileDocumentFindCallback {
+            override fun onDocumentFileFound(file: DocumentFile) {
+                openFile(context, file, mimeType, authority)
             }
         })
     }
 
     @UiThread
-    fun openFile(context: Context, file: DocumentFile?, authority: String, mimeType: String? = null) {
+    fun openFile(context: Context, file: DocumentFile?, mimeType: String?, authority: String) {
         if (file == null || !file.isFile) {
             Toast.makeText(context, R.string.file_not_found, Toast.LENGTH_SHORT).show()
             return
@@ -782,6 +790,6 @@ object FileUtils {
     }
 
     interface FileDocumentFindCallback {
-        fun onDocumentFileFound(file: DocumentFile?)
+        fun onDocumentFileFound(file: DocumentFile)
     }
 }

@@ -38,3 +38,12 @@
 -keep public class com.anggrayudi.materialpreference.TimePreference { *; }
 -keep public class com.anggrayudi.materialpreference.DatePreference { *; }
 -keep public class com.anggrayudi.materialpreference.ColorPreference { *; }
+
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-keepnames class kotlinx.coroutines.android.AndroidExceptionPreHandler {}
+-keepnames class kotlinx.coroutines.android.AndroidDispatcherFactory {}
+
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}

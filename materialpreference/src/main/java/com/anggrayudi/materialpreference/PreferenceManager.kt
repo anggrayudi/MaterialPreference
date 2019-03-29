@@ -285,9 +285,7 @@ constructor(val context: Context) {
      */
     fun setPreferences(preferenceScreen: PreferenceScreen): Boolean {
         if (preferenceScreen != this.preferenceScreen) {
-            if (this.preferenceScreen != null) {
-                this.preferenceScreen!!.onDetached()
-            }
+            this.preferenceScreen?.onDetached()
             this.preferenceScreen = preferenceScreen
             return true
         }

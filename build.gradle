@@ -8,7 +8,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
         classpath 'com.google.gms:google-services:4.2.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
@@ -33,13 +33,13 @@ task clean(type: Delete) {
 }
 
 ext {
-    appVersionCode = 7
-    libVersion = '3.1.5'
+    appVersionCode = 8
+    libVersion = '3.1.6'
     processorVersion = '1.1'
     minSdkVersion = 17
     targetSdkVersion = 28
     compileSdkVersion = 28
     buildToolsVersion = '28.0.3'
-    dialogVersion = '2.0.1'
+    dialogVersion = '2.6.0'
     coroutinesVersion = '1.1.1'
 }

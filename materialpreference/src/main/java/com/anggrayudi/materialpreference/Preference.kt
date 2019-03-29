@@ -22,7 +22,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.TypedArray
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -46,6 +45,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.anggrayudi.materialpreference.callback.OnPreferenceChangeListener
 import com.anggrayudi.materialpreference.callback.OnPreferenceClickListener
 import com.anggrayudi.materialpreference.callback.OnPreferenceLongClickListener
+import com.anggrayudi.materialpreference.util.applyTint
 import java.util.*
 
 /**
@@ -488,9 +488,7 @@ open class Preference @JvmOverloads constructor(
         set(visible) {
             if (_visible != visible) {
                 _visible = visible
-                if (onPreferenceChangeInternalListener != null) {
-                    onPreferenceChangeInternalListener!!.onPreferenceVisibilityChange(this)
-                }
+                onPreferenceChangeInternalListener?.onPreferenceVisibilityChange(this)
             }
         }
     private var _visible = true
@@ -726,57 +724,55 @@ open class Preference @JvmOverloads constructor(
         holder.itemView.setOnClickListener(clickListener)
         holder.itemView.setOnLongClickListener(longClickListener)
 
-        val titleView = holder.findViewById(android.R.id.title) as? TextView
-        if (titleView != null) {
+        (holder.findViewById(android.R.id.title) as? TextView)?.run {
             if (fontFamily != null)
-                titleView.typeface = fontFamily
+                typeface = fontFamily
 
             val title = title
             if (!title.isNullOrEmpty()) {
-                titleView.text = title
-                titleView.visibility = View.VISIBLE
+                text = title
+                visibility = View.VISIBLE
                 if (hasSingleLineTitleAttr) {
-                    titleView.setSingleLine(isSingleLineTitle)
+                    setSingleLine(isSingleLineTitle)
                 }
                 if (titleTextColor != 0)
-                    titleView.setTextColor(titleTextColor)
+                    setTextColor(titleTextColor)
             } else {
-                titleView.visibility = View.GONE
+                visibility = View.GONE
             }
         }
 
-        val legacySummaryView = holder.findViewById(android.R.id.summary) as? TextView
-        if (legacySummaryView != null) {
+        // Legacy Summary
+        (holder.findViewById(android.R.id.summary) as? TextView)?.run {
             if (fontFamily != null)
-                legacySummaryView.typeface = fontFamily
+                typeface = fontFamily
 
             val s = summary
             if (isLegacySummary && !s.isNullOrEmpty()) {
-                legacySummaryView.text = s
-                legacySummaryView.visibility = View.VISIBLE
+                text = s
+                visibility = View.VISIBLE
             } else {
-                legacySummaryView.visibility = View.GONE
+                visibility = View.GONE
             }
         }
 
-        val materialSummaryView = holder.findViewById(R.id.material_summary) as? TextView
-        if (materialSummaryView != null) {
+        // Material Summary
+        (holder.findViewById(R.id.material_summary) as? TextView)?.run {
             if (fontFamily != null)
-                materialSummaryView.typeface = fontFamily
+                typeface = fontFamily
 
             val s = summary
             if (!isLegacySummary && !s.isNullOrEmpty()) {
-                materialSummaryView.text = s
-                materialSummaryView.visibility = View.VISIBLE
+                text = s
+                visibility = View.VISIBLE
             } else {
-                materialSummaryView.visibility = View.GONE
+                visibility = View.GONE
             }
         }
 
-        val imageView = holder.findViewById(android.R.id.icon) as? ImageView
-        if (imageView != null) {
-            if (imageView.tag == null && iconSize == 1) {
-                imageView.tag = 1
+        (holder.findViewById(android.R.id.icon) as? ImageView)?.run {
+            if (tag == null && iconSize == 1) {
+                tag = 1
             }
 
             var c = icon
@@ -786,15 +782,15 @@ open class Preference @JvmOverloads constructor(
                 }
                 if (c != null) {
                     if (tintIcon != Color.TRANSPARENT) {
-                        c.mutate().setColorFilter(tintIcon, PorterDuff.Mode.SRC_IN)
+                        c.applyTint(tintIcon)
                     }
-                    imageView.setImageDrawable(c)
+                    setImageDrawable(c)
                 }
             }
-            if (c != null) {
-                imageView.visibility = View.VISIBLE
+            visibility = if (c != null) {
+                View.VISIBLE
             } else {
-                imageView.visibility = if (isIconSpaceReserved) View.INVISIBLE else View.GONE
+                if (isIconSpaceReserved) View.INVISIBLE else View.GONE
             }
         }
 
@@ -1025,9 +1021,8 @@ open class Preference @JvmOverloads constructor(
 
     /**
      * Called when the Preference hierarchy has been detached from the
-     * list of preferences. This can also be called when this
-     * Preference has been removed from a group that was attached
-     * to the list of preferences.
+     * list of preferences. This can also be called when this Preference has been removed
+     * from a group that was attached to the list of preferences.
      */
     open fun onDetached() {
         unregisterDependency()

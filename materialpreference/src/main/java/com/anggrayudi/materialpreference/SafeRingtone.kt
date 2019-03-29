@@ -98,9 +98,7 @@ class SafeRingtone private constructor(
     }
 
     fun stop() {
-        if (mRingtone != null) {
-            mRingtone!!.stop()
-        }
+        mRingtone?.stop()
     }
 
     /**
@@ -113,9 +111,7 @@ class SafeRingtone private constructor(
             throw IllegalArgumentException("Invalid stream type: $streamType")
         }
         mStreamType = streamType
-        if (mRingtone != null) {
-            mRingtone!!.streamType = streamType
-        }
+        mRingtone?.streamType = streamType
     }
 
     fun canGetTitle(): Boolean {

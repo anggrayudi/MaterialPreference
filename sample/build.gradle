@@ -59,7 +59,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.android.billingclient:billing:1.2'
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha02'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha03'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation "com.afollestad.material-dialogs:core:$dialogVersion"
 

@@ -397,9 +397,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
                             Log.e(TAG, "Failed to create unknown Ringtone from $mExistingUri.", ex)
                         }
                     }
-                    if (mUnknownRingtone != null) {
-                        mUnknownRingtone!!.streamType = mRingtoneManager!!.inferStreamType()
-                    }
+                    mUnknownRingtone?.streamType = mRingtoneManager!!.inferStreamType()
                     ringtone = mUnknownRingtone
                     mCurrentRingtone = null
                 }
@@ -447,9 +445,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
             mUnknownRingtone!!.stop()
         }
 
-        if (mRingtoneManager != null) {
-            mRingtoneManager!!.stopPreviousRingtone()
-        }
+        mRingtoneManager?.stopPreviousRingtone()
     }
 
     private fun getRingtoneManagerPosition(listPos: Int): Int {

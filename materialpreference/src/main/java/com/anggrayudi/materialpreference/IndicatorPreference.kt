@@ -2,12 +2,12 @@ package com.anggrayudi.materialpreference
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 import androidx.core.content.res.TypedArrayUtils
+import com.anggrayudi.materialpreference.util.applyTint
 
 /**
  * Used to indicate status of something, e.g. verified account is shown as check icon.
@@ -42,9 +42,7 @@ class IndicatorPreference @JvmOverloads constructor(
         get() = _tint
         set(tint) {
             _tint = tint
-            if (drawable != null)
-                drawable!!.mutate().setColorFilter(_tint, PorterDuff.Mode.SRC_IN)
-
+            drawable?.applyTint(_tint)
             notifyChanged()
         }
     private var _tint: Int = 0
