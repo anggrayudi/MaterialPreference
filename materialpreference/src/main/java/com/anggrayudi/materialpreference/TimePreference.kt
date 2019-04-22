@@ -99,9 +99,7 @@ class TimePreference @JvmOverloads constructor(
             /** 24 hours format  */
             var hourOfDay: Int, var minute: Int, var second: Int) {
 
-        override fun toString(): String {
-            return hourOfDay.toString() + ":" + minute + ":" + second
-        }
+        override fun toString(): String = "$hourOfDay:$minute:$second"
 
         fun toDate(initDateMillis: Long = 0): Date {
             val calendar = Calendar.getInstance()

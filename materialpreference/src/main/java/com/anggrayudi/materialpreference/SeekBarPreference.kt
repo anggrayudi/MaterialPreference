@@ -46,16 +46,16 @@ class SeekBarPreference @JvmOverloads constructor(
         defStyleAttr: Int = R.attr.seekBarPreferenceStyle, defStyleRes: Int = 0)
     : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
-    private var mSeekBarValue: Int = 0
-    private var mTrackingTouch: Boolean = false
-    private var mSeekBar: SeekBar? = null
+    private var seekBarValue: Int = 0
+    private var trackingTouch: Boolean = false
+    private var seekBar: SeekBar? = null
     var isAdjustable: Boolean = false // whether the seekbar should respond to the left/right keys
 
     var summaryFormatter: IntSummaryFormatter? = null
         set(f) {
             field = f
             if (isBindValueToSummary)
-                summary = f?.invoke(mSeekBarValue) ?: mSeekBarValue.toString()
+                summary = f?.invoke(seekBarValue) ?: seekBarValue.toString()
         }
 
     override var isLegacySummary: Boolean
@@ -65,20 +65,20 @@ class SeekBarPreference @JvmOverloads constructor(
         }
 
     /** Listener reacting to the SeekBar changing value by the user */
-    private val mSeekBarChangeListener = object : OnSeekBarChangeListener {
+    private val seekBarChangeListener = object : OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-            if (fromUser && !mTrackingTouch) {
+            if (fromUser && !trackingTouch) {
                 syncValueInternal(seekBar)
             }
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar) {
-            mTrackingTouch = true
+            trackingTouch = true
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar) {
-            mTrackingTouch = false
-            if (seekBar.progress + mMin != mSeekBarValue) {
+            trackingTouch = false
+            if (seekBar.progress + _min != seekBarValue) {
                 syncValueInternal(seekBar)
             }
         }
@@ -88,7 +88,7 @@ class SeekBarPreference @JvmOverloads constructor(
      * Listener reacting to the user pressing DPAD left/right keys if `adjustable` attribute is set to true;
      * it transfers the key presses to the `SeekBar` to be handled accordingly.
      */
-    private val mSeekBarKeyListener = View.OnKeyListener { v, keyCode, event ->
+    private val seekBarKeyListener = View.OnKeyListener { _, keyCode, event ->
         if (event.action != KeyEvent.ACTION_DOWN) {
             return@OnKeyListener false
         }
@@ -104,26 +104,26 @@ class SeekBarPreference @JvmOverloads constructor(
             return@OnKeyListener false
         }
 
-        if (mSeekBar == null) {
+        if (seekBar == null) {
             Log.e(TAG, "SeekBar view is null and hence cannot be adjusted.")
             return@OnKeyListener false
         }
-        mSeekBar!!.onKeyDown(keyCode, event)
+        seekBar!!.onKeyDown(keyCode, event)
     }
 
     var min: Int
-        get() = mMin
-        set(min) {
-            var min = min
-            if (min > mMax) {
-                min = mMax
+        get() = _min
+        set(value) {
+            var min = value
+            if (min > _max) {
+                min = _max
             }
-            if (min != mMin) {
-                mMin = min
+            if (min != _min) {
+                _min = min
                 notifyChanged()
             }
         }
-    private var mMin: Int = 0
+    private var _min: Int = 0
 
     /**
      * Sets the increment amount on the SeekBar for each arrow key press.
@@ -133,31 +133,31 @@ class SeekBarPreference @JvmOverloads constructor(
      * from the default `mKeyProgressIncrement` value in [android.widget.AbsSeekBar].
      */
     var seekBarIncrement: Int
-        get() = mSeekBarIncrement
+        get() = _seekBarIncrement
         set(seekBarIncrement) {
-            if (seekBarIncrement != mSeekBarIncrement) {
-                mSeekBarIncrement = Math.min(mMax - mMin, Math.abs(seekBarIncrement))
+            if (seekBarIncrement != _seekBarIncrement) {
+                _seekBarIncrement = Math.min(_max - _min, Math.abs(seekBarIncrement))
                 notifyChanged()
             }
         }
-    private var mSeekBarIncrement: Int = 0
+    private var _seekBarIncrement: Int = 0
 
     var max: Int
-        get() = mMax
-        set(max) {
-            var max = max
-            if (max < mMin) {
-                max = mMin
+        get() = _max
+        set(value) {
+            var max = value
+            if (max < _min) {
+                max = _min
             }
-            if (max != mMax) {
-                mMax = max
+            if (max != _max) {
+                _max = max
                 notifyChanged()
             }
         }
-    private var mMax: Int = 0
+    private var _max: Int = 0
 
     var value: Int
-        get() = mSeekBarValue
+        get() = seekBarValue
         set(seekBarValue) = setValueInternal(seekBarValue, true)
 
     init {
@@ -165,57 +165,57 @@ class SeekBarPreference @JvmOverloads constructor(
         /*
          * The ordering of these two statements are important. If we want to set max first, we need
          * to perform the same steps by changing min/max to max/min as following:
-         * mMax = a.getInt(...) and setMin(...).
+         * _max = a.getInt(...) and setMin(...).
          */
-        mMin = a.getInt(R.styleable.SeekBarPreference_min, 0)
-        max = a.getInt(R.styleable.SeekBarPreference_android_max, 100)
-        seekBarIncrement = a.getInt(R.styleable.SeekBarPreference_seekBarIncrement, 0)
+        _min = a.getInt(R.styleable.SeekBarPreference_min, 0)
+        _max = a.getInt(R.styleable.SeekBarPreference_android_max, 100)
+        _seekBarIncrement = a.getInt(R.styleable.SeekBarPreference_seekBarIncrement, 0)
         isAdjustable = a.getBoolean(R.styleable.SeekBarPreference_adjustable, true)
         a.recycle()
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
-        holder.itemView.setOnKeyListener(mSeekBarKeyListener)
-        mSeekBar = holder.findViewById(R.id.seekbar) as SeekBar
+        holder.itemView.setOnKeyListener(seekBarKeyListener)
+        seekBar = holder.findViewById(R.id.seekbar) as SeekBar
 
-        if (mSeekBar == null) {
+        if (seekBar == null) {
             Log.e(TAG, "SeekBar view is null in onBindViewHolder.")
             return
         }
-        mSeekBar!!.setOnSeekBarChangeListener(mSeekBarChangeListener)
-        mSeekBar!!.max = mMax - mMin
+        seekBar!!.setOnSeekBarChangeListener(seekBarChangeListener)
+        seekBar!!.max = _max - _min
         // If the increment is not zero, use that. Otherwise, use the default mKeyProgressIncrement
         // in AbsSeekBar when it's zero. This default increment value is set by AbsSeekBar
         // after calling setMax. That's why it's important to call setKeyProgressIncrement after
         // calling setMax() since setMax() can change the increment value.
-        if (mSeekBarIncrement != 0) {
-            mSeekBar!!.keyProgressIncrement = mSeekBarIncrement
+        if (_seekBarIncrement != 0) {
+            seekBar!!.keyProgressIncrement = _seekBarIncrement
         } else {
-            mSeekBarIncrement = mSeekBar!!.keyProgressIncrement
+            _seekBarIncrement = seekBar!!.keyProgressIncrement
         }
 
-        mSeekBar!!.progress = mSeekBarValue - mMin
+        seekBar!!.progress = seekBarValue - _min
         if (isBindValueToSummary)
-            summary = summaryFormatter?.invoke(mSeekBarValue) ?: mSeekBarValue.toString()
+            summary = summaryFormatter?.invoke(seekBarValue) ?: seekBarValue.toString()
 
-        mSeekBar!!.isEnabled = isEnabled
+        seekBar!!.isEnabled = isEnabled
     }
 
     private fun setValueInternal(seekBarValue: Int, notifyChanged: Boolean) {
         var value = seekBarValue
-        if (value < mMin) {
-            value = mMin
+        if (value < _min) {
+            value = _min
         }
-        if (value > mMax) {
-            value = mMax
+        if (value > _max) {
+            value = _max
         }
 
-        if (value != mSeekBarValue) {
-            mSeekBarValue = value
+        if (value != this.seekBarValue) {
+            this.seekBarValue = value
             persistInt(value)
             if (isBindValueToSummary || notifyChanged)
-                summary = summaryFormatter?.invoke(mSeekBarValue) ?: mSeekBarValue.toString()
+                summary = summaryFormatter?.invoke(this.seekBarValue) ?: this.seekBarValue.toString()
         }
     }
 
@@ -224,18 +224,18 @@ class SeekBarPreference @JvmOverloads constructor(
      * returns true, otherwise set the seekBar's value to the stored value
      */
     private fun syncValueInternal(seekBar: SeekBar) {
-        val seekBarValue = mMin + seekBar.progress
-        if (seekBarValue != mSeekBarValue) {
+        val seekBarValue = _min + seekBar.progress
+        if (seekBarValue != this.seekBarValue) {
             if (callChangeListener(seekBarValue)) {
                 setValueInternal(seekBarValue, false)
             } else {
-                seekBar.progress = mSeekBarValue - mMin
+                seekBar.progress = this.seekBarValue - _min
             }
         }
     }
 
     override fun onSetInitialValue() {
-        mSeekBarValue = getPersistedInt(value)
+        seekBarValue = getPersistedInt(value)
     }
 
     override fun onSaveInstanceState(): Parcelable? {
@@ -247,9 +247,9 @@ class SeekBarPreference @JvmOverloads constructor(
 
         // Save the instance state
         val myState = SavedState(superState!!)
-        myState.seekBarValue = mSeekBarValue
-        myState.min = mMin
-        myState.max = mMax
+        myState.seekBarValue = seekBarValue
+        myState.min = _min
+        myState.max = _max
         return myState
     }
 
@@ -263,9 +263,9 @@ class SeekBarPreference @JvmOverloads constructor(
         // Restore the instance state
         val myState = state as SavedState?
         super.onRestoreInstanceState(myState!!.superState)
-        mSeekBarValue = myState.seekBarValue
-        mMin = myState.min
-        mMax = myState.max
+        seekBarValue = myState.seekBarValue
+        _min = myState.min
+        _max = myState.max
         notifyChanged()
     }
 
@@ -275,7 +275,7 @@ class SeekBarPreference @JvmOverloads constructor(
      *
      * It is important to always call through to super methods.
      */
-    private class SavedState : Preference.BaseSavedState {
+    private class SavedState : BaseSavedState {
         internal var seekBarValue: Int = 0
         internal var min: Int = 0
         internal var max: Int = 0

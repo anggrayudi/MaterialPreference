@@ -28,16 +28,17 @@ import androidx.recyclerview.widget.RecyclerView
  * Cached views can be retrieved by calling [findViewById].
  */
 class PreferenceViewHolder internal constructor(internal val itemView: View) {
-    private val mCachedViews = SparseArray<View>(5)
+
+    private val cachedViews = SparseArray<View>(5)
 
     init {
         // Pre-cache the views that we know in advance we'll want to find
-        mCachedViews.put(android.R.id.title, itemView.findViewById(android.R.id.title))
-        mCachedViews.put(android.R.id.summary, itemView.findViewById(android.R.id.summary))
-        mCachedViews.put(R.id.material_summary, itemView.findViewById(R.id.material_summary))
-        mCachedViews.put(android.R.id.icon, itemView.findViewById(android.R.id.icon))
-        mCachedViews.put(R.id.icon_frame, itemView.findViewById(R.id.icon_frame))
-        mCachedViews.put(android.R.id.widget_frame, itemView.findViewById(android.R.id.widget_frame))
+        cachedViews.put(android.R.id.title, itemView.findViewById(android.R.id.title))
+        cachedViews.put(android.R.id.summary, itemView.findViewById(android.R.id.summary))
+        cachedViews.put(R.id.material_summary, itemView.findViewById(R.id.material_summary))
+        cachedViews.put(android.R.id.icon, itemView.findViewById(android.R.id.icon))
+        cachedViews.put(R.id.icon_frame, itemView.findViewById(R.id.icon_frame))
+        cachedViews.put(android.R.id.widget_frame, itemView.findViewById(android.R.id.widget_frame))
     }
 
     /**
@@ -48,13 +49,13 @@ class PreferenceViewHolder internal constructor(internal val itemView: View) {
      * @return The view, or null if no view with the requested ID is found.
      */
     fun findViewById(@IdRes id: Int): View? {
-        val cachedView = mCachedViews.get(id)
+        val cachedView = cachedViews.get(id)
         return if (cachedView != null) {
             cachedView
         } else {
             val v = itemView.findViewById<View>(id)
             if (v != null) {
-                mCachedViews.put(id, v)
+                cachedViews.put(id, v)
             }
             v
         }

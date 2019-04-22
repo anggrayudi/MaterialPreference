@@ -20,29 +20,32 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep public class com.anggrayudi.materialpreference.Preference { *; }
--keep public class com.anggrayudi.materialpreference.PreferenceScreen { *; }
--keep public class com.anggrayudi.materialpreference.PreferenceCategory { *; }
--keep public class com.anggrayudi.materialpreference.SeekBarPreference { *; }
--keep public class com.anggrayudi.materialpreference.SeekBarDialogPreference { *; }
--keep public class com.anggrayudi.materialpreference.TwoStatePreference { *; }
--keep public class com.anggrayudi.materialpreference.CheckBoxPreference { *; }
--keep public class com.anggrayudi.materialpreference.SwitchPreference { *; }
--keep public class com.anggrayudi.materialpreference.RingtonePreference { *; }
--keep public class com.anggrayudi.materialpreference.ListPreference { *; }
--keep public class com.anggrayudi.materialpreference.MultiSelectListPreference { *; }
--keep public class com.anggrayudi.materialpreference.EditTextPreference { *; }
--keep public class com.anggrayudi.materialpreference.IndicatorPreference { *; }
--keep public class com.anggrayudi.materialpreference.FolderPreference { *; }
--keep public class com.anggrayudi.materialpreference.FilePreference { *; }
--keep public class com.anggrayudi.materialpreference.TimePreference { *; }
--keep public class com.anggrayudi.materialpreference.DatePreference { *; }
--keep public class com.anggrayudi.materialpreference.ColorPreference { *; }
+-keepnames class com.anggrayudi.materialpreference.Preference
+-keepnames class com.anggrayudi.materialpreference.PreferenceScreen
+-keepnames class com.anggrayudi.materialpreference.PreferenceCategory
+-keepnames class com.anggrayudi.materialpreference.SeekBarPreference
+-keepnames class com.anggrayudi.materialpreference.SeekBarDialogPreference
+-keepnames class com.anggrayudi.materialpreference.RingtonePreference
+-keepnames class com.anggrayudi.materialpreference.ListPreference
+-keepnames class com.anggrayudi.materialpreference.MultiSelectListPreference
+-keepnames class com.anggrayudi.materialpreference.EditTextPreference
+-keepnames class com.anggrayudi.materialpreference.IndicatorPreference
+-keepnames class com.anggrayudi.materialpreference.FolderPreference
+-keepnames class com.anggrayudi.materialpreference.ColorPreference
+-keepnames class com.anggrayudi.materialpreference.FilePreference
+-keepnames class com.anggrayudi.materialpreference.TwoStatePreference
 
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
--keepnames class kotlinx.coroutines.android.AndroidExceptionPreHandler {}
--keepnames class kotlinx.coroutines.android.AndroidDispatcherFactory {}
+-keep class com.anggrayudi.materialpreference.CheckBoxPreference
+-keep class com.anggrayudi.materialpreference.SwitchPreference
+-keep class com.anggrayudi.materialpreference.TimePreference
+-keep class com.anggrayudi.materialpreference.DatePreference
+
+-keepclassmembers class * extends com.anggrayudi.materialpreference.Preference { public <init>(...); }
+
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler
+-keepnames class kotlinx.coroutines.android.AndroidExceptionPreHandler
+-keepnames class kotlinx.coroutines.android.AndroidDispatcherFactory
 
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;

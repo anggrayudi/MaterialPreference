@@ -24,92 +24,69 @@ import java.util.*
 /**
  * Created by Eugen on 07.12.2015.
  */
+@Suppress("DEPRECATION")
 class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
 
-    private var mRingtoneManager: RingtoneManager? = null
-    private var mType: Int = 0
+    private var ringtoneManager: RingtoneManager? = null
+    private var type: Int = 0
 
-    private var mCursor: Cursor? = null
-    private var mHandler: Handler? = null
+    private var cursor: Cursor? = null
+    private var handler: Handler? = null
 
-    private var mUnknownPos = POS_UNKNOWN
+    private var unknownPos = POS_UNKNOWN
 
-    /**
-     * The position in the list of the 'Silent' item.
-     */
-    private var mSilentPos = POS_UNKNOWN
+    /** The position in the list of the 'Silent' item. */
+    private var silentPos = POS_UNKNOWN
 
-    /**
-     * The position in the list of the 'Default' item.
-     */
-    private var mDefaultRingtonePos = POS_UNKNOWN
+    /** The position in the list of the 'Default' item. */
+    private var defaultRingtonePos = POS_UNKNOWN
 
-    /**
-     * The position in the list of the last clicked item.
-     */
-    internal var mClickedPos = POS_UNKNOWN
+    /** The position in the list of the last clicked item. */
+    internal var clickedPos = POS_UNKNOWN
 
-    /**
-     * The position in the list of the ringtone to sample.
-     */
-    private var mSampleRingtonePos = POS_UNKNOWN
+    /** The position in the list of the ringtone to sample. */
+    private var sampleRingtonePos = POS_UNKNOWN
 
-    /**
-     * Whether this list has the 'Silent' item.
-     */
-    private var mHasSilentItem: Boolean = false
+    /** Whether this list has the 'Silent' item. */
+    private var hasSilentItem: Boolean = false
 
-    /**
-     * The Uri to place a checkmark next to.
-     */
-    private var mExistingUri: Uri? = null
+    /** The Uri to place a checkmark next to. */
+    private var existingUri: Uri? = null
 
-    /**
-     * The number of static items in the list.
-     */
-    private val mStaticItems = ArrayList<CharSequence>()
+    /** The number of static items in the list. */
+    private val staticItems = ArrayList<CharSequence>()
 
-    /**
-     * Whether this list has the 'Default' item.
-     */
-    private var mHasDefaultItem: Boolean = false
+    /** Whether this list has the 'Default' item. */
+    private var hasDefaultItem: Boolean = false
 
-    /**
-     * The Uri to play when the 'Default' item is clicked.
-     */
-    private var mUriForDefaultItem: Uri? = null
+    /** The Uri to play when the 'Default' item is clicked. */
+    private var uriForDefaultItem: Uri? = null
 
-    private var mUnknownRingtone: Ringtone? = null
+    private var unknownRingtone: Ringtone? = null
 
     /**
      * A Ringtone for the default ringtone. In most cases, the RingtoneManager
      * will stop the previous ringtone. However, the RingtoneManager doesn't
      * manage the default ringtone for us, so we should stop this one manually.
      */
-    private var mDefaultRingtone: Ringtone? = null
+    private var defaultRingtone: Ringtone? = null
 
-    /**
-     * The ringtone that's currently playing, unless the currently playing one is the default
-     * ringtone.
-     */
-    private var mCurrentRingtone: Ringtone? = null
-
-    val ringtonePreference: RingtonePreference?
-        get() = preference as RingtonePreference
+    /** The ringtone that's currently playing, unless the currently playing one is the default ringtone. */
+    private var currentRingtone: Ringtone? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mHandler = Handler()
+        handler = Handler()
         loadRingtoneManager(savedInstanceState)
     }
 
     private fun loadRingtoneManager(savedInstanceState: Bundle?) {
         // Give the Activity so it can do managed queries
-        mRingtoneManager = RingtoneManagerCompat(activity!!)
+        ringtoneManager = RingtoneManagerCompat(activity!!)
 
         val fallbackRingtonePicker: Boolean
         if (savedInstanceState != null) {
-            mClickedPos = savedInstanceState.getInt(SAVE_CLICKED_POS, POS_UNKNOWN)
+            clickedPos = savedInstanceState.getInt(SAVE_CLICKED_POS, POS_UNKNOWN)
             fallbackRingtonePicker = savedInstanceState.getBoolean(KEY_FALLBACK_RINGTONE_PICKER)
         } else {
             fallbackRingtonePicker = false
@@ -124,26 +101,26 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
              * Get whether to show the 'Default' item, and the URI to play when the
              * default is clicked
              */
-            mHasDefaultItem = preference.showDefault
-            mUriForDefaultItem = RingtoneManager.getDefaultUri(preference.ringtoneType)
+            hasDefaultItem = preference.showDefault
+            uriForDefaultItem = RingtoneManager.getDefaultUri(preference.ringtoneType)
 
             // Get whether to show the 'Silent' item
-            mHasSilentItem = preference.showSilent
+            hasSilentItem = preference.showSilent
 
             // Get the types of ringtones to show
-            mType = preference.ringtoneType
-            if (mType != -1) {
-                mRingtoneManager!!.setType(mType)
+            type = preference.ringtoneType
+            if (type != -1) {
+                ringtoneManager!!.setType(type)
             }
 
             // Get the URI whose list item should have a checkmark
-            mExistingUri = preference.onRestoreRingtone()
+            existingUri = preference.onRestoreRingtone()
 
             try {
-                mCursor = mRingtoneManager!!.cursor
+                cursor = ringtoneManager!!.cursor
 
                 // Check if cursor is valid.
-                mCursor!!.columnNames
+                cursor!!.columnNames
             } catch (ex: IllegalStateException) {
                 recover(preference, ex)
             } catch (ex: IllegalArgumentException) {
@@ -155,7 +132,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
     private fun recover(preference: RingtonePreference, ex: Throwable) {
         Log.e(TAG, "RingtoneManager returned unexpected cursor.", ex)
 
-        mCursor = null
+        cursor = null
         showsDialog = false
 
         // Alternatively try starting system picker.
@@ -173,8 +150,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
      * Just dismisses this fragment by default.
      *
      * @param requestCode You can use this code to launch another activity instead of dismissing
-     * this fragment. The result must contain
-     * [RingtoneManager.EXTRA_RINGTONE_PICKED_URI] extra.
+     * this fragment. The result must contain [RingtoneManager.EXTRA_RINGTONE_PICKED_URI] extra.
      */
     fun onRingtonePickerNotFound(requestCode: Int) {
         dismiss()
@@ -194,77 +170,76 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
         val preference = requireRingtonePreference()
 
         // The volume keys will control the stream that we are choosing a ringtone for
-        activity?.volumeControlStream = mRingtoneManager!!.inferStreamType()
+        activity?.volumeControlStream = ringtoneManager!!.inferStreamType()
 
         dialog.title(text = preference.nonEmptyDialogTitle.toString())
 
-        val context = dialog.context
+        if (hasDefaultItem) {
+            defaultRingtonePos = addDefaultRingtoneItem()
 
-        if (mHasDefaultItem) {
-            mDefaultRingtonePos = addDefaultRingtoneItem()
-
-            if (mClickedPos == POS_UNKNOWN && RingtoneManager.isDefault(mExistingUri)) {
-                mClickedPos = mDefaultRingtonePos
+            if (clickedPos == POS_UNKNOWN && RingtoneManager.isDefault(existingUri)) {
+                clickedPos = defaultRingtonePos
             }
         }
-        if (mHasSilentItem) {
-            mSilentPos = addSilentItem()
+        if (hasSilentItem) {
+            silentPos = addSilentItem()
 
             // The 'Silent' item should use a null Uri
-            if (mClickedPos == POS_UNKNOWN && mExistingUri == null) {
-                mClickedPos = mSilentPos
+            if (clickedPos == POS_UNKNOWN && existingUri == null) {
+                clickedPos = silentPos
             }
         }
 
-        if (mClickedPos == POS_UNKNOWN) {
-            mClickedPos = getListPosition(mRingtoneManager!!.getRingtonePosition(mExistingUri))
+        if (clickedPos == POS_UNKNOWN) {
+            clickedPos = getListPosition(ringtoneManager!!.getRingtonePosition(existingUri))
         }
 
         // If we still don't have selected item, but we're not silent, show the 'Unknown' item.
-        if (mClickedPos == POS_UNKNOWN && mExistingUri != null) {
+        if (clickedPos == POS_UNKNOWN && existingUri != null) {
             val ringtoneTitle: String?
-            val ringtone = SafeRingtone.obtain(context, mExistingUri)
+            val ringtone = SafeRingtone.obtain(dialog.context, existingUri)
             try {
                 // We may not be able to list external ringtones
                 // but we may be able to show selected external ringtone title.
-                ringtoneTitle = if (ringtone.canGetTitle()) {
+                ringtoneTitle = if (ringtone.canGetTitle())
                     ringtone.title
-                } else {
+                else
                     null
-                }
             } finally {
                 ringtone.stop()
             }
-            mUnknownPos = if (ringtoneTitle == null) {
+            unknownPos = if (ringtoneTitle == null) {
                 addUnknownItem()
             } else {
                 addStaticItem(ringtoneTitle)
             }
-            mClickedPos = mUnknownPos
+            clickedPos = unknownPos
         }
 
         val titles = ArrayList<String>()
-        mStaticItems.forEach { titles.add(it.toString()) }
-        if (mCursor!!.moveToFirst()) {
-            val index = mCursor!!.getColumnIndex(MediaStore.Audio.Media.TITLE)
+        staticItems.forEach { titles.add(it.toString()) }
+        if (cursor!!.moveToFirst()) {
+            val index = cursor!!.getColumnIndex(MediaStore.Audio.Media.TITLE)
             do {
-                titles.add(mCursor!!.getString(index))
-            } while (mCursor!!.moveToNext())
+                titles.add(cursor!!.getString(index))
+            } while (cursor!!.moveToNext())
         }
 
         return dialog.noAutoDismiss()
-                .positiveButton(text = mPositiveButtonText ?: getText(android.R.string.ok)) {
-                    mWhichButtonClicked = WhichButton.POSITIVE
+                .positiveButton(text = positiveButtonText ?: getText(android.R.string.ok)) {
+                    whichButtonClicked = WhichButton.POSITIVE
                     it.dismiss()
                 }
-                .negativeButton(text = mNegativeButtonText ?: getText(android.R.string.cancel)) {
-                    mWhichButtonClicked = WhichButton.NEGATIVE
+                .negativeButton(text = negativeButtonText ?: getText(android.R.string.cancel)) {
+                    whichButtonClicked = WhichButton.NEGATIVE
                     it.dismiss()
                 }
-                .listItemsSingleChoice(items = titles, waitForPositiveButton = false) { d, index, _ ->
-                    mClickedPos = index
-                    d.getActionButton(WhichButton.POSITIVE).isEnabled = true
-                    playRingtone(index, DELAY_MS_SELECTION_PLAYED)
+                .listItemsSingleChoice(items = titles, waitForPositiveButton = false, initialSelection = clickedPos) { d, index, _ ->
+                    if (d.isShowing) {
+                        clickedPos = index
+                        d.getActionButton(WhichButton.POSITIVE).isEnabled = true
+                        playRingtone(index, DELAY_MS_SELECTION_PLAYED)
+                    }
                 }
     }
 
@@ -276,12 +251,12 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
      * @return The position of the inserted item.
      */
     private fun addStaticItem(text: CharSequence): Int {
-        mStaticItems.add(text)
-        return mStaticItems.size - 1
+        staticItems.add(text)
+        return staticItems.size - 1
     }
 
     private fun addDefaultRingtoneItem(): Int {
-        return when (mType) {
+        return when (type) {
             RingtoneManager.TYPE_NOTIFICATION -> addStaticItem(RingtonePreference.getNotificationSoundDefaultString(context!!))
             RingtoneManager.TYPE_ALARM -> addStaticItem(RingtonePreference.getAlarmSoundDefaultString(context!!))
             else -> addStaticItem(RingtonePreference.getRingtoneDefaultString(context!!))
@@ -298,7 +273,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
 
     private fun getListPosition(ringtoneManagerPos: Int): Int {
         // If the manager position is -1 (for not found), return that
-        return if (ringtoneManagerPos < 0) POS_UNKNOWN else ringtoneManagerPos + mStaticItems.size
+        return if (ringtoneManagerPos < 0) POS_UNKNOWN else ringtoneManagerPos + staticItems.size
     }
 
     override fun onPause() {
@@ -319,38 +294,34 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(SAVE_CLICKED_POS, mClickedPos)
+        outState.putInt(SAVE_CLICKED_POS, clickedPos)
         outState.putBoolean(KEY_FALLBACK_RINGTONE_PICKER, !showsDialog)
     }
 
     protected fun requireRingtonePreference(): RingtonePreference {
-        val preference = ringtonePreference
-        if (preference == null) {
-            val key = arguments!!.getString(PreferenceDialogFragment.ARG_KEY)
-            throw IllegalStateException("RingtonePreference[$key] not available (yet).")
-        }
-        return preference
+        return preference as? RingtonePreference
+                ?: throw IllegalStateException("RingtonePreference[${arguments?.getString(ARG_KEY)}] not available (yet).")
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
         // Stop playing the previous ringtone
         if (sPlayingRingtone == null) {
-            mRingtoneManager!!.stopPreviousRingtone()
+            ringtoneManager?.stopPreviousRingtone()
         }
 
         // The volume keys will control the default stream
         activity?.volumeControlStream = AudioManager.USE_DEFAULT_STREAM_TYPE
 
         if (positiveResult) {
-            val uri = when (mClickedPos) {
-                mDefaultRingtonePos -> // Set it to the default Uri that they originally gave us
-                    mUriForDefaultItem
-                mSilentPos -> // A null Uri is for the 'Silent' item
+            val uri = when (clickedPos) {
+                defaultRingtonePos -> // Set it to the default Uri that they originally gave us
+                    uriForDefaultItem
+                silentPos -> // A null Uri is for the 'Silent' item
                     null
-                mUnknownPos -> // 'Unknown' was shown because it was persisted before showing the picker.
+                unknownPos -> // 'Unknown' was shown because it was persisted before showing the picker.
                     // There's no change to persist, return immediately.
                     return
-                else -> mRingtoneManager!!.getRingtoneUri(getRingtoneManagerPosition(mClickedPos))
+                else -> ringtoneManager?.getRingtoneUri(getRingtoneManagerPosition(clickedPos))
             }
 
             requireRingtonePreference().saveRingtone(uri)
@@ -358,58 +329,58 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
     }
 
     internal fun playRingtone(position: Int, delayMs: Int) {
-        mHandler!!.removeCallbacks(this)
-        mSampleRingtonePos = position
-        mHandler!!.postDelayed(this, delayMs.toLong())
+        handler!!.removeCallbacks(this)
+        sampleRingtonePos = position
+        handler!!.postDelayed(this, delayMs.toLong())
     }
 
     override fun run() {
         stopAnyPlayingRingtone()
-        if (mSampleRingtonePos == mSilentPos) {
+        if (sampleRingtonePos == silentPos) {
             return
         }
 
-        //        final int oldSampleRingtonePos = mSampleRingtonePos;
+        //        final int oldSampleRingtonePos = sampleRingtonePos;
         try {
             var ringtone: Ringtone? = null
-            when (mSampleRingtonePos) {
-                mDefaultRingtonePos -> {
-                    if (mDefaultRingtone == null) {
+            when (sampleRingtonePos) {
+                defaultRingtonePos -> {
+                    if (defaultRingtone == null) {
                         try {
-                            mDefaultRingtone = RingtoneManager.getRingtone(context!!, mUriForDefaultItem)
+                            defaultRingtone = RingtoneManager.getRingtone(context!!, uriForDefaultItem)
                         } catch (ex: SecurityException) {
-                            Log.e(TAG, "Failed to create default Ringtone from $mUriForDefaultItem.", ex)
+                            Log.e(TAG, "Failed to create default Ringtone from $uriForDefaultItem.", ex)
                         }
                     }
                     /*
-                     * Stream type of mDefaultRingtone is not set explicitly here.
-                     * It should be set in accordance with mRingtoneManager of this Activity.
+                     * Stream type of defaultRingtone is not set explicitly here.
+                     * It should be set in accordance with ringtoneManager of this Activity.
                      */
-                    mDefaultRingtone?.streamType = mRingtoneManager!!.inferStreamType()
-                    ringtone = mDefaultRingtone
-                    mCurrentRingtone = null
+                    defaultRingtone?.streamType = ringtoneManager!!.inferStreamType()
+                    ringtone = defaultRingtone
+                    currentRingtone = null
                 }
-                mUnknownPos -> {
-                    if (mUnknownRingtone == null) {
+                unknownPos -> {
+                    if (unknownRingtone == null) {
                         try {
-                            mUnknownRingtone = RingtoneManager.getRingtone(context!!, mExistingUri)
+                            unknownRingtone = RingtoneManager.getRingtone(context!!, existingUri)
                         } catch (ex: SecurityException) {
-                            Log.e(TAG, "Failed to create unknown Ringtone from $mExistingUri.", ex)
+                            Log.e(TAG, "Failed to create unknown Ringtone from $existingUri.", ex)
                         }
                     }
-                    mUnknownRingtone?.streamType = mRingtoneManager!!.inferStreamType()
-                    ringtone = mUnknownRingtone
-                    mCurrentRingtone = null
+                    unknownRingtone?.streamType = ringtoneManager!!.inferStreamType()
+                    ringtone = unknownRingtone
+                    currentRingtone = null
                 }
                 else -> {
-                    val position = getRingtoneManagerPosition(mSampleRingtonePos)
+                    val position = getRingtoneManagerPosition(sampleRingtonePos)
                     try {
-                        ringtone = mRingtoneManager!!.getRingtone(position)
+                        ringtone = ringtoneManager!!.getRingtone(position)
                     } catch (ex: SecurityException) {
-                        Log.e(TAG, "Failed to create selected Ringtone from " + mRingtoneManager!!.getRingtoneUri(position) + ".", ex)
+                        Log.e(TAG, "Failed to create selected Ringtone from " + ringtoneManager!!.getRingtoneUri(position) + ".", ex)
                     }
     
-                    mCurrentRingtone = ringtone
+                    currentRingtone = ringtone
                 }
             }
 
@@ -417,17 +388,17 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
         } catch (ex: SecurityException) {
             // Don't play the inaccessible default ringtone.
             Log.e(TAG, "Failed to play Ringtone.", ex)
-            //            mSampleRingtonePos = oldSampleRingtonePos;
+            //            sampleRingtonePos = oldSampleRingtonePos;
         }
     }
 
     private fun saveAnyPlayingRingtone() {
-        if (mDefaultRingtone != null && mDefaultRingtone!!.isPlaying) {
-            sPlayingRingtone = mDefaultRingtone
-        } else if (mUnknownRingtone != null && mUnknownRingtone!!.isPlaying) {
-            sPlayingRingtone = mUnknownRingtone
-        } else if (mCurrentRingtone != null && mCurrentRingtone!!.isPlaying) {
-            sPlayingRingtone = mCurrentRingtone
+        if (defaultRingtone != null && defaultRingtone!!.isPlaying) {
+            sPlayingRingtone = defaultRingtone
+        } else if (unknownRingtone != null && unknownRingtone!!.isPlaying) {
+            sPlayingRingtone = unknownRingtone
+        } else if (currentRingtone != null && currentRingtone!!.isPlaying) {
+            sPlayingRingtone = currentRingtone
         }
     }
 
@@ -437,20 +408,18 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
         }
         sPlayingRingtone = null
 
-        if (mDefaultRingtone != null && mDefaultRingtone!!.isPlaying) {
-            mDefaultRingtone!!.stop()
+        if (defaultRingtone != null && defaultRingtone!!.isPlaying) {
+            defaultRingtone!!.stop()
         }
 
-        if (mUnknownRingtone != null && mUnknownRingtone!!.isPlaying) {
-            mUnknownRingtone!!.stop()
+        if (unknownRingtone != null && unknownRingtone!!.isPlaying) {
+            unknownRingtone!!.stop()
         }
 
-        mRingtoneManager?.stopPreviousRingtone()
+        ringtoneManager?.stopPreviousRingtone()
     }
 
-    private fun getRingtoneManagerPosition(listPos: Int): Int {
-        return listPos - mStaticItems.size
-    }
+    private fun getRingtoneManagerPosition(listPos: Int): Int = listPos - staticItems.size
 
     companion object {
 
@@ -475,7 +444,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
         fun newInstance(key: String): RingtonePreferenceDialogFragment {
             val fragment = RingtonePreferenceDialogFragment()
             val b = Bundle(1)
-            b.putString(PreferenceDialogFragment.ARG_KEY, key)
+            b.putString(ARG_KEY, key)
             fragment.arguments = b
             return fragment
         }

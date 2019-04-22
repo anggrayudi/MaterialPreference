@@ -41,20 +41,18 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         PreferenceManager.OnNavigateToScreenListener,
         DialogPreference.TargetFragment {
 
-    /**
-     * @return The [PreferenceManager] used by this fragment.
-     */
+    /** @return The [PreferenceManager] used by this fragment. */
     var preferenceManager: PreferenceManager? = null
         private set
 
-    private var mScrollView: NestedScrollView? = null
-    private var mListContainer: LinearLayout? = null
-    private var mHavePrefs: Boolean = false
-    private var mInitDone: Boolean = false
+    private var styledContext: Context? = null
+    private var scrollView: NestedScrollView? = null
+    private var listContainer: LinearLayout? = null
+    private var havePrefs: Boolean = false
+    private var initDone: Boolean = false
     internal var preferenceKeyOnActivityResult: String? = null
 
-    private var mStyledContext: Context? = null
-    private val mHandler = object : Handler() {
+    private val handler = object : Handler() {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 MSG_BIND_PREFERENCES -> bindPreferences()
@@ -62,9 +60,9 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         }
     }
 
-    private val mRequestFocus = Runnable { mScrollView!!.focusableViewAvailable(mScrollView) }
+    private val requestFocus = Runnable { scrollView!!.focusableViewAvailable(scrollView) }
 
-    private var mSelectPreferenceRunnable: Runnable? = null
+    private var selectPreferenceRunnable: Runnable? = null
 
     val preferenceFragmentTitle: String?
         get() = arguments!!.getString(PREFERENCE_TITLE)
@@ -79,14 +77,14 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         set(preferenceScreen) {
             if (preferenceScreen != null && preferenceManager!!.setPreferences(preferenceScreen)) {
                 onUnbindPreferences()
-                mHavePrefs = true
-                if (mInitDone) {
+                havePrefs = true
+                if (initDone) {
                     postBindPreferences()
                 }
             }
         }
 
-    private var mAdapter: PreferenceGroupAdapter? = null
+    private var adapter: PreferenceGroupAdapter? = null
 
     /** @return Fragment to possibly use as a callback */
     private val callbackFragment: Fragment
@@ -150,8 +148,8 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         if (arguments == null) {
             throw IllegalStateException("Must specify non-null PreferenceFragmentMaterial arguments")
         }
-        mStyledContext = ContextThemeWrapper(activity, theme)
-        preferenceManager = PreferenceManager(mStyledContext!!)
+        styledContext = ContextThemeWrapper(activity, theme)
+        preferenceManager = PreferenceManager(styledContext!!)
         preferenceManager!!.onNavigateToScreenListener = this
         val rootKey = arguments!!.getString(ARG_PREFERENCE_ROOT)
         if (rootKey == null && savedInstanceState == null)
@@ -172,7 +170,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     abstract fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-//        val a = mStyledContext!!.obtainStyledAttributes(null,
+//        val a = styledContext!!.obtainStyledAttributes(null,
 //                R.styleable.PreferenceFragmentMaterial,
 //                R.attr.preferenceFragmentCompatStyle,
 //                0)
@@ -180,24 +178,22 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         // Need to theme the inflater to pick up the preferenceFragmentListStyle
         val tv = TypedValue()
         activity!!.theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
-        val theme = tv.resourceId
-
-        val themedContext = ContextThemeWrapper(inflater.context, theme)
+        val themedContext = ContextThemeWrapper(inflater.context, tv.resourceId)
         val themedInflater = inflater.cloneInContext(themedContext)
-        mScrollView = themedInflater.inflate(R.layout.preference_scrollview, container, false) as NestedScrollView
-        mListContainer = mScrollView!!.findViewById(R.id.list_container)
-        mHandler.post(mRequestFocus)
-        return mScrollView!!
+        scrollView = themedInflater.inflate(R.layout.preference_scrollview, container, false) as NestedScrollView
+        listContainer = scrollView!!.findViewById(R.id.list_container)
+        handler.post(requestFocus)
+        return scrollView!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (mHavePrefs) {
+        if (havePrefs) {
             bindPreferences()
-            mSelectPreferenceRunnable?.run()
-            mSelectPreferenceRunnable = null
+            selectPreferenceRunnable?.run()
+            selectPreferenceRunnable = null
         }
-        mInitDone = true
+        initDone = true
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -206,7 +202,6 @@ abstract class PreferenceFragmentMaterial : Fragment(),
             preferenceKeyOnActivityResult = savedInstanceState.getString("preferenceKeyOnActivityResult")
             val container = savedInstanceState.getBundle(PREFERENCES_TAG)
             if (container != null) {
-                val preferenceScreen = preferenceScreen
                 preferenceScreen?.restoreHierarchyState(container)
             }
         }
@@ -225,9 +220,9 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     }
 
     override fun onDestroyView() {
-        mHandler.removeCallbacks(mRequestFocus)
-        mHandler.removeMessages(MSG_BIND_PREFERENCES)
-        if (mHavePrefs) {
+        handler.removeCallbacks(requestFocus)
+        handler.removeMessages(MSG_BIND_PREFERENCES)
+        if (havePrefs) {
             unbindPreferences()
         }
         super.onDestroyView()
@@ -251,7 +246,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
      */
     fun addPreferencesFromResource(@XmlRes preferencesResId: Int) {
         requirePreferenceManager()
-        preferenceScreen = preferenceManager!!.inflateFromResource(mStyledContext!!,
+        preferenceScreen = preferenceManager!!.inflateFromResource(styledContext!!,
                 preferencesResId, preferenceScreen)
     }
 
@@ -265,7 +260,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
      */
     fun setPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?) {
         requirePreferenceManager()
-        val xmlRoot = preferenceManager!!.inflateFromResource(mStyledContext!!,
+        val xmlRoot = preferenceManager!!.inflateFromResource(styledContext!!,
                 preferencesResId, null)
 
         val root: Preference?
@@ -284,12 +279,12 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         if (preference.fragment != null) {
             var handled = false
-            if (callbackFragment is PreferenceFragmentMaterial.OnPreferenceStartFragmentCallback) {
-                handled = (callbackFragment as PreferenceFragmentMaterial.OnPreferenceStartFragmentCallback)
+            if (callbackFragment is OnPreferenceStartFragmentCallback) {
+                handled = (callbackFragment as OnPreferenceStartFragmentCallback)
                         .onPreferenceStartFragment(this, preference)
             }
-            if (!handled && activity is PreferenceFragmentMaterial.OnPreferenceStartFragmentCallback) {
-                handled = (activity as PreferenceFragmentMaterial.OnPreferenceStartFragmentCallback)
+            if (!handled && activity is OnPreferenceStartFragmentCallback) {
+                handled = (activity as OnPreferenceStartFragmentCallback)
                         .onPreferenceStartFragment(this, preference)
             }
             return handled
@@ -307,12 +302,12 @@ abstract class PreferenceFragmentMaterial : Fragment(),
      */
     override fun onNavigateToScreen(preferenceScreen: PreferenceScreen) {
         var handled = false
-        if (callbackFragment is PreferenceFragmentMaterial.OnPreferenceStartScreenCallback) {
-            handled = (callbackFragment as PreferenceFragmentMaterial.OnPreferenceStartScreenCallback)
+        if (callbackFragment is OnPreferenceStartScreenCallback) {
+            handled = (callbackFragment as OnPreferenceStartScreenCallback)
                     .onPreferenceStartScreen(this, preferenceScreen)
         }
-        if (!handled && activity is PreferenceFragmentMaterial.OnPreferenceStartScreenCallback) {
-            (activity as PreferenceFragmentMaterial.OnPreferenceStartScreenCallback)
+        if (!handled && activity is OnPreferenceStartScreenCallback) {
+            (activity as OnPreferenceStartScreenCallback)
                     .onPreferenceStartScreen(this, preferenceScreen)
         }
     }
@@ -337,8 +332,8 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     }
 
     private fun postBindPreferences() {
-        if (mHandler.hasMessages(MSG_BIND_PREFERENCES)) return
-        mHandler.obtainMessage(MSG_BIND_PREFERENCES).sendToTarget()
+        if (handler.hasMessages(MSG_BIND_PREFERENCES)) return
+        handler.obtainMessage(MSG_BIND_PREFERENCES).sendToTarget()
     }
 
     private fun bindPreferences() {
@@ -366,7 +361,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 
     private fun attachPreferences(screen: PreferenceScreen) {
         // TODO: 01/07/18 Attach to cardviews
-        mAdapter = PreferenceGroupAdapter(this, screen, mListContainer!!)
+        adapter = PreferenceGroupAdapter(this, screen, listContainer!!)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -411,12 +406,12 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     override fun onDisplayPreferenceDialog(preference: Preference) {
 
         var handled = false
-        if (callbackFragment is PreferenceFragmentMaterial.OnPreferenceDisplayDialogCallback) {
-            handled = (callbackFragment as PreferenceFragmentMaterial.OnPreferenceDisplayDialogCallback)
+        if (callbackFragment is OnPreferenceDisplayDialogCallback) {
+            handled = (callbackFragment as OnPreferenceDisplayDialogCallback)
                     .onPreferenceDisplayDialog(this, preference)
         }
-        if (!handled && activity is PreferenceFragmentMaterial.OnPreferenceDisplayDialogCallback) {
-            handled = (activity as PreferenceFragmentMaterial.OnPreferenceDisplayDialogCallback)
+        if (!handled && activity is OnPreferenceDisplayDialogCallback) {
+            handled = (activity as OnPreferenceDisplayDialogCallback)
                     .onPreferenceDisplayDialog(this, preference)
         }
 
@@ -494,25 +489,25 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         //            }
         //        };
         //        if (mList == null) {
-        //            mSelectPreferenceRunnable = r;
+        //            selectPreferenceRunnable = r;
         //        } else {
         //            r.run();
         //        }
     }
 
-//    private class ScrollToPreferenceObserver(private val mAdapter: RecyclerView.Adapter,
+//    private class ScrollToPreferenceObserver(private val adapter: RecyclerView.Adapter,
 //                                             private val mList: RecyclerView,
 //                                             private val mPreference: Preference?,
 //                                             private val mKey: String)
 //        : RecyclerView.AdapterDataObserver() {
 //
 //        private fun scrollToPreference() {
-//            mAdapter.unregisterAdapterDataObserver(this)
+//            adapter.unregisterAdapterDataObserver(this)
 //            val position = if (mPreference != null) {
-//                (mAdapter as PreferenceGroup.PreferencePositionCallback)
+//                (adapter as PreferenceGroup.PreferencePositionCallback)
 //                        .getPreferenceAdapterPosition(mPreference)
 //            } else {
-//                (mAdapter as PreferenceGroup.PreferencePositionCallback)
+//                (adapter as PreferenceGroup.PreferencePositionCallback)
 //                        .getPreferenceAdapterPosition(mKey)
 //            }
 //            if (position != RecyclerView.NO_POSITION) {

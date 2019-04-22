@@ -132,9 +132,7 @@ abstract class PreferenceDataStore {
      * @return the value from the data store or the default return value
      * @see putString
      */
-    fun getString(key: String, defValue: String? = null): String? {
-        return defValue
-    }
+    fun getString(key: String, defValue: String? = null): String? = defValue
 
     /**
      * Retrieves a set of Strings from the data store.
@@ -144,9 +142,7 @@ abstract class PreferenceDataStore {
      * @return the values from the data store or the default return values
      * @see putStringSet
      */
-    fun getStringSet(key: String, defValues: Set<String>? = null): Set<String>? {
-        return defValues
-    }
+    fun getStringSet(key: String, defValues: Set<String>? = null): Set<String>? = defValues
 
     /**
      * Retrieves an [Integer] value from the data store.
@@ -156,9 +152,7 @@ abstract class PreferenceDataStore {
      * @return the value from the data store or the default return value
      * @see putInt
      */
-    fun getInt(key: String, defValue: Int): Int {
-        return defValue
-    }
+    fun getInt(key: String, defValue: Int): Int = defValue
 
     /**
      * Retrieves a [Long] value from the data store.
@@ -168,9 +162,7 @@ abstract class PreferenceDataStore {
      * @return the value from the data store or the default return value
      * @see putLong
      */
-    fun getLong(key: String, defValue: Long): Long {
-        return defValue
-    }
+    fun getLong(key: String, defValue: Long): Long = defValue
 
     /**
      * Retrieves a [Float] value from the data store.
@@ -180,9 +172,7 @@ abstract class PreferenceDataStore {
      * @return the value from the data store or the default return value
      * @see putFloat
      */
-    fun getFloat(key: String, defValue: Float): Float {
-        return defValue
-    }
+    fun getFloat(key: String, defValue: Float): Float = defValue
 
     /**
      * Retrieves a [Boolean] value from the data store.
@@ -192,8 +182,6 @@ abstract class PreferenceDataStore {
      * @return the value from the data store or the default return value
      * @see .getBoolean
      */
-    fun getBoolean(key: String, defValue: Boolean): Boolean {
-        return defValue
-    }
+    fun getBoolean(key: String, defValue: Boolean): Boolean = defValue
 }
 

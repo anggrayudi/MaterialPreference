@@ -32,30 +32,28 @@ import com.anggrayudi.materialpreference.SafeRingtone.Companion.obtain
  *
  * @see RingtoneManager
  */
+@Suppress("DEPRECATION")
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 class SafeRingtone private constructor(
-        private val mContext: Context, @param:Nullable private val mUri: Uri?) {
-
-    private var mStreamType: Int = 0
-
-    private var mRingtone: Ringtone? = null
+        private val context: Context, @param:Nullable private val uri: Uri?) {
 
     private val ringtone: Ringtone?
         get() {
-            if (mRingtone == null) {
-                val ringtone = RingtoneManager.getRingtone(mContext, mUri)
+            if (_ringtone == null) {
+                val ringtone = RingtoneManager.getRingtone(context, uri)
                 if (ringtone != null) {
-                    if (mStreamType != STREAM_NULL) {
-                        ringtone.streamType = mStreamType
+                    if (_streamType != STREAM_NULL) {
+                        ringtone.streamType = _streamType
                     }
                 }
-                mRingtone = ringtone
+                _ringtone = ringtone
             }
-            return mRingtone
+            return _ringtone
         }
+    private var _ringtone: Ringtone? = null
 
     val isPlaying: Boolean
-        get() = mRingtone != null && mRingtone!!.isPlaying
+        get() = _ringtone != null && _ringtone!!.isPlaying
 
     // On API 23+ reading ringtone title is safe.
     // On API 16-22 Ringtone does nothing when reading from SD card without permission.
@@ -66,56 +64,56 @@ class SafeRingtone private constructor(
             val ringtone = ringtone
             if (ringtone != null) {
                 return if (Build.VERSION.SDK_INT >= 23) {
-                    ringtone.getTitle(mContext)
+                    ringtone.getTitle(context)
                 } else {
                     try {
-                        if (mUri != null) {
-                            peek(mContext, mUri)
+                        if (uri != null) {
+                            peek(context, uri)
                         }
-                        ringtone.getTitle(mContext)
+                        ringtone.getTitle(context)
                     } catch (e: SecurityException) {
-                        Log.w(TAG, "Cannot get title of ringtone at $mUri.")
-                        RingtonePreference.getRingtoneUnknownString(mContext)
+                        Log.w(TAG, "Cannot get title of ringtone at $uri.")
+                        RingtonePreference.getRingtoneUnknownString(context)
                     }
                 }
             } else {
-                Log.w(TAG, "Cannot get title of ringtone at $mUri.")
-                return RingtonePreference.getRingtoneUnknownString(mContext)
+                Log.w(TAG, "Cannot get title of ringtone at $uri.")
+                return RingtonePreference.getRingtoneUnknownString(context)
             }
         }
 
-    fun canPlay(): Boolean {
-        return canPlay(mContext, mUri)
-    }
+    fun canPlay(): Boolean = uri != null
 
     fun play() {
         if (canPlay()) {
-            val ringtone = ringtone
-            ringtone?.play() ?: Log.w(TAG, "Ringtone at $mUri cannot be played.")
+            ringtone?.play() ?: Log.w(TAG, "Ringtone at $uri cannot be played.")
         } else {
-            Log.w(TAG, "Ringtone at $mUri cannot be played.")
+            Log.w(TAG, "Ringtone at $uri cannot be played.")
         }
     }
 
     fun stop() {
-        mRingtone?.stop()
+        _ringtone?.stop()
     }
 
     /**
      * Sets the stream type where this ringtone will be played.
      *
-     * @param streamType The stream, see [AudioManager].
+     * @see [AudioManager]
      */
-    internal fun setStreamType(streamType: Int) {
-        if (streamType < -1) {
-            throw IllegalArgumentException("Invalid stream type: $streamType")
+    internal var streamType: Int
+        get() = _streamType
+        set(value) {
+            if (value < -1) {
+                throw IllegalArgumentException("Invalid stream type: $value")
+            }
+            _streamType = value
+            _ringtone?.streamType = value
         }
-        mStreamType = streamType
-        mRingtone?.streamType = streamType
-    }
+    private var _streamType: Int = 0
 
     fun canGetTitle(): Boolean {
-        return canGetTitle(mContext, mUri)
+        return canGetTitle(context, uri)
     }
 
     companion object {
@@ -131,7 +129,7 @@ class SafeRingtone private constructor(
 
         fun obtain(context: Context, uri: Uri?, streamType: Int): SafeRingtone {
             val ringtone = SafeRingtone(context.applicationContext, uri)
-            ringtone.setStreamType(streamType)
+            ringtone.streamType = streamType
             return ringtone
         }
 
@@ -152,22 +150,6 @@ class SafeRingtone private constructor(
             val res = context.contentResolver
             val cursor = res.query(uri, COLUMNS, null, null, null)
             cursor?.close()
-        }
-
-        fun canPlay(context: Context, uri: Uri?): Boolean {
-            if (uri == null) {
-                // We can't play silence.
-                return false
-            }
-            if (Build.VERSION.SDK_INT >= 16) {
-                return true
-            }
-            return try {
-                peek(context, uri)
-                true
-            } catch (e: SecurityException) {
-                false
-            }
         }
 
         fun canGetTitle(context: Context, uri: Uri?): Boolean {

@@ -794,10 +794,7 @@ open class Preference @JvmOverloads constructor(
             }
         }
 
-        var imageFrame = holder.findViewById(R.id.icon_frame)
-        if (imageFrame == null) {
-            imageFrame = holder.findViewById(R.id.icon_frame)
-        }
+        val imageFrame = holder.findViewById(R.id.icon_frame) ?: holder.findViewById(R.id.icon_frame)
         if (imageFrame != null) {
             if (icon != null) {
                 imageFrame.visibility = View.VISIBLE
@@ -1159,7 +1156,7 @@ open class Preference @JvmOverloads constructor(
     protected open fun onSetInitialValue() {}
 
     private fun tryCommit(editor: SharedPreferences.Editor) {
-        if (preferenceManager!!.shouldCommit()) {
+        if (preferenceManager!!.shouldCommit) {
             editor.apply()
         }
     }

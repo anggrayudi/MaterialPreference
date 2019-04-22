@@ -141,7 +141,6 @@ class PreferenceKeyConstansProcessor : AbstractProcessor() {
         }
     }
 
-    override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        return mutableSetOf(PreferenceKeysConfig::class.java.canonicalName)
-    }
+    override fun getSupportedAnnotationTypes(): MutableSet<String>
+            = mutableSetOf(PreferenceKeysConfig::class.java.canonicalName)
 }

@@ -49,19 +49,19 @@ class MultiSelectListPreference @JvmOverloads constructor(
     override var entryValues: Array<CharSequence>? = null
     var disabledEntryValues: Array<CharSequence>? = null
 
-    private val mValues = HashSet<String>()
-    private var mNothing: CharSequence? = null
+    private val values = HashSet<String>()
+    private var _nothingText: CharSequence? = null
 
     override var value: Set<String>?
-        get() = mValues
-        set(values) {
-            mValues.clear()
-            if (values != null) {
-                mValues.addAll(values)
+        get() = values
+        set(v) {
+            values.clear()
+            if (v != null) {
+                values.addAll(v)
             }
-            if (persistStringSet(values ?: HashSet()) && isBindValueToSummary) {
+            if (persistStringSet(v ?: HashSet()) && isBindValueToSummary) {
                 summary = when {
-                    value!!.isEmpty() -> if (summaryFormatter == null) nothing else summaryFormatter!!.invoke(value!!.toTypedArray())
+                    value!!.isEmpty() -> if (summaryFormatter == null) nothingText else summaryFormatter!!.invoke(value!!.toTypedArray())
                     summaryFormatter != null -> summaryFormatter!!.invoke(value!!.toTypedArray())
                     else -> "${value!!.size}/${entryValues!!.size}"
                 }
@@ -76,7 +76,7 @@ class MultiSelectListPreference @JvmOverloads constructor(
             field = f
             if (isBindValueToSummary) {
                 summary = when {
-                    value!!.isEmpty() -> if (f == null) nothing else f.invoke(value!!.toTypedArray())
+                    value!!.isEmpty() -> if (f == null) nothingText else f.invoke(value!!.toTypedArray())
                     f != null -> f.invoke(value!!.toTypedArray())
                     else -> "${value!!.size}/${entryValues!!.size}"
                 }
@@ -87,10 +87,10 @@ class MultiSelectListPreference @JvmOverloads constructor(
      * When value is bound to the summary and there is nothing selected in this [MultiSelectListPreference],
      * the 'Nothing' text will be shown as summary.
      */
-    var nothing: CharSequence?
-        get() = mNothing
+    var nothingText: CharSequence?
+        get() = _nothingText
         set(nothing) {
-            mNothing = nothing
+            _nothingText = nothing
             if (isBindValueToSummary) {
                 summary = when {
                     value!!.isEmpty() -> if (summaryFormatter == null) nothing else summaryFormatter!!.invoke(value!!.toTypedArray())
@@ -104,7 +104,7 @@ class MultiSelectListPreference @JvmOverloads constructor(
         val a = context.obtainStyledAttributes(attrs, R.styleable.MultiSelectListPreference, defStyleAttr, defStyleRes)
         entries = a.getTextArray(R.styleable.MultiSelectListPreference_android_entries)
         entryValues = a.getTextArray(R.styleable.MultiSelectListPreference_android_entryValues)
-        mNothing = a.getText(R.styleable.MultiSelectListPreference_summaryNothing)
+        _nothingText = a.getText(R.styleable.MultiSelectListPreference_summaryNothing)
         a.recycle()
     }
 
@@ -125,23 +125,23 @@ class MultiSelectListPreference @JvmOverloads constructor(
     }
 
     fun setPrettySummaryFormatter() {
-        val text = HashSet<String>(mValues.size)
-        val values = TreeSet(mValues)
+        val text = HashSet<String>(values.size)
+        val values = TreeSet(values)
         values.forEach { text.add(entries!![findIndexOfValue(it)].toString()) }
         summaryFormatter = {
             val summ = text.toString()
-            if (mValues.isEmpty() && nothing != null)
-                nothing.toString()
+            if (values.isEmpty() && nothingText != null)
+                nothingText.toString()
             else
                 summ.substring(1, summ.length - 1)
         }
     }
 
     override fun onSetInitialValue() {
-        mValues.addAll(getPersistedStringSet(value)!!)
+        values.addAll(getPersistedStringSet(value)!!)
         if (isBindValueToSummary) {
             summary = when {
-                value!!.isEmpty() -> if (summaryFormatter == null) nothing else summaryFormatter!!.invoke(value!!.toTypedArray())
+                value!!.isEmpty() -> if (summaryFormatter == null) nothingText else summaryFormatter!!.invoke(value!!.toTypedArray())
                 summaryFormatter != null -> summaryFormatter!!.invoke(value!!.toTypedArray())
                 else -> "${value!!.size}/${entryValues!!.size}"
             }
@@ -172,7 +172,7 @@ class MultiSelectListPreference @JvmOverloads constructor(
         value = myState.values
     }
 
-    private class SavedState : Preference.BaseSavedState {
+    private class SavedState : BaseSavedState {
         internal var values: Set<String>? = null
 
         constructor(source: Parcel) : super(source) {

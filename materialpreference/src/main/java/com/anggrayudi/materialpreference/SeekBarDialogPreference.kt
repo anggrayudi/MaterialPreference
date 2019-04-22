@@ -33,9 +33,9 @@ class SeekBarDialogPreference @JvmOverloads constructor(
         defStyleRes: Int = R.style.Preference_DialogPreference_SeekBarDialogPreference) 
     : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
 
-    private var mProgress: Int = 0
-    private var mPreferredMax = 100
-    private var mPreferredMin = 0
+    private var progress: Int = 0
+    private var preferredMax = 100
+    private var preferredMin = 0
 
     var summaryFormatter: IntSummaryFormatter? = null
         set(f) {
@@ -45,7 +45,7 @@ class SeekBarDialogPreference @JvmOverloads constructor(
         }
 
     var value: Int
-        get() = mProgress
+        get() = progress
         set(progress) {
             if (callChangeListener(progress)) {
                 setProgress(progress, true)
@@ -53,51 +53,51 @@ class SeekBarDialogPreference @JvmOverloads constructor(
         }
 
     var max: Int
-        get() = mPreferredMax
+        get() = preferredMax
         set(max) {
-            if (max != mPreferredMax) {
-                mPreferredMax = max
+            if (max != preferredMax) {
+                preferredMax = max
                 notifyChanged()
             }
         }
 
     var min: Int
-        get() = mPreferredMin
+        get() = preferredMin
         set(min) {
-            if (min != mPreferredMin) {
-                mPreferredMin = min
+            if (min != preferredMin) {
+                preferredMin = min
                 notifyChanged()
             }
         }
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference, defStyleAttr, defStyleRes)
-        max = a.getInt(R.styleable.SeekBarPreference_android_max, mPreferredMax)
+        preferredMax = a.getInt(R.styleable.SeekBarPreference_android_max, preferredMax)
         val hasAspMin = a.hasValue(R.styleable.SeekBarPreference_min)
         if (hasAspMin) {
-            min = a.getInt(R.styleable.SeekBarPreference_min, mPreferredMin)
+            preferredMin = a.getInt(R.styleable.SeekBarPreference_min, preferredMin)
         }
         a.recycle()
     }
 
     override fun shouldDisableDependents(): Boolean {
-        return mProgress == 0 || super.shouldDisableDependents()
+        return progress == 0 || super.shouldDisableDependents()
     }
 
     private fun setProgress(preferredProgress: Int, notifyChanged: Boolean) {
-        var preferredProgress = preferredProgress
+        var p = preferredProgress
         val wasBlocking = shouldDisableDependents()
 
-        if (preferredProgress > mPreferredMax) {
-            preferredProgress = mPreferredMax
+        if (p > preferredMax) {
+            p = preferredMax
         }
-        if (preferredProgress < mPreferredMin) {
-            preferredProgress = mPreferredMin
+        if (p < preferredMin) {
+            p = preferredMin
         }
-        if (preferredProgress != mProgress) {
-            mProgress = preferredProgress
-            persistInt(preferredProgress)
-            //            Log.d("SBDP", "preferredProgress=" + preferredProgress);
+        if (p != progress) {
+            progress = p
+            persistInt(p)
+            //            Log.d("SBDP", "p=" + p);
             if (notifyChanged) {
                 notifyChanged()
             }
@@ -107,7 +107,7 @@ class SeekBarDialogPreference @JvmOverloads constructor(
         if (isBlocking != wasBlocking) {
             notifyDependencyChange(isBlocking)
         }
-        summary = summaryFormatter?.invoke(preferredProgress) ?: preferredProgress.toString()
+        summary = summaryFormatter?.invoke(p) ?: p.toString()
     }
 
     override fun onSetInitialValue() {
@@ -122,9 +122,9 @@ class SeekBarDialogPreference @JvmOverloads constructor(
         }
 
         val myState = SavedState(superState)
-        myState.progress = mProgress
-        myState.max = mPreferredMax
-        myState.min = mPreferredMin
+        myState.progress = progress
+        myState.max = preferredMax
+        myState.min = preferredMin
         return myState
     }
 
@@ -137,12 +137,12 @@ class SeekBarDialogPreference @JvmOverloads constructor(
 
         val myState = state as SavedState?
         super.onRestoreInstanceState(myState!!.superState)
-        mPreferredMax = myState.max
-        mPreferredMin = myState.min
+        preferredMax = myState.max
+        preferredMin = myState.min
         setProgress(myState.progress, true)
     }
 
-    private class SavedState : Preference.BaseSavedState {
+    private class SavedState : BaseSavedState {
         internal var progress: Int = 0
         internal var max: Int = 0
         internal var min: Int = 0

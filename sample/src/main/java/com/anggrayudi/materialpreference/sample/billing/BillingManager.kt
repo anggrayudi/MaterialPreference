@@ -16,7 +16,6 @@
 package com.anggrayudi.materialpreference.sample.billing
 
 import android.app.Activity
-import android.content.Context
 import android.util.Log
 import com.android.billingclient.api.*
 import com.android.billingclient.api.BillingClient.*
@@ -30,30 +29,27 @@ import java.util.*
  * it through BillingClient and caches temporary states/data if needed
  */
 class BillingManager(
-        private val mActivity: Activity,
-        private val mBillingUpdatesListener: BillingUpdatesListener)
+        private val activity: Activity,
+        private val billingUpdatesListener: BillingUpdatesListener)
     : PurchasesUpdatedListener {
 
     /** A reference to BillingClient  */
-    private var mBillingClient: BillingClient? = null
+    private var billingClient: BillingClient? = null
 
     /**
      * True if billing service is connected now.
      */
-    private var mIsServiceConnected: Boolean = false
+    private var isServiceConnected: Boolean = false
 
-    private val mPurchases = ArrayList<Purchase>()
+    private val purchases = ArrayList<Purchase>()
 
-    private var mTokensToBeConsumed: MutableSet<String>? = null
+    private var tokensToBeConsumed: MutableSet<String>? = null
 
     /**
      * Returns the value Billing client response code or BILLING_MANAGER_NOT_INITIALIZED if the
      * clien connection response was not received yet.
      */
     var billingClientResponseCode = BILLING_MANAGER_NOT_INITIALIZED
-
-    val context: Context
-        get() = mActivity
 
     /**
      * Listener to the updates that happen when purchases list was updated or consumption of the
@@ -65,16 +61,9 @@ class BillingManager(
         fun onPurchasesUpdated(purchases: List<Purchase>)
     }
 
-    /**
-     * Listener for the Billing client state to become connected
-     */
-    interface ServiceConnectedListener {
-        fun onServiceConnected(@BillingResponse resultCode: Int)
-    }
-
     init {
         Log.d(TAG, "Creating Billing client.")
-        mBillingClient = BillingClient.newBuilder(mActivity).setListener(this).build()
+        billingClient = BillingClient.newBuilder(activity).setListener(this).build()
 
         Log.d(TAG, "Starting setup.")
 
@@ -83,7 +72,7 @@ class BillingManager(
         // It also starts to report all the new purchases through onPurchasesUpdated() callback.
         startServiceConnection(Runnable {
             // Notifying the listener that billing client is ready
-            mBillingUpdatesListener.onBillingClientSetupFinished()
+            billingUpdatesListener.onBillingClientSetupFinished()
             // IAB is fully set up. Now, let's get an inventory of stuff we own.
             Log.d(TAG, "Setup successful. Querying inventory.")
             queryPurchases()
@@ -97,7 +86,7 @@ class BillingManager(
         when (resultCode) {
             BillingResponse.OK -> {
                 purchases?.forEach { handlePurchase(it) }
-                mBillingUpdatesListener.onPurchasesUpdated(mPurchases)
+                billingUpdatesListener.onPurchasesUpdated(this.purchases)
             }
             BillingResponse.USER_CANCELED -> Log.i(TAG, "onPurchasesUpdated() - user cancelled the purchase flow - skipping")
             else -> Log.w(TAG, "onPurchasesUpdated() got unknown resultCode: $resultCode")
@@ -120,7 +109,7 @@ class BillingManager(
             Log.d(TAG, "Launching in-app purchase flow. Replace old SKU? " + (oldSkus != null))
             val purchaseParams = BillingFlowParams.newBuilder()
                     .setSku(skuId).setType(billingType).setOldSkus(oldSkus).build()
-            mBillingClient!!.launchBillingFlow(mActivity, purchaseParams)
+            billingClient!!.launchBillingFlow(activity, purchaseParams)
         }
         executeServiceRequest(purchaseFlowRequest)
     }
@@ -131,9 +120,9 @@ class BillingManager(
     fun destroy() {
         Log.d(TAG, "Destroying the manager.")
 
-        if (mBillingClient != null && mBillingClient!!.isReady) {
-            mBillingClient!!.endConnection()
-            mBillingClient = null
+        if (billingClient != null && billingClient!!.isReady) {
+            billingClient!!.endConnection()
+            billingClient = null
         }
     }
 
@@ -144,7 +133,7 @@ class BillingManager(
             // Query the purchase async
             val params = SkuDetailsParams.newBuilder()
             params.setSkusList(skuList).setType(itemType)
-            mBillingClient!!.querySkuDetailsAsync(params.build()) {
+            billingClient!!.querySkuDetailsAsync(params.build()) {
                 responseCode, skuDetailsList -> listener.onSkuDetailsResponse(responseCode, skuDetailsList) }
         }
 
@@ -155,25 +144,25 @@ class BillingManager(
         // If we've already scheduled to consume this token - no action is needed (this could happen
         // if you received the token when querying purchases inside onReceive() and later from
         // onActivityResult()
-        if (mTokensToBeConsumed == null) {
-            mTokensToBeConsumed = HashSet()
-        } else if (mTokensToBeConsumed!!.contains(purchaseToken)) {
+        if (tokensToBeConsumed == null) {
+            tokensToBeConsumed = HashSet()
+        } else if (tokensToBeConsumed!!.contains(purchaseToken)) {
             Log.i(TAG, "Token was already scheduled to be consumed - skipping...")
             return
         }
-        mTokensToBeConsumed!!.add(purchaseToken)
+        tokensToBeConsumed!!.add(purchaseToken)
 
         // Generating Consume Response listener
         val onConsumeListener = ConsumeResponseListener { responseCode, purchaseToken1 ->
             // If billing service was disconnected, we try to reconnect 1 time
             // (feel free to introduce your retry policy here).
-            mBillingUpdatesListener.onConsumeFinished(purchaseToken1, responseCode)
+            billingUpdatesListener.onConsumeFinished(purchaseToken1, responseCode)
         }
 
         // Creating a runnable from the request to use it inside our connection retry policy below
         val consumeRequest = Runnable {
             // Consume the purchase async
-            mBillingClient!!.consumeAsync(purchaseToken, onConsumeListener)
+            billingClient!!.consumeAsync(purchaseToken, onConsumeListener)
         }
 
         executeServiceRequest(consumeRequest)
@@ -196,7 +185,7 @@ class BillingManager(
 
         Log.d(TAG, "Got a verified purchase: $purchase")
 
-        mPurchases.add(purchase)
+        purchases.add(purchase)
     }
 
     /**
@@ -204,7 +193,7 @@ class BillingManager(
      */
     private fun onQueryPurchasesFinished(result: PurchasesResult) {
         // Have we been disposed of in the meantime? If so, or bad result code, then quit
-        if (mBillingClient == null || result.responseCode != BillingResponse.OK) {
+        if (billingClient == null || result.responseCode != BillingResponse.OK) {
             Log.w(TAG, "Billing client was null or result code (" + result.responseCode
                     + ") was bad - quitting")
             return
@@ -213,7 +202,7 @@ class BillingManager(
         Log.d(TAG, "Query inventory was successful.")
 
         // Update the UI and purchases inventory with new list of purchases
-        mPurchases.clear()
+        purchases.clear()
         onPurchasesUpdated(BillingResponse.OK, result.purchasesList)
     }
 
@@ -226,7 +215,7 @@ class BillingManager(
      *
      */
     fun areSubscriptionsSupported(): Boolean {
-        val responseCode = mBillingClient!!.isFeatureSupported(FeatureType.SUBSCRIPTIONS)
+        val responseCode = billingClient!!.isFeatureSupported(FeatureType.SUBSCRIPTIONS)
         if (responseCode != BillingResponse.OK) {
             Log.w(TAG, "areSubscriptionsSupported() got an error response: $responseCode")
         }
@@ -240,12 +229,12 @@ class BillingManager(
     fun queryPurchases() {
         val queryToExecute = Runnable {
             val time = System.currentTimeMillis()
-            val purchasesResult = mBillingClient!!.queryPurchases(SkuType.INAPP)
+            val purchasesResult = billingClient!!.queryPurchases(SkuType.INAPP)
             Log.i(TAG, "Querying purchases elapsed time: " + (System.currentTimeMillis() - time)
                     + "ms")
             // If there are subscriptions supported, we add subscription rows as well
             if (areSubscriptionsSupported()) {
-                val subscriptionResult = mBillingClient!!.queryPurchases(SkuType.SUBS)
+                val subscriptionResult = billingClient!!.queryPurchases(SkuType.SUBS)
                 Log.i(TAG, "Querying purchases and subscriptions elapsed time: "
                         + (System.currentTimeMillis() - time) + "ms")
                 Log.i(TAG, "Querying subscriptions result code: "
@@ -270,25 +259,25 @@ class BillingManager(
     }
 
     fun startServiceConnection(executeOnSuccess: Runnable?) {
-        mBillingClient!!.startConnection(object : BillingClientStateListener {
+        billingClient!!.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(@BillingResponse billingResponseCode: Int) {
                 Log.d(TAG, "Setup finished. Response code: $billingResponseCode")
                 billingClientResponseCode = billingResponseCode
                 if (billingResponseCode == BillingResponse.OK) {
-                    mIsServiceConnected = true
+                    isServiceConnected = true
                     executeOnSuccess?.run()
                 }
             }
 
             override fun onBillingServiceDisconnected() {
                 billingClientResponseCode = BillingResponse.SERVICE_DISCONNECTED
-                mIsServiceConnected = false
+                isServiceConnected = false
             }
         })
     }
 
     private fun executeServiceRequest(runnable: Runnable) {
-        if (mIsServiceConnected) {
+        if (isServiceConnected) {
             runnable.run()
         } else {
             // If billing service was disconnected, we try to reconnect 1 time.

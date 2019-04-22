@@ -109,7 +109,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 
         fun newInstance(rootKey: String?): SettingsFragment {
             val args = Bundle()
-            args.putString(PreferenceFragmentMaterial.ARG_PREFERENCE_ROOT, rootKey)
+            args.putString(ARG_PREFERENCE_ROOT, rootKey)
             val fragment = SettingsFragment()
             fragment.arguments = args
             return fragment

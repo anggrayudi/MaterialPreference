@@ -35,15 +35,18 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    api 'androidx.appcompat:appcompat:1.1.0-alpha03'
+    api 'androidx.appcompat:appcompat:1.1.0-alpha04'
     api 'androidx.cardview:cardview:1.0.0'
-    api 'com.google.android.material:material:1.1.0-alpha04'
+    api 'com.google.android.material:material:1.1.0-alpha05'
     api 'com.wdullaer:materialdatetimepicker:4.1.2'
     api "com.afollestad.material-dialogs:core:$dialogVersion"
     api "com.afollestad.material-dialogs:files:$dialogVersion"
     api "com.afollestad.material-dialogs:color:$dialogVersion"
     api 'commons-io:commons-io:2.6'
     api "com.anggrayudi:materialpreference-api:$processorVersion"
+
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 }
 
 ext {

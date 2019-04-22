@@ -36,6 +36,7 @@ class DonationActivity : AppCompatActivity(), BillingManager.BillingUpdatesListe
         menuInflater.inflate(R.menu.donation, menu)
         menu.findItem(R.id.action_donate_paypal).intent = Intent(Intent.ACTION_VIEW,
                 Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TGPGSY66LKUMN&source=url"))
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return super.onCreateOptionsMenu(menu)
     }
 

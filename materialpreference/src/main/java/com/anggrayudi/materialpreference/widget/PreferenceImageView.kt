@@ -18,7 +18,6 @@ package com.anggrayudi.materialpreference.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.ImageView
 import com.anggrayudi.materialpreference.R
 
@@ -34,8 +33,8 @@ internal class PreferenceImageView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : ImageView(context, attrs, defStyleAttr) {
 
-    private var mMaxWidth = Integer.MAX_VALUE
-    private var mMaxHeight = Integer.MAX_VALUE
+    private var maxWidth = Integer.MAX_VALUE
+    private var maxHeight = Integer.MAX_VALUE
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.PreferenceImageView, defStyleAttr, 0)
@@ -45,44 +44,44 @@ internal class PreferenceImageView @JvmOverloads constructor(
     }
 
     override fun setMaxWidth(maxWidth: Int) {
-        mMaxWidth = maxWidth
+        this.maxWidth = maxWidth
         super.setMaxWidth(maxWidth)
     }
 
     override fun getMaxWidth(): Int {
-        return mMaxWidth
+        return maxWidth
     }
 
     override fun setMaxHeight(maxHeight: Int) {
-        mMaxHeight = maxHeight
+        this.maxHeight = maxHeight
         super.setMaxHeight(maxHeight)
     }
 
     override fun getMaxHeight(): Int {
-        return mMaxHeight
+        return maxHeight
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var widthMeasureSpec = widthMeasureSpec
-        var heightMeasureSpec = heightMeasureSpec
-        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
-        if (widthMode == View.MeasureSpec.AT_MOST || widthMode == View.MeasureSpec.UNSPECIFIED) {
-            val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
+        var widthSpec = widthMeasureSpec
+        var heightSpec = heightMeasureSpec
+        val widthMode = MeasureSpec.getMode(widthSpec)
+        if (widthMode == MeasureSpec.AT_MOST || widthMode == MeasureSpec.UNSPECIFIED) {
+            val widthSize = MeasureSpec.getSize(widthSpec)
             val maxWidth = maxWidth
-            if (maxWidth != Integer.MAX_VALUE && (maxWidth < widthSize || widthMode == View.MeasureSpec.UNSPECIFIED)) {
-                widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(maxWidth, View.MeasureSpec.AT_MOST)
+            if (maxWidth != Integer.MAX_VALUE && (maxWidth < widthSize || widthMode == MeasureSpec.UNSPECIFIED)) {
+                widthSpec = MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.AT_MOST)
             }
         }
 
-        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
-        if (heightMode == View.MeasureSpec.AT_MOST || heightMode == View.MeasureSpec.UNSPECIFIED) {
-            val heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightSpec)
+        if (heightMode == MeasureSpec.AT_MOST || heightMode == MeasureSpec.UNSPECIFIED) {
+            val heightSize = MeasureSpec.getSize(heightSpec)
             val maxHeight = maxHeight
-            if (maxHeight != Integer.MAX_VALUE && (maxHeight < heightSize || heightMode == View.MeasureSpec.UNSPECIFIED)) {
-                heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(maxHeight, View.MeasureSpec.AT_MOST)
+            if (maxHeight != Integer.MAX_VALUE && (maxHeight < heightSize || heightMode == MeasureSpec.UNSPECIFIED)) {
+                heightSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST)
             }
         }
 
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        super.onMeasure(widthSpec, heightSpec)
     }
 }

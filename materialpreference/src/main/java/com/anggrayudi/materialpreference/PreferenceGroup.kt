@@ -27,6 +27,7 @@ import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
 import androidx.collection.SimpleArrayMap
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A container for multiple [Preference] objects. It is a base class for  Preference objects that are
@@ -45,7 +46,7 @@ abstract class PreferenceGroup @JvmOverloads constructor(
      * The container for child [Preference]s. This is sorted based on the
      * ordering, please use [addPreference] instead of adding to this directly.
      */
-    private val mPreferenceList: MutableList<Preference>
+    private val preferenceList: MutableList<Preference> = ArrayList()
 
     /**
      * Whether to order the [Preference] children of this group as they
@@ -60,19 +61,19 @@ abstract class PreferenceGroup @JvmOverloads constructor(
      */
     var isOrderingAsAdded = true
 
-    private var mCurrentPreferenceOrder = 0
+    private var currentPreferenceOrder = 0
 
     /** Returns true if we're between [onAttached] and [onPrepareForRemoval] */
     @get:RestrictTo(LIBRARY_GROUP)
     var isAttached = false
         private set
 
-    private val mIdRecycleCache = SimpleArrayMap<String, Long>()
-    private val mHandler = Handler()
-    private val mClearRecycleCacheRunnable = object : Runnable {
+    private val idRecycleCache = SimpleArrayMap<String, Long>()
+    private val handler = Handler()
+    private val clearRecycleCacheRunnable = object : Runnable {
         override fun run() {
             synchronized(this) {
-                mIdRecycleCache.clear()
+                idRecycleCache.clear()
             }
         }
     }
@@ -82,7 +83,7 @@ abstract class PreferenceGroup @JvmOverloads constructor(
      * @return The number of preference children in this group.
      */
     val preferenceCount: Int
-        get() = mPreferenceList.size
+        get() = preferenceList.size
 
     /**
      * Whether this preference group should be shown on the same screen as its contained preferences.
@@ -99,7 +100,6 @@ abstract class PreferenceGroup @JvmOverloads constructor(
 
     init {
         isPersistent = false
-        mPreferenceList = ArrayList()
         val a = context.obtainStyledAttributes(attrs, R.styleable.PreferenceGroup, defStyleAttr, defStyleRes)
         isOrderingAsAdded = a.getBoolean(R.styleable.PreferenceGroup_android_orderingFromXml, true)
         a.recycle()
@@ -117,7 +117,7 @@ abstract class PreferenceGroup @JvmOverloads constructor(
      * @return The [Preference].
      */
     fun getPreference(index: Int): Preference {
-        return mPreferenceList[index]
+        return preferenceList[index]
     }
 
     /**
@@ -127,14 +127,14 @@ abstract class PreferenceGroup @JvmOverloads constructor(
      * @return Whether the preference is now in this group.
      */
     fun addPreference(preference: Preference): Boolean {
-        if (mPreferenceList.contains(preference)) {
+        if (preferenceList.contains(preference)) {
             // Exists
             return true
         }
 
-        if (preference.order == Preference.DEFAULT_ORDER) {
+        if (preference.order == DEFAULT_ORDER) {
             if (isOrderingAsAdded) {
-                preference.order = mCurrentPreferenceOrder++
+                preference.order = currentPreferenceOrder++
             }
 
             if (preference is PreferenceGroup) {
@@ -144,7 +144,7 @@ abstract class PreferenceGroup @JvmOverloads constructor(
             }
         }
 
-        var insertionIndex = Collections.binarySearch(mPreferenceList, preference)
+        var insertionIndex = Collections.binarySearch(preferenceList, preference)
         if (insertionIndex < 0) {
             insertionIndex = insertionIndex * -1 - 1
         }
@@ -154,13 +154,13 @@ abstract class PreferenceGroup @JvmOverloads constructor(
         }
 
         synchronized(this) {
-            mPreferenceList.add(insertionIndex, preference)
+            preferenceList.add(insertionIndex, preference)
         }
 
         val preferenceManager = preferenceManager
         val key = preference.key
-        val id = if (key != null && mIdRecycleCache.containsKey(key)) {
-            mIdRecycleCache.remove(key)!!
+        val id = if (key != null && idRecycleCache.containsKey(key)) {
+            idRecycleCache.remove(key)!!
         } else {
             preferenceManager!!.nextId
         }
@@ -193,7 +193,7 @@ abstract class PreferenceGroup @JvmOverloads constructor(
             if (preference.parent === this) {
                 preference.assignParent(null)
             }
-            val success = mPreferenceList.remove(preference)
+            val success = preferenceList.remove(preference)
             if (success) {
                 // If this preference, or another preference with the same key, gets re-added
                 // immediately, we want it to have the same id so that it can be correctly tracked
@@ -208,9 +208,9 @@ abstract class PreferenceGroup @JvmOverloads constructor(
                 // API is strongly discouraged.
                 val key = preference.key
                 if (key != null) {
-                    mIdRecycleCache.put(key, preference.id)
-                    mHandler.removeCallbacks(mClearRecycleCacheRunnable)
-                    mHandler.post(mClearRecycleCacheRunnable)
+                    idRecycleCache.put(key, preference.id)
+                    handler.removeCallbacks(clearRecycleCacheRunnable)
+                    handler.post(clearRecycleCacheRunnable)
                 }
                 if (isAttached) {
                     preference.onDetached()
@@ -223,7 +223,7 @@ abstract class PreferenceGroup @JvmOverloads constructor(
     /** Removes all [Preference]s from this group. */
     fun removeAll() {
         synchronized(this) {
-            val preferenceList = mPreferenceList
+            val preferenceList = preferenceList
             for (i in preferenceList.indices.reversed()) {
                 removePreferenceInt(preferenceList[0])
             }
@@ -283,7 +283,6 @@ abstract class PreferenceGroup @JvmOverloads constructor(
         isAttached = true
 
         // Dispatch to all contained preferences
-        val preferenceCount = preferenceCount
         for (i in 0 until preferenceCount) {
             getPreference(i).onAttached()
         }
@@ -296,7 +295,6 @@ abstract class PreferenceGroup @JvmOverloads constructor(
         isAttached = false
 
         // Dispatch to all contained preferences
-        val preferenceCount = preferenceCount
         for (i in 0 until preferenceCount) {
             getPreference(i).onDetached()
         }
@@ -307,7 +305,6 @@ abstract class PreferenceGroup @JvmOverloads constructor(
 
         // Child preferences have an implicit dependency on their containing
         // group. Dispatch dependency change to all contained preferences.
-        val preferenceCount = preferenceCount
         for (i in 0 until preferenceCount) {
             getPreference(i).onParentChanged(this, disableDependents)
         }
@@ -315,7 +312,7 @@ abstract class PreferenceGroup @JvmOverloads constructor(
 
     internal fun sortPreferences() {
         synchronized(this) {
-            mPreferenceList.sort()
+            preferenceList.sort()
         }
     }
 
@@ -323,7 +320,6 @@ abstract class PreferenceGroup @JvmOverloads constructor(
         super.dispatchSaveInstanceState(container)
 
         // Dispatch to all contained preferences
-        val preferenceCount = preferenceCount
         for (i in 0 until preferenceCount) {
             getPreference(i).dispatchSaveInstanceState(container)
         }
@@ -333,7 +329,6 @@ abstract class PreferenceGroup @JvmOverloads constructor(
         super.dispatchRestoreInstanceState(container)
 
         // Dispatch to all contained preferences
-        val preferenceCount = preferenceCount
         for (i in 0 until preferenceCount) {
             getPreference(i).dispatchRestoreInstanceState(container)
         }

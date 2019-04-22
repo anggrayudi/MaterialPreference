@@ -149,7 +149,7 @@ class ListPreference @JvmOverloads constructor(
         value = myState.value
     }
 
-    private class SavedState : Preference.BaseSavedState {
+    private class SavedState : BaseSavedState {
         internal var value: String? = null
 
         constructor(source: Parcel) : super(source) {

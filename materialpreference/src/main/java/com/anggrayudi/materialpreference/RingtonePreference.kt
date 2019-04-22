@@ -95,10 +95,7 @@ class RingtonePreference @JvmOverloads constructor(
     // FIXME Adjust logic once strings are bundled.
     internal val nonEmptyDialogTitle: CharSequence
         get() {
-            var title = dialogTitle
-            if (title == null) {
-                title = super.title
-            }
+            var title = dialogTitle ?: super.title
             if (title.isNullOrEmpty()) {
                 when (ringtoneType) {
                     RingtoneManager.TYPE_NOTIFICATION -> title = getRingtonePickerTitleNotificationString(context)
@@ -165,14 +162,13 @@ class RingtonePreference @JvmOverloads constructor(
     /** Creates system ringtone picker intent for manual use. */
     fun buildRingtonePickerIntent(): Intent {
         val type = ringtoneType
-        val i = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
-        i.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, onRestoreRingtone())
-        i.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, RingtoneManager.getDefaultUri(type))
-        i.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, showDefault)
-        i.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, showSilent)
-        i.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, type)
-        i.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, nonEmptyDialogTitle)
-        return i
+        return Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
+                .putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, onRestoreRingtone())
+                .putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, RingtoneManager.getDefaultUri(type))
+                .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, showDefault)
+                .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, showSilent)
+                .putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, type)
+                .putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, nonEmptyDialogTitle)
     }
 
     /**
@@ -180,10 +176,8 @@ class RingtonePreference @JvmOverloads constructor(
      * by [RingtoneManager.ACTION_RINGTONE_PICKER].
      */
     fun onActivityResult(data: Intent?) {
-        if (data != null) {
-            val uri = data.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
-            saveRingtone(uri)
-        }
+        val uri = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI) ?: return
+        saveRingtone(uri)
     }
 
     internal fun saveRingtone(uri: Uri?) {

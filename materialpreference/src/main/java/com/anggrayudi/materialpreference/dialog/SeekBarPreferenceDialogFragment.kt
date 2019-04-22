@@ -18,70 +18,69 @@ import java.util.*
  */
 class SeekBarPreferenceDialogFragment : PreferenceDialogFragment(), View.OnKeyListener {
 
-    private var mSeekBar: SeekBar? = null
-    private var mTextMin: TextView? = null
-    private var mTextMax: TextView? = null
-    private var mTextValue: TextView? = null
+    private var seekBar: SeekBar? = null
+    private var textMin: TextView? = null
+    private var textMax: TextView? = null
+    private var textValue: TextView? = null
+    private var keyProgressIncrement: Int = 0
 
     private val seekBarDialogPreference: SeekBarDialogPreference
         get() = preference as SeekBarDialogPreference
-
-    private var mKeyProgressIncrement: Int = 0
 
     override fun onBindDialogView(view: View) {
         super.onBindDialogView(view)
 
         val preference = seekBarDialogPreference
 
-        mTextMin = view.findViewById(R.id.seekbar_min)
-        mTextMax = view.findViewById(R.id.seekbar_max)
-        mTextValue = view.findViewById(R.id.seekbar_value)
-        mSeekBar = view.findViewById(R.id.seekbar)
+        textMin = view.findViewById(R.id.seekbar_min)
+        textMax = view.findViewById(R.id.seekbar_max)
+        textValue = view.findViewById(R.id.seekbar_value)
+        seekBar = view.findViewById(R.id.seekbar)
 
         val max = preference.max
-        mTextMax!!.text = String.format(Locale.US, "%d", max)
+        textMax!!.text = String.format(Locale.US, "%d", max)
 
         val min = preference.min
-        mTextMin!!.text = String.format(Locale.US, "%d", min)
+        textMin!!.text = String.format(Locale.US, "%d", min)
 
-        mSeekBar!!.max = max - min
-        mSeekBar!!.progress = preference.value - min
+        seekBar!!.max = max - min
+        seekBar!!.progress = preference.value - min
         val listener = object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (preference.summaryFormatter != null)
-                    mTextValue!!.text = preference.summaryFormatter!!.invoke(progress + min)
+                    textValue!!.text = preference.summaryFormatter!!.invoke(progress + min)
                 else
-                    mTextValue!!.text = String.format(Locale.US, "%d", progress + min)
+                    textValue!!.text = String.format(Locale.US, "%d", progress + min)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         }
-        listener.onProgressChanged(mSeekBar!!, mSeekBar!!.progress, false)
-        mSeekBar!!.setOnSeekBarChangeListener(listener)
-        mKeyProgressIncrement = mSeekBar!!.keyProgressIncrement
-        mSeekBar!!.setOnKeyListener(this)
+        listener.onProgressChanged(seekBar!!, seekBar!!.progress, false)
+        seekBar!!.setOnSeekBarChangeListener(listener)
+        keyProgressIncrement = seekBar!!.keyProgressIncrement
+        seekBar!!.setOnKeyListener(this)
 
         setupAccessibilityDelegate(max, min)
     }
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
         return dialog
-                .positiveButton(text = mPositiveButtonText ?: getString(android.R.string.ok)) {
-                    mWhichButtonClicked = WhichButton.POSITIVE
+                .positiveButton(text = positiveButtonText ?: getString(android.R.string.ok)) {
+                    whichButtonClicked = WhichButton.POSITIVE
                 }
-                .negativeButton(text = mNegativeButtonText ?: getString(android.R.string.cancel)) {
-                    mWhichButtonClicked = WhichButton.NEGATIVE
+                .negativeButton(text = negativeButtonText ?: getString(android.R.string.cancel)) {
+                    whichButtonClicked = WhichButton.NEGATIVE
                 }
     }
 
     private fun setupAccessibilityDelegate(max: Int, min: Int) {
-        mSeekBar!!.setAccessibilityDelegate(object : View.AccessibilityDelegate() {
+        seekBar!!.setAccessibilityDelegate(object : View.AccessibilityDelegate() {
             override fun onInitializeAccessibilityEvent(host: View, event: AccessibilityEvent) {
                 super.onInitializeAccessibilityEvent(host, event)
 
-                val progress = mSeekBar!!.progress + min
+                val progress = seekBar!!.progress + min
                 event.contentDescription = progress.toString() + ""
 
                 //                    event.setItemCount(max - min);
@@ -93,7 +92,7 @@ class SeekBarPreferenceDialogFragment : PreferenceDialogFragment(), View.OnKeyLi
             override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(host, info)
 
-                val progress = mSeekBar!!.progress + min
+                val progress = seekBar!!.progress + min
                 info.contentDescription = progress.toString() + ""
             }
         })
@@ -101,20 +100,19 @@ class SeekBarPreferenceDialogFragment : PreferenceDialogFragment(), View.OnKeyLi
 
     private fun hasDialogTitle(): Boolean {
         val preference = preference
-        var dialogTitle = preference!!.dialogTitle
-        if (dialogTitle == null) dialogTitle = preference.title
+        val dialogTitle = preference!!.dialogTitle ?: preference.title
         return !dialogTitle.isNullOrEmpty()
     }
 
     override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
         if (event.action != KeyEvent.ACTION_UP) {
-            val step = mKeyProgressIncrement
+            val step = keyProgressIncrement
             if (keyCode == KeyEvent.KEYCODE_PLUS || keyCode == KeyEvent.KEYCODE_EQUALS) {
-                mSeekBar!!.progress = mSeekBar!!.progress + step
+                seekBar!!.progress = seekBar!!.progress + step
                 return true
             }
             if (keyCode == KeyEvent.KEYCODE_MINUS) {
-                mSeekBar!!.progress = mSeekBar!!.progress - step
+                seekBar!!.progress = seekBar!!.progress - step
                 return true
             }
         }
@@ -122,14 +120,14 @@ class SeekBarPreferenceDialogFragment : PreferenceDialogFragment(), View.OnKeyLi
     }
 
     override fun onDestroyView() {
-        mSeekBar?.setOnKeyListener(null)
+        seekBar?.setOnKeyListener(null)
         super.onDestroyView()
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
         val preference = seekBarDialogPreference
         if (positiveResult) {
-            val progress = mSeekBar!!.progress + preference.min
+            val progress = seekBar!!.progress + preference.min
             if (preference.callChangeListener(progress)) {
                 preference.value = progress
             }

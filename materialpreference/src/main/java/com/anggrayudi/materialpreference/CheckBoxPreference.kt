@@ -48,7 +48,7 @@ class CheckBoxPreference @JvmOverloads constructor(
                 android.R.attr.checkBoxPreferenceStyle), defStyleRes: Int = 0)
     : TwoStatePreference(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val mListener = CompoundButton.OnCheckedChangeListener {
+    private val listener = CompoundButton.OnCheckedChangeListener {
         buttonView, isChecked ->
         if (!callChangeListener(isChecked)) {
             // Listener didn't like it, change it back.
@@ -89,10 +89,10 @@ class CheckBoxPreference @JvmOverloads constructor(
             view.setOnCheckedChangeListener(null)
         }
         if (view is Checkable) {
-            (view as Checkable).isChecked = mChecked
+            (view as Checkable).isChecked = isChecked
         }
         if (view is CompoundButton) {
-            view.setOnCheckedChangeListener(mListener)
+            view.setOnCheckedChangeListener(listener)
         }
     }
 }

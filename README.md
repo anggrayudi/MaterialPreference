@@ -28,7 +28,7 @@ Writing code in Java is slow, and that's why I decided to migrate to Kotlin.
 
 ```gradle
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.1.6'
+    implementation 'com.anggrayudi:materialpreference:3.1.7'
 }
 ```
 
@@ -120,7 +120,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.1.6'
+    implementation 'com.anggrayudi:materialpreference:3.1.7'
     kapt 'com.anggrayudi:materialpreference-compiler:1.1'
 }
 ````
@@ -141,7 +141,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 
 **Note:**
 * If `PrefKey` does not update constant fields, click ![Alt text](art/make-project.png?raw=true "Make Project") Make Project in Android Studio.
-* This generator wont work with Android Studio 3.3.0 Stable, 3.4 Beta 3, and 3.5 Canary 3 because of [this bug](https://issuetracker.google.com/issues/122883561). The fixes is available in the next version of Android Studio.
+* This generator wont work with Android Studio 3.3.0 Stable, 3.4 Beta 3, and 3.5 Canary 3 because of [this bug](https://issuetracker.google.com/issues/122883561). The fixes are available in the next version of Android Studio.
 
 ## Preferences
 

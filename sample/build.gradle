@@ -46,6 +46,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
 }
 
 repositories {
@@ -59,15 +62,15 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.android.billingclient:billing:1.2'
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha03'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation "com.afollestad.material-dialogs:core:$dialogVersion"
 
     implementation project(':materialpreference')
-    compileOnly project(':annotation')
+//    compileOnly project(':annotation')
     kapt project(':processor')
 
-//    implementation 'com.anggrayudi:materialpreference:3.1.3'
-//    implementation 'com.anggrayudi:materialpreference-api:1.0'
-//    kapt 'com.anggrayudi:materialpreference-compiler:1.0'
+//    implementation 'com.anggrayudi:materialpreference:3.1.7'
+//    implementation 'com.anggrayudi:materialpreference-api:1.1'
+//    kapt 'com.anggrayudi:materialpreference-compiler:1.1'
 }

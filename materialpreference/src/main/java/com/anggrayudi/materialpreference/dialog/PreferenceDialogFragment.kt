@@ -45,17 +45,16 @@ import com.anggrayudi.materialpreference.PreferenceFragmentMaterial
  */
 abstract class PreferenceDialogFragment : DialogFragment() {
 
-    private var mPreference: DialogPreference? = null
-    private var mDialogTitle: CharSequence? = null
-    private var mDialogMessage: CharSequence? = null
-    private var mDialogIcon: BitmapDrawable? = null
-    @LayoutRes private var mDialogLayoutRes: Int = 0
+    private var dialogTitle: CharSequence? = null
+    private var dialogMessage: CharSequence? = null
+    private var dialogIcon: BitmapDrawable? = null
+    @LayoutRes private var dialogLayoutRes: Int = 0
 
-    protected var mPositiveButtonText: CharSequence? = null
-    protected var mNegativeButtonText: CharSequence? = null
+    protected var positiveButtonText: CharSequence? = null
+    protected var negativeButtonText: CharSequence? = null
 
     /** Which button was clicked.  */
-    protected var mWhichButtonClicked = WhichButton.NEGATIVE
+    protected var whichButtonClicked = WhichButton.NEGATIVE
 
     /**
      * Get the preference that requested this dialog. Available after [.onCreate] has
@@ -65,13 +64,14 @@ abstract class PreferenceDialogFragment : DialogFragment() {
      */
     val preference: DialogPreference?
         get() {
-            if (mPreference == null) {
+            if (_preference == null) {
                 val key = arguments!!.getString(ARG_KEY)!!
                 val fragment = targetFragment as DialogPreference.TargetFragment
-                mPreference = fragment.findPreference(key) as DialogPreference
+                _preference = fragment.findPreference(key) as DialogPreference
             }
-            return mPreference
+            return _preference
         }
+    private var _preference: DialogPreference? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,15 +81,15 @@ abstract class PreferenceDialogFragment : DialogFragment() {
 
         val key = arguments!!.getString(ARG_KEY)!!
         if (savedInstanceState == null) {
-            mPreference = rawFragment.findPreference(key) as DialogPreference
-            mDialogTitle = mPreference!!.dialogTitle
-            mPositiveButtonText = mPreference!!.positiveButtonText
-            mNegativeButtonText = mPreference!!.negativeButtonText
-            mDialogMessage = mPreference!!.dialogMessage
-            mDialogLayoutRes = mPreference!!.dialogLayoutResource
+            _preference = rawFragment.findPreference(key) as DialogPreference
+            dialogTitle = _preference!!.dialogTitle
+            positiveButtonText = _preference!!.positiveButtonText
+            negativeButtonText = _preference!!.negativeButtonText
+            dialogMessage = _preference!!.dialogMessage
+            dialogLayoutRes = _preference!!.dialogLayoutResource
 
-            val icon = mPreference!!.dialogIcon
-            mDialogIcon = when {
+            val icon = _preference!!.dialogIcon
+            dialogIcon = when {
                 icon is BitmapDrawable -> icon
                 icon != null -> {
                     val bitmap = Bitmap.createBitmap(icon.intrinsicWidth,
@@ -102,54 +102,54 @@ abstract class PreferenceDialogFragment : DialogFragment() {
                 else -> null
             }
         } else {
-            mDialogTitle = savedInstanceState.getCharSequence(SAVE_STATE_TITLE)
-            mPositiveButtonText = savedInstanceState.getCharSequence(SAVE_STATE_POSITIVE_TEXT)
-            mNegativeButtonText = savedInstanceState.getCharSequence(SAVE_STATE_NEGATIVE_TEXT)
-            mDialogMessage = savedInstanceState.getCharSequence(SAVE_STATE_MESSAGE)
-            mDialogLayoutRes = savedInstanceState.getInt(SAVE_STATE_LAYOUT, 0)
+            dialogTitle = savedInstanceState.getCharSequence(SAVE_STATE_TITLE)
+            positiveButtonText = savedInstanceState.getCharSequence(SAVE_STATE_POSITIVE_TEXT)
+            negativeButtonText = savedInstanceState.getCharSequence(SAVE_STATE_NEGATIVE_TEXT)
+            dialogMessage = savedInstanceState.getCharSequence(SAVE_STATE_MESSAGE)
+            dialogLayoutRes = savedInstanceState.getInt(SAVE_STATE_LAYOUT, 0)
             val bitmap = savedInstanceState.getParcelable<Bitmap>(SAVE_STATE_ICON)
             if (bitmap != null) {
-                mDialogIcon = BitmapDrawable(resources, bitmap)
+                dialogIcon = BitmapDrawable(resources, bitmap)
             }
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putCharSequence(SAVE_STATE_TITLE, mDialogTitle)
-        outState.putCharSequence(SAVE_STATE_POSITIVE_TEXT, mPositiveButtonText)
-        outState.putCharSequence(SAVE_STATE_NEGATIVE_TEXT, mNegativeButtonText)
-        outState.putCharSequence(SAVE_STATE_MESSAGE, mDialogMessage)
-        outState.putInt(SAVE_STATE_LAYOUT, mDialogLayoutRes)
-        if (mDialogIcon != null) {
-            outState.putParcelable(SAVE_STATE_ICON, mDialogIcon!!.bitmap)
+        outState.putCharSequence(SAVE_STATE_TITLE, dialogTitle)
+        outState.putCharSequence(SAVE_STATE_POSITIVE_TEXT, positiveButtonText)
+        outState.putCharSequence(SAVE_STATE_NEGATIVE_TEXT, negativeButtonText)
+        outState.putCharSequence(SAVE_STATE_MESSAGE, dialogMessage)
+        outState.putInt(SAVE_STATE_LAYOUT, dialogLayoutRes)
+        if (dialogIcon != null) {
+            outState.putParcelable(SAVE_STATE_ICON, dialogIcon!!.bitmap)
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = activity!!
         var dialog = MaterialDialog(context)
-                .title(text = mDialogTitle.toString())
+                .title(text = dialogTitle.toString())
 
-        if (mDialogIcon != null)
-            dialog.icon(drawable = mDialogIcon)
+        if (dialogIcon != null)
+            dialog.icon(drawable = dialogIcon)
 
         val contentView = createDialogView(context)
         if (contentView != null) {
             onBindDialogView(contentView)
             dialog = dialog.customView(view = contentView, scrollable = true)
-        } else if (mDialogMessage != null) {
+        } else if (dialogMessage != null) {
             // normal dialog
-            dialog.message(text = mDialogMessage)
+            dialog.message(text = dialogMessage)
 
-            if (mPositiveButtonText != null)
-                dialog.positiveButton(text = mPositiveButtonText) {
-                    mWhichButtonClicked = WhichButton.POSITIVE
+            if (positiveButtonText != null)
+                dialog.positiveButton(text = positiveButtonText) {
+                    whichButtonClicked = WhichButton.POSITIVE
                 }
 
-            if (mNegativeButtonText != null)
-                dialog.negativeButton(text = mNegativeButtonText) {
-                    mWhichButtonClicked = WhichButton.NEGATIVE
+            if (negativeButtonText != null)
+                dialog.negativeButton(text = negativeButtonText) {
+                    whichButtonClicked = WhichButton.NEGATIVE
                 }
         }
 
@@ -197,7 +197,7 @@ abstract class PreferenceDialogFragment : DialogFragment() {
      * @see DialogPreference.layoutResource
      */
     private fun createDialogView(context: Context): View? {
-        val resId = mDialogLayoutRes
+        val resId = dialogLayoutRes
         if (resId == 0) {
             return null
         }
@@ -216,7 +216,7 @@ abstract class PreferenceDialogFragment : DialogFragment() {
         val dialogMessageView = view.findViewById<View>(android.R.id.message)
 
         if (dialogMessageView != null) {
-            val message = mDialogMessage
+            val message = dialogMessage
             var newVisibility = View.GONE
 
             if (!message.isNullOrEmpty()) {
@@ -235,7 +235,7 @@ abstract class PreferenceDialogFragment : DialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        onDialogClosed(mWhichButtonClicked == WhichButton.POSITIVE)
+        onDialogClosed(whichButtonClicked == WhichButton.POSITIVE)
     }
 
     abstract fun onDialogClosed(positiveResult: Boolean)

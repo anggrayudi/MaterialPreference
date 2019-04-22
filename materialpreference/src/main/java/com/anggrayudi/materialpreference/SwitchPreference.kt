@@ -50,7 +50,7 @@ class SwitchPreference @JvmOverloads constructor(
         defStyleAttr: Int = R.attr.switchPreferenceStyle, defStyleRes: Int = 0) :
         TwoStatePreference(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val mListener = Listener()
+    private val listener = Listener()
 
     /**
      * Set the text displayed on the switch widget in the on state.
@@ -151,13 +151,13 @@ class SwitchPreference @JvmOverloads constructor(
             switchView!!.setOnCheckedChangeListener(null)
         }
         if (view is Checkable) {
-            (view as Checkable).isChecked = mChecked
+            (view as Checkable).isChecked = isChecked
         }
         if (view is AspSwitchCompat) {
             val switchView = view as AspSwitchCompat?
             switchView!!.textOn = switchTextOn
             switchView.textOff = switchTextOff
-            switchView.setOnCheckedChangeListener(mListener)
+            switchView.setOnCheckedChangeListener(listener)
         }
     }
 }

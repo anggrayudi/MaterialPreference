@@ -66,8 +66,7 @@ abstract class TwoStatePreference @JvmOverloads constructor(
         }
     private var _summaryOff: CharSequence? = null
 
-    protected var mChecked: Boolean = false
-    private var mCheckedSet: Boolean = false
+    private var checkedSet: Boolean = false
 
     /**
      * Sets whether dependents are disabled when this preference is on (`true`)
@@ -85,12 +84,12 @@ abstract class TwoStatePreference @JvmOverloads constructor(
      */
     // Always persist/notify the first time; don't assume the field's default of false.
     var isChecked: Boolean
-        get() = mChecked
+        get() = _checked
         set(checked) {
-            val changed = mChecked != checked
-            if (changed || !mCheckedSet) {
-                mChecked = checked
-                mCheckedSet = true
+            val changed = _checked != checked
+            if (changed || !checkedSet) {
+                _checked = checked
+                checkedSet = true
                 persistBoolean(checked)
                 if (changed) {
                     notifyDependencyChange(shouldDisableDependents())
@@ -98,6 +97,7 @@ abstract class TwoStatePreference @JvmOverloads constructor(
                 }
             }
         }
+    private var _checked: Boolean = false
 
     override var isLegacySummary: Boolean
         get() = true
@@ -123,12 +123,12 @@ abstract class TwoStatePreference @JvmOverloads constructor(
     }
 
     override fun shouldDisableDependents(): Boolean {
-        val shouldDisable = if (disableDependentsState) mChecked else !mChecked
+        val shouldDisable = if (disableDependentsState) _checked else !_checked
         return shouldDisable || super.shouldDisableDependents()
     }
 
     override fun onSetInitialValue() {
-        isChecked = getPersistedBoolean(mChecked)
+        isChecked = getPersistedBoolean(_checked)
     }
 
     /**
@@ -164,10 +164,10 @@ abstract class TwoStatePreference @JvmOverloads constructor(
         }
         val summaryView = view as TextView?
         var useDefaultSummary = true
-        if (mChecked && !summaryOn.isNullOrEmpty()) {
+        if (_checked && !summaryOn.isNullOrEmpty()) {
             summaryView!!.text = summaryOn
             useDefaultSummary = false
-        } else if (!mChecked && !summaryOff.isNullOrEmpty()) {
+        } else if (!_checked && !summaryOff.isNullOrEmpty()) {
             summaryView!!.text = summaryOff
             useDefaultSummary = false
         }
@@ -212,7 +212,7 @@ abstract class TwoStatePreference @JvmOverloads constructor(
         isChecked = myState.checked
     }
 
-    internal class SavedState : Preference.BaseSavedState {
+    internal class SavedState : BaseSavedState {
         var checked: Boolean = false
 
         constructor(source: Parcel) : super(source) {

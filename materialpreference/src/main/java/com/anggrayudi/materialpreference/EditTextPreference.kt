@@ -150,7 +150,7 @@ class EditTextPreference @JvmOverloads constructor(
         _text = myState.text
     }
 
-    private class SavedState : Preference.BaseSavedState {
+    private class SavedState : BaseSavedState {
         internal var text: String? = null
 
         internal constructor(source: Parcel) : super(source) {

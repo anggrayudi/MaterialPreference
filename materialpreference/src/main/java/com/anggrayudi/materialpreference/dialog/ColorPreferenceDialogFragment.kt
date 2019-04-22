@@ -19,7 +19,7 @@ class ColorPreferenceDialogFragment : PreferenceDialogFragment() {
                         initialSelection = colorPreference.color,
                         allowCustomArgb = colorPreference.allowArgb,
                         showAlphaSelector = colorPreference.allowTransparency) { _, color ->
-                    mWhichButtonClicked = WhichButton.POSITIVE
+                    whichButtonClicked = WhichButton.POSITIVE
                     colorPreference.color = color
                 }
     }
@@ -31,7 +31,7 @@ class ColorPreferenceDialogFragment : PreferenceDialogFragment() {
 
         fun newInstance(key: String): ColorPreferenceDialogFragment {
             val b = Bundle(2)
-            b.putString(PreferenceDialogFragment.ARG_KEY, key)
+            b.putString(ARG_KEY, key)
             val fragment = ColorPreferenceDialogFragment()
             fragment.arguments = b
             return fragment

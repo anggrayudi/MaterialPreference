@@ -33,18 +33,17 @@ import com.google.android.material.textfield.TextInputLayout
 
 class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
 
-    private var mEditText: EditText? = null
-    private var mTextInputLayout: TextInputLayout? = null
-    private var mTextMessage: TextView? = null
-
-    private var mText: CharSequence? = null
+    private var editText: EditText? = null
+    private var textInputLayout: TextInputLayout? = null
+    private var textMessage: TextView? = null
+    private var text: CharSequence? = null
 
     private val editTextPreference: EditTextPreference
         get() = preference as EditTextPreference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mText = if (savedInstanceState == null) {
+        text = if (savedInstanceState == null) {
             editTextPreference.value
         } else {
             savedInstanceState.getCharSequence(SAVE_STATE_TEXT)
@@ -53,38 +52,38 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putCharSequence(SAVE_STATE_TEXT, mText)
+        outState.putCharSequence(SAVE_STATE_TEXT, text)
     }
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
         return dialog
-                .positiveButton(text = mPositiveButtonText ?: getString(android.R.string.ok)) {
-                    mWhichButtonClicked = WhichButton.POSITIVE
-                }.negativeButton(text = mNegativeButtonText ?: getString(android.R.string.cancel)) {
-                    mWhichButtonClicked = WhichButton.NEGATIVE
+                .positiveButton(text = positiveButtonText ?: getString(android.R.string.ok)) {
+                    whichButtonClicked = WhichButton.POSITIVE
+                }.negativeButton(text = negativeButtonText ?: getString(android.R.string.cancel)) {
+                    whichButtonClicked = WhichButton.NEGATIVE
                 }
     }
 
     override fun onBindDialogView(view: View) {
         super.onBindDialogView(view)
         val preference = editTextPreference
-        mTextMessage = view.findViewById(android.R.id.message)
-        mTextInputLayout = view.findViewById(android.R.id.inputArea)
-        mEditText = view.findViewById(android.R.id.edit)
+        textMessage = view.findViewById(android.R.id.message)
+        textInputLayout = view.findViewById(android.R.id.inputArea)
+        editText = view.findViewById(android.R.id.edit)
 
-        mTextMessage!!.text = preference.message
+        textMessage!!.text = preference.message
         if (preference.message.isNullOrEmpty())
-            mTextMessage!!.visibility = View.GONE
+            textMessage!!.visibility = View.GONE
 
-        mTextInputLayout!!.isCounterEnabled = preference.isCounterEnabled
-        mTextInputLayout!!.counterMaxLength = preference.maxLength
+        textInputLayout!!.isCounterEnabled = preference.isCounterEnabled
+        textInputLayout!!.counterMaxLength = preference.maxLength
 
         if (preference.inputFilters != null)
-            mEditText!!.filters = preference.inputFilters
+            editText!!.filters = preference.inputFilters
 
-        mEditText!!.hint = preference.hint
-        mEditText!!.inputType = preference.inputType
-        mEditText!!.setText(mText)
+        editText!!.hint = preference.hint
+        editText!!.inputType = preference.inputType
+        editText!!.setText(text)
 
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
@@ -94,7 +93,7 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
                 (dialog as MaterialDialog).getActionButton(WhichButton.POSITIVE).isEnabled =
                         !underMinChars && text!!.length <= preference.maxLength
 
-                mTextInputLayout!!.error = if (underMinChars && preference.minLength > 0)
+                textInputLayout!!.error = if (underMinChars && preference.minLength > 0)
                     getString(R.string.min_preference_input_chars_, preference.minLength)
                 else
                     null
@@ -102,8 +101,8 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
 
             override fun afterTextChanged(editable: Editable) {}
         }
-        mEditText!!.addTextChangedListener(textWatcher)
-        mEditText!!.post { textWatcher.onTextChanged(mText, 0, 0, 0) }
+        editText!!.addTextChangedListener(textWatcher)
+        editText!!.post { textWatcher.onTextChanged(text, 0, 0, 0) }
     }
 
     @RestrictTo(LIBRARY_GROUP)
@@ -114,7 +113,7 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
 
     override fun onDialogClosed(positiveResult: Boolean) {
         if (positiveResult) {
-            editTextPreference.value = mEditText!!.text.toString()
+            editTextPreference.value = editText!!.text.toString()
         }
     }
 
@@ -125,7 +124,7 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
         fun newInstance(key: String): EditTextPreferenceDialogFragment {
             val fragment = EditTextPreferenceDialogFragment()
             val b = Bundle(1)
-            b.putString(PreferenceDialogFragment.ARG_KEY, key)
+            b.putString(ARG_KEY, key)
             fragment.arguments = b
             return fragment
         }

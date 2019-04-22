@@ -41,8 +41,8 @@ import java.util.*
 internal class PreferenceGroupAdapter internal constructor(
         private val fragment: PreferenceFragmentMaterial,
         /** The group that we are providing data from. */
-        private val mPreferenceGroup: PreferenceGroup,
-        private val mRootParent: ViewGroup)
+        private val preferenceGroup: PreferenceGroup,
+        private val rootParent: ViewGroup)
     : Preference.OnPreferenceChangeInternalListener, ListUpdateCallback {
 
     /**
@@ -50,22 +50,22 @@ internal class PreferenceGroupAdapter internal constructor(
      * [Preference]s don't have to be direct children of this
      * [PreferenceGroup], they can be grand children or younger)
      */
-    private var mPreferenceList: List<Preference>? = null
+    private var preferenceList: List<Preference>? = null
 
     /**
      * Contains a sorted list of all preferences in this adapter regardless of visibility. This is
-     * used to construct [mPreferenceList]
+     * used to construct [preferenceList]
      */
-    private var mPreferenceListInternal: List<Preference>? = null
+    private var preferenceListInternal: List<Preference>? = null
 
     /** List of unique Preference and its subclasses' names and layouts. */
-    private val mPreferenceLayouts: MutableList<PreferenceLayout>
+    private val preferenceLayouts: MutableList<PreferenceLayout>
 
-    private var mTempPreferenceLayout = PreferenceLayout()
+    private var tempPreferenceLayout = PreferenceLayout()
 
-    private val mHandler = Handler()
+    private val handler = Handler()
 
-    private val mSyncRunnable = { syncMyPreferences() }
+    private val syncRunnable = { syncMyPreferences() }
 
     private class PreferenceLayout {
         internal var resId: Int = 0
@@ -98,24 +98,24 @@ internal class PreferenceGroupAdapter internal constructor(
 
     init {
         // If this group gets or loses any children, let us know
-        mPreferenceGroup.onPreferenceChangeInternalListener = this
-        mPreferenceList = ArrayList()
-        mPreferenceListInternal = ArrayList()
-        mPreferenceLayouts = ArrayList()
+        preferenceGroup.onPreferenceChangeInternalListener = this
+        preferenceList = ArrayList()
+        preferenceListInternal = ArrayList()
+        preferenceLayouts = ArrayList()
         syncMyPreferences()
     }
 
     private fun syncMyPreferences() {
-        mPreferenceListInternal!!.forEach {
+        preferenceListInternal!!.forEach {
             // Clear out the listeners in anticipation of some items being removed. This listener
             // will be (re-)added to the remaining prefs when we flatten.
             it.onPreferenceChangeInternalListener = null
         }
-        val fullPreferenceList = ArrayList<Preference>(mPreferenceListInternal!!.size)
-        flattenPreferenceGroup(fullPreferenceList, mPreferenceGroup)
+        val fullPreferenceList = ArrayList<Preference>(preferenceListInternal!!.size)
+        flattenPreferenceGroup(fullPreferenceList, preferenceGroup)
 
-        mPreferenceList = fullPreferenceList
-        mPreferenceListInternal = fullPreferenceList
+        preferenceList = fullPreferenceList
+        preferenceListInternal = fullPreferenceList
 
         notifyDataSetChanged()
 
@@ -125,8 +125,7 @@ internal class PreferenceGroupAdapter internal constructor(
     private fun flattenPreferenceGroup(preferences: MutableList<Preference>, group: PreferenceGroup) {
         group.sortPreferences()
 
-        val groupSize = group.preferenceCount
-        for (i in 0 until groupSize) {
+        for (i in 0 until group.preferenceCount) {
             val preference = group.getPreference(i)
 
             preferences.add(preference)
@@ -158,17 +157,17 @@ internal class PreferenceGroupAdapter internal constructor(
 
     private fun addPreferenceClassName(preference: Preference) {
         val pl = createPreferenceLayout(preference, null)
-        if (!mPreferenceLayouts.contains(pl)) {
-            mPreferenceLayouts.add(pl)
+        if (!preferenceLayouts.contains(pl)) {
+            preferenceLayouts.add(pl)
         }
     }
 
     private fun getItem(position: Int): Preference? {
-        return if (position < 0 || position >= mPreferenceList!!.size) null else mPreferenceList!![position]
+        return if (position < 0 || position >= preferenceList!!.size) null else preferenceList!![position]
     }
 
     override fun onPreferenceChange(preference: Preference) {
-        val index = mPreferenceList!!.indexOf(preference)
+        val index = preferenceList!!.indexOf(preference)
         // If we don't find the preference, we don't need to notify anyone
         if (index != -1) {
             // Send the pref object as a placeholder to ensure the view holder is recycled in place
@@ -177,12 +176,12 @@ internal class PreferenceGroupAdapter internal constructor(
     }
 
     override fun onPreferenceHierarchyChange(preference: Preference) {
-        mHandler.removeCallbacks(mSyncRunnable)
-        mHandler.post(mSyncRunnable)
+        handler.removeCallbacks(syncRunnable)
+        handler.post(syncRunnable)
     }
 
     override fun onPreferenceVisibilityChange(preference: Preference) {
-        if (!mPreferenceListInternal!!.contains(preference)) {
+        if (!preferenceListInternal!!.contains(preference)) {
             return
         }
         preference.preferenceViewHolder?.itemView?.visibility = if (preference.isVisible) View.VISIBLE else View.GONE
@@ -191,21 +190,21 @@ internal class PreferenceGroupAdapter internal constructor(
     private fun getItemViewType(position: Int): Int {
         val preference = getItem(position)
 
-        mTempPreferenceLayout = createPreferenceLayout(preference!!, mTempPreferenceLayout)
+        tempPreferenceLayout = createPreferenceLayout(preference!!, tempPreferenceLayout)
 
-        var viewType = mPreferenceLayouts.indexOf(mTempPreferenceLayout)
+        var viewType = preferenceLayouts.indexOf(tempPreferenceLayout)
         return if (viewType != -1) {
             viewType
         } else {
-            viewType = mPreferenceLayouts.size
-            mPreferenceLayouts.add(PreferenceLayout(mTempPreferenceLayout))
+            viewType = preferenceLayouts.size
+            preferenceLayouts.add(PreferenceLayout(tempPreferenceLayout))
             viewType
         }
     }
 
     private fun createViewHolder(viewType: Int, preference: Preference): PreferenceViewHolder {
-        val pl = mPreferenceLayouts[viewType]
-        val context = mPreferenceGroup.context
+        val pl = preferenceLayouts[viewType]
+        val context = preferenceGroup.context
         val a = context.obtainStyledAttributes(null, R.styleable.BackgroundStyle)
         val background = a.getDrawable(R.styleable.BackgroundStyle_android_selectableItemBackground)
                 ?: ContextCompat.getDrawable(context, android.R.drawable.list_selector_background)
@@ -246,12 +245,12 @@ internal class PreferenceGroupAdapter internal constructor(
     }
 
     private fun notifyDataSetChanged() {
-        mPreferenceList?.indices?.forEach { onItemChanged(it) }
+        preferenceList?.indices?.forEach { onItemChanged(it) }
     }
 
     private fun getParentView(preference: Preference): ViewGroup {
         if (preference.parent == null || preference is PreferenceCategory)
-            return mRootParent
+            return rootParent
 
         if (preference.parent!!.preferenceViewHolder == null) {
             var message = ("Make sure that you wrap " + preference.javaClass.simpleName

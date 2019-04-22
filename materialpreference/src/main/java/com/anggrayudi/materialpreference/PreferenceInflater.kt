@@ -33,7 +33,7 @@ import java.util.*
  */
 internal class PreferenceInflater(val context: Context, private val preferenceManager: PreferenceManager) {
 
-    private val mConstructorArgs = arrayOfNulls<Any>(2)
+    private val constructorArgs = arrayOfNulls<Any>(2)
 
     /**
      * Sets the default package that will be searched for classes to construct
@@ -41,11 +41,7 @@ internal class PreferenceInflater(val context: Context, private val preferenceMa
      *
      * @return Default package, or null if it is not set.
      */
-    var defaultPackages: Array<String>? = null
-
-    init {
-        defaultPackages = arrayOf("com.anggrayudi.materialpreference.")
-    }
+    var defaultPackages: Array<String>? = arrayOf("com.anggrayudi.materialpreference.")
 
     /**
      * Inflate a new item hierarchy from the specified xml resource.
@@ -86,9 +82,9 @@ internal class PreferenceInflater(val context: Context, private val preferenceMa
      * this is root; otherwise it is the root of the inflated XML file.
      */
     fun inflate(parser: XmlResourceParser, root: PreferenceGroup?): Preference {
-        synchronized(mConstructorArgs) {
+        synchronized(constructorArgs) {
             val attrs = Xml.asAttributeSet(parser)
-            mConstructorArgs[0] = context
+            constructorArgs[0] = context
             val result: Preference
 
             try {
@@ -186,7 +182,7 @@ internal class PreferenceInflater(val context: Context, private val preferenceMa
                 CONSTRUCTOR_MAP[name] = constructor
             }
 
-            val args = mConstructorArgs
+            val args = constructorArgs
             args[1] = attrs
             return constructor.newInstance(*args) as Preference
 

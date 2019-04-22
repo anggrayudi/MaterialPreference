@@ -47,9 +47,7 @@ class PreferenceCategory @JvmOverloads constructor(
         return super.onPrepareAddPreference(preference)
     }
 
-    override fun shouldDisableDependents(): Boolean {
-        return !super.isEnabled
-    }
+    override fun shouldDisableDependents(): Boolean = !super.isEnabled
 
     override fun onInitializeAccessibilityNodeInfo(info: AccessibilityNodeInfoCompat) {
         super.onInitializeAccessibilityNodeInfo(info)

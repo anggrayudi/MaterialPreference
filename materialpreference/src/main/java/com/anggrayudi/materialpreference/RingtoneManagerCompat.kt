@@ -17,6 +17,10 @@ import java.lang.reflect.Method
 @SuppressLint("PrivateApi")
 internal class RingtoneManagerCompat : RingtoneManager {
 
+    constructor(activity: Activity) : super(activity)
+
+    constructor(context: Context) : super(context)
+
     private val internalRingtones: Cursor
         get() {
             try {
@@ -34,15 +38,12 @@ internal class RingtoneManagerCompat : RingtoneManager {
         }
     }
 
-    constructor(activity: Activity) : super(activity)
-
-    constructor(context: Context) : super(context)
-
     override fun getCursor(): Cursor {
         return try {
             super.getCursor()
         } catch (ex: SecurityException) {
             Log.w(TAG, "No READ_EXTERNAL_STORAGE permission, ignoring ringtones on ext storage")
+            @Suppress("DEPRECATION")
             if (includeDrm) {
                 Log.w(TAG, "DRM ringtones are ignored.")
             }
@@ -51,7 +52,6 @@ internal class RingtoneManagerCompat : RingtoneManager {
             setCursor(cursor)
             cursor
         }
-
     }
 
     companion object {

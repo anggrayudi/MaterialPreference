@@ -37,18 +37,18 @@ abstract class PreferenceActivityMaterial : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         replaceFragmentStrategy = REPLACE_FRAGMENT_SLIDE
-        activityLabel = if (savedInstanceState == null) title else savedInstanceState.getCharSequence("mActivityLabel")
+        activityLabel = if (savedInstanceState == null) title else savedInstanceState.getCharSequence("activityLabel")
         supportFragmentManager.addOnBackStackChangedListener(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putCharSequence("mActivityLabel", activityLabel)
+        outState.putCharSequence("activityLabel", activityLabel)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> onBackPressed()
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
         }
         return super.onOptionsItemSelected(item)
     }

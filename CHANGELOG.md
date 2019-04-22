@@ -1,4 +1,12 @@
 
+## 3.1.7 (2019-23-04)
+
+### Enhancements
+* Updated ProGuard rules
+
+### Fixed
+* `RingtonePreference` keeps playing sound after dialog was closed.
+
 ## 3.1.5 (2019-27-02)
 
 ### Enhancements

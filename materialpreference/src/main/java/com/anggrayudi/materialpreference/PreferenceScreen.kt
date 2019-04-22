@@ -53,11 +53,8 @@ constructor(context: Context, attrs: AttributeSet?)
         if (intent != null || fragment != null || preferenceCount == 0) {
             return
         }
-        val listener = preferenceManager!!.onNavigateToScreenListener
-        listener?.onNavigateToScreen(this)
+        preferenceManager!!.onNavigateToScreenListener?.onNavigateToScreen(this)
     }
 
-    override fun toString(): String {
-        return title.toString()
-    }
+    override fun toString(): String = title.toString()
 }

@@ -33,12 +33,6 @@ class PreferenceManager
 @RestrictTo(LIBRARY_GROUP)
 constructor(val context: Context) {
 
-    /** The counter for unique IDs. */
-    private var mNextId: Long = 0
-
-    /** Cached shared preferences. */
-    private var mSharedPreferences: SharedPreferences? = null
-
     /**
      * Sets a [PreferenceDataStore] to be used by all Preferences associated with this manager
      * that don't have a custom [PreferenceDataStore] assigned via [Preference.preferenceDataStore].
@@ -49,18 +43,6 @@ constructor(val context: Context) {
      * @see Preference.preferenceDataStore
      */
     var preferenceDataStore: PreferenceDataStore? = null
-
-    /**
-     * If in no-commit mode, the shared editor to give out (which will be
-     * committed when exiting no-commit mode).
-     */
-    private var mEditor: SharedPreferences.Editor? = null
-
-    /**
-     * Blocks commits from happening on the shared editor. This is used when
-     * inflating the hierarchy. Do not set this directly, use [setNoCommit]
-     */
-    private var mNoCommit: Boolean = false
 
     /**
      * Sets the name of the [SharedPreferences] file that preferences managed by this will use.
@@ -74,7 +56,7 @@ constructor(val context: Context) {
     var sharedPreferencesName: String? = null
         set(sharedPreferencesName) {
             field = sharedPreferencesName
-            mSharedPreferences = null
+            _sharedPreferences = null
         }
 
     /**
@@ -86,10 +68,10 @@ constructor(val context: Context) {
     var sharedPreferencesMode: Int = 0
         set(sharedPreferencesMode) {
             field = sharedPreferencesMode
-            mSharedPreferences = null
+            _sharedPreferences = null
         }
 
-    private var mStorage = STORAGE_DEFAULT
+    private var storage = STORAGE_DEFAULT
 
     /**
      * Returns the root of the preference hierarchy managed by this class.
@@ -122,8 +104,11 @@ constructor(val context: Context) {
      */
     internal val nextId: Long
         get() = synchronized(this) {
-            return mNextId++
+            return _nextId++
         }
+
+    /** The counter for unique IDs. */
+    private var _nextId: Long = 0
 
     /**
      * Indicates if the storage location used internally by this class is the
@@ -134,7 +119,7 @@ constructor(val context: Context) {
      */
     val isStorageDefault: Boolean
         get() = if (Build.VERSION.SDK_INT >= 24) {
-            mStorage == STORAGE_DEFAULT
+            storage == STORAGE_DEFAULT
         } else {
             true
         }
@@ -148,7 +133,7 @@ constructor(val context: Context) {
      */
     val isStorageDeviceProtected: Boolean
         get() = if (Build.VERSION.SDK_INT >= 24) {
-            mStorage == STORAGE_DEVICE_PROTECTED
+            storage == STORAGE_DEVICE_PROTECTED
         } else {
             false
         }
@@ -166,17 +151,20 @@ constructor(val context: Context) {
                 return null
             }
 
-            if (mSharedPreferences == null) {
-                val storageContext = when (mStorage) {
+            if (_sharedPreferences == null) {
+                val storageContext = when (storage) {
                     STORAGE_DEVICE_PROTECTED -> ContextCompat.createDeviceProtectedStorageContext(context)
                     else -> context
                 }
-                mSharedPreferences = storageContext!!.getSharedPreferences(sharedPreferencesName,
+                _sharedPreferences = storageContext!!.getSharedPreferences(sharedPreferencesName,
                         sharedPreferencesMode)
             }
 
-            return mSharedPreferences
+            return _sharedPreferences
         }
+
+    /** Cached shared preferences. */
+    private var _sharedPreferences: SharedPreferences? = null
 
     /**
      * Returns an editor to use when modifying the shared preferences.
@@ -194,15 +182,21 @@ constructor(val context: Context) {
                 return null
             }
 
-            return if (mNoCommit) {
-                if (mEditor == null) {
-                    mEditor = sharedPreferences!!.edit()
+            return if (_noCommit) {
+                if (_editor == null) {
+                    _editor = sharedPreferences!!.edit()
                 }
-                mEditor
+                _editor
             } else {
                 sharedPreferences!!.edit()
             }
         }
+
+    /**
+     * If in no-commit mode, the shared editor to give out (which will be
+     * committed when exiting no-commit mode).
+     */
+    private var _editor: SharedPreferences.Editor? = null
 
     init {
         sharedPreferencesName = getDefaultSharedPreferencesName(context)
@@ -219,18 +213,17 @@ constructor(val context: Context) {
      */
     @RestrictTo(LIBRARY_GROUP)
     fun inflateFromResource(context: Context, resId: Int, rootPreferences: PreferenceScreen?): PreferenceScreen {
-        var rootPreferences = rootPreferences
         // Block commits
-        setNoCommit(true)
+        noCommit = true
 
         val inflater = PreferenceInflater(context, this)
-        rootPreferences = inflater.inflate(resId, rootPreferences) as PreferenceScreen
-        rootPreferences.onAttachedToHierarchy(this)
+        val rp = inflater.inflate(resId, rootPreferences) as PreferenceScreen
+        rp.onAttachedToHierarchy(this)
 
         // Unblock commits
-        setNoCommit(false)
+        noCommit = false
 
-        return rootPreferences
+        return rp
     }
 
     fun createPreferenceScreen(context: Context): PreferenceScreen {
@@ -245,8 +238,8 @@ constructor(val context: Context) {
      */
     fun setStorageDefault() {
         if (Build.VERSION.SDK_INT >= 24) {
-            mStorage = STORAGE_DEFAULT
-            mSharedPreferences = null
+            storage = STORAGE_DEFAULT
+            _sharedPreferences = null
         }
     }
 
@@ -272,8 +265,8 @@ constructor(val context: Context) {
      */
     fun setStorageDeviceProtected() {
         if (Build.VERSION.SDK_INT >= 24) {
-            mStorage = STORAGE_DEVICE_PROTECTED
-            mSharedPreferences = null
+            storage = STORAGE_DEVICE_PROTECTED
+            _sharedPreferences = null
         }
     }
 
@@ -315,16 +308,23 @@ constructor(val context: Context) {
      *
      * @return Whether the client should commit.
      */
-    internal fun shouldCommit(): Boolean {
-        return !mNoCommit
-    }
+    internal val shouldCommit: Boolean
+        get() = !_noCommit
 
-    private fun setNoCommit(noCommit: Boolean) {
-        if (!noCommit && mEditor != null) {
-            mEditor!!.apply()
+    private var noCommit: Boolean
+        get() = _noCommit
+        set(value) {
+            if (!value && _editor != null) {
+                _editor!!.apply()
+            }
+            _noCommit = value
         }
-        mNoCommit = noCommit
-    }
+
+    /**
+     * Blocks commits from happening on the shared editor. This is used when
+     * inflating the hierarchy. Do not set this directly, use [noCommit]
+     */
+    private var _noCommit: Boolean = false
 
     /**
      * Called when a preference requests that a dialog be shown to complete a user interaction.
@@ -373,9 +373,7 @@ constructor(val context: Context) {
          *
          * @see Preference.key
          */
-        override fun arePreferenceItemsTheSame(p1: Preference, p2: Preference): Boolean {
-            return p1.id == p2.id
-        }
+        override fun arePreferenceItemsTheSame(p1: Preference, p2: Preference): Boolean = p1.id == p2.id
 
         /**
          * The result of this method is only valid for the default [Preference] objects,
@@ -476,16 +474,9 @@ constructor(val context: Context) {
          * @return A `SharedPreferences` instance that can be used to retrieve and
          * listen to values of the preferences.
          */
-        fun getDefaultSharedPreferences(context: Context): SharedPreferences {
-            return context.getSharedPreferences(getDefaultSharedPreferencesName(context),
-                    defaultSharedPreferencesMode)
-        }
+        fun getDefaultSharedPreferences(context: Context): SharedPreferences
+                = context.getSharedPreferences(getDefaultSharedPreferencesName(context), Context.MODE_PRIVATE)
 
-        private fun getDefaultSharedPreferencesName(context: Context): String {
-            return context.packageName + "_preferences"
-        }
-
-        private val defaultSharedPreferencesMode: Int
-            get() = Context.MODE_PRIVATE
+        private fun getDefaultSharedPreferencesName(context: Context): String = context.packageName + "_preferences"
     }
 }

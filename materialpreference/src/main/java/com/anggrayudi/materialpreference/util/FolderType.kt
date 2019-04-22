@@ -39,9 +39,9 @@ object FolderType {
             PICTURES -> dir = Environment.DIRECTORY_PICTURES
             PODCASTS -> dir = Environment.DIRECTORY_PODCASTS
             RINGTONES -> dir = Environment.DIRECTORY_RINGTONES
-            DOCUMENTS -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            DOCUMENTS -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                 dir = Environment.DIRECTORY_DOCUMENTS
-            } else
+            else
                 return SaveDir.EXTERNAL + "/Documents"
         }
         return if (dir == null)

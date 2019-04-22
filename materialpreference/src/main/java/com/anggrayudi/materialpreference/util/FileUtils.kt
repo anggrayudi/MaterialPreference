@@ -218,7 +218,7 @@ object FileUtils {
         val directories = tree.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         directories.forEach { directory ->
             val dir = directory.trim { it <= ' ' }
-            if (!dir.isEmpty()) {
+            if (dir.isNotEmpty()) {
                 resolvedPath.append(dir).append("/")
             }
         }
@@ -238,7 +238,7 @@ object FileUtils {
         } else {
             var currentDirectory = getExternalRoot(context, folder)
             val cleanedPath = cleanSdCardPath(folder)
-            if (!cleanedPath.isEmpty()) {
+            if (cleanedPath.isNotEmpty()) {
                 val s = if (cleanedPath.contains("/")) cleanedPath.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() else arrayOf(cleanedPath)
                 s.forEach {
                     if (currentDirectory != null) {
@@ -562,18 +562,18 @@ object FileUtils {
         val timer = Timer()
         try {
             val buffer = ByteArray(1024)
-            val byteMoved = longArrayOf(0)
+            var byteMoved: Long = 0
             if (callback is RealTimeFileMoveCallback && srcSize > 10 * FileSize.MB) {
                 timer.schedule(object : TimerTask() {
                     override fun run() {
-                        callback.onMoving((byteMoved[0] * 100 / srcSize).toInt(), byteMoved[0])
+                        callback.onMoving((byteMoved * 100 / srcSize).toInt(), byteMoved)
                     }
                 }, 1, 700)
             }
             var read = input.read(buffer)
             while (read != -1) {
                 output.write(buffer, 0, read)
-                byteMoved[0] += read.toLong()
+                byteMoved += read
                 read = input.read(buffer)
             }
             timer.cancel()
@@ -619,7 +619,7 @@ object FileUtils {
             if (!files[it].isFile)
                 files.removeAt(it)
         }
-        if (!files.isEmpty()) {
+        if (files.isNotEmpty()) {
             val uris = ArrayList<Uri>(files.size)
             files.forEach {
                 uris.add(if (it.uri.scheme == "file")
