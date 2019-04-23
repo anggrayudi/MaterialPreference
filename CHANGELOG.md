@@ -1,4 +1,12 @@
 
+## 3.1.8 (2019-23-04)
+
+### Enhancements
+* `SafeRingtone` is now publicly available.
+
+### Fixed
+* `SafeRingtone.title` causes `RuntimeException` if storage permission not granted.
+
 ## 3.1.7 (2019-23-04)
 
 ### Enhancements

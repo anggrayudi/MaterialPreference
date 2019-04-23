@@ -201,7 +201,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
             try {
                 // We may not be able to list external ringtones
                 // but we may be able to show selected external ringtone title.
-                ringtoneTitle = if (ringtone.canGetTitle())
+                ringtoneTitle = if (ringtone.canGetTitle)
                     ringtone.title
                 else
                     null

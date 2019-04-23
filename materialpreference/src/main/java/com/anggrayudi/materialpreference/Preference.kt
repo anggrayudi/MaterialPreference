@@ -35,8 +35,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.*
+import androidx.annotation.CallSuper
+import androidx.annotation.DrawableRes
+import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.res.TypedArrayUtils
@@ -262,7 +265,6 @@ open class Preference @JvmOverloads constructor(
      *
      * @return The parent PreferenceGroup or null if not attached to any.
      */
-    @get:Nullable
     var parent: PreferenceGroup? = null
         private set
 
@@ -794,12 +796,11 @@ open class Preference @JvmOverloads constructor(
             }
         }
 
-        val imageFrame = holder.findViewById(R.id.icon_frame) ?: holder.findViewById(R.id.icon_frame)
-        if (imageFrame != null) {
-            if (icon != null) {
-                imageFrame.visibility = View.VISIBLE
+        holder.findViewById(R.id.icon_frame)?.run {
+            visibility = if (icon != null) {
+                View.VISIBLE
             } else {
-                imageFrame.visibility = if (isIconSpaceReserved) View.INVISIBLE else View.GONE
+                if (isIconSpaceReserved) View.INVISIBLE else View.GONE
             }
         }
 

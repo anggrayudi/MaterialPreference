@@ -5,12 +5,9 @@ import android.media.AudioManager
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
-import android.os.Build
 import android.provider.BaseColumns
 import android.provider.Settings
 import android.util.Log
-import androidx.annotation.Nullable
-import androidx.annotation.RestrictTo
 import com.anggrayudi.materialpreference.SafeRingtone.Companion.obtain
 
 /**
@@ -33,9 +30,9 @@ import com.anggrayudi.materialpreference.SafeRingtone.Companion.obtain
  * @see RingtoneManager
  */
 @Suppress("DEPRECATION")
-@RestrictTo(RestrictTo.Scope.LIBRARY)
 class SafeRingtone private constructor(
-        private val context: Context, @param:Nullable private val uri: Uri?) {
+        private val context: Context,
+        private val uri: Uri?) {
 
     private val ringtone: Ringtone?
         get() {
@@ -61,31 +58,31 @@ class SafeRingtone private constructor(
     // But that's just AOSP. Let's enforce any SecurityException here.
     val title: String
         get() {
+            val handleException: () -> String = {
+                Log.w(TAG, "Cannot get title of ringtone at $uri.")
+                RingtonePreference.getRingtoneUnknownString(context)
+            }
             val ringtone = ringtone
-            if (ringtone != null) {
-                return if (Build.VERSION.SDK_INT >= 23) {
-                    ringtone.getTitle(context)
-                } else {
-                    try {
-                        if (uri != null) {
-                            peek(context, uri)
-                        }
-                        ringtone.getTitle(context)
-                    } catch (e: SecurityException) {
-                        Log.w(TAG, "Cannot get title of ringtone at $uri.")
-                        RingtonePreference.getRingtoneUnknownString(context)
+            return if (ringtone != null) {
+                try {
+                    if (uri != null) {
+                        peek(context, uri)
                     }
+                    ringtone.getTitle(context)
+                } catch (e: RuntimeException) {
+                    handleException()
                 }
             } else {
-                Log.w(TAG, "Cannot get title of ringtone at $uri.")
-                return RingtonePreference.getRingtoneUnknownString(context)
+                handleException()
             }
         }
 
-    fun canPlay(): Boolean = uri != null
+    val canPlay: Boolean
+        get() = uri != null
 
     fun play() {
-        if (canPlay()) {
+        if (canPlay) {
+            if (isPlaying) stop()
             ringtone?.play() ?: Log.w(TAG, "Ringtone at $uri cannot be played.")
         } else {
             Log.w(TAG, "Ringtone at $uri cannot be played.")
@@ -112,9 +109,8 @@ class SafeRingtone private constructor(
         }
     private var _streamType: Int = 0
 
-    fun canGetTitle(): Boolean {
-        return canGetTitle(context, uri)
-    }
+    val canGetTitle: Boolean
+        get() = canGetTitle(context, uri)
 
     companion object {
         private val TAG = SafeRingtone::class.java.simpleName
@@ -157,13 +153,10 @@ class SafeRingtone private constructor(
                 // We can display "None".
                 return true
             }
-            if (Build.VERSION.SDK_INT >= 23) {
-                return true
-            }
             return try {
                 peek(context, uri)
                 true
-            } catch (e: SecurityException) {
+            } catch (e: RuntimeException) {
                 false
             }
         }

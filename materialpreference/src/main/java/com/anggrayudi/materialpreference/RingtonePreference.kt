@@ -130,7 +130,7 @@ class RingtonePreference @JvmOverloads constructor(
         val defaultUri = RingtoneManager.getDefaultUri(ringtoneType)
         val ringtone = SafeRingtone.obtain(context, defaultUri)
         try {
-            return ringtone.canPlay()
+            return ringtone.canPlay
         } finally {
             ringtone.stop()
         }
@@ -140,7 +140,7 @@ class RingtonePreference @JvmOverloads constructor(
         val currentUri = onRestoreRingtone()
         val ringtone = SafeRingtone.obtain(context, currentUri)
         try {
-            return ringtone.canGetTitle()
+            return ringtone.canGetTitle
         } finally {
             ringtone.stop()
         }
