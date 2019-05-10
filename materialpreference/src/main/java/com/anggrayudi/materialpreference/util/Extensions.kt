@@ -34,3 +34,5 @@ fun Context.getAttrColor(@AttrRes attr: Int): Int {
         a.recycle()
     }
 }
+
+fun CharSequence?.toUri() = if (this != null) Uri.parse(toString()) else null

@@ -34,7 +34,7 @@ class SafeRingtone private constructor(
         private val context: Context,
         private val uri: Uri?) {
 
-    private val ringtone: Ringtone?
+    val ringtone: Ringtone?
         get() {
             if (_ringtone == null) {
                 val ringtone = RingtoneManager.getRingtone(context, uri)

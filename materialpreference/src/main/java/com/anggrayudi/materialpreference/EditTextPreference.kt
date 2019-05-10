@@ -31,6 +31,7 @@ import com.anggrayudi.materialpreference.util.StringSummaryFormatter
 /*
  * HOW TO CREATE TABLE IN KOTLIN DOCS, DAMMIT? IT DOES NOT WORK AT ALL.
  * [https://stackoverflow.com/q/53894870/3922207]
+ * Workaround => https://www.tablesgenerator.com/markdown_tables
  */
 /**
  * A [Preference] that allows for string input.

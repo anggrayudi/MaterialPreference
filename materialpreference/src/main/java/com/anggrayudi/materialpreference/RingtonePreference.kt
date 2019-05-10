@@ -208,40 +208,30 @@ class RingtonePreference @JvmOverloads constructor(
             }
         }
 
-        fun getNotificationSoundDefaultString(context: Context): String {
-            return context.getString(R.string.notification_sound_default)
-        }
+        fun getNotificationSoundDefaultString(context: Context): String
+            = context.getString(R.string.notification_sound_default)
 
-        fun getAlarmSoundDefaultString(context: Context): String {
-            return context.getString(R.string.alarm_sound_default)
-        }
+        fun getAlarmSoundDefaultString(context: Context): String
+            = context.getString(R.string.alarm_sound_default)
 
-        fun getRingtoneDefaultString(context: Context): String {
-            return context.getString(R.string.ringtone_default)
-        }
+        fun getRingtoneDefaultString(context: Context): String
+            = context.getString(R.string.ringtone_default)
 
-        fun getRingtoneDefaultWithActualString(context: Context, actual: String): String {
-            return context.getString(R.string.ringtone_default_with_actual, actual)
-        }
+        fun getRingtoneDefaultWithActualString(context: Context, actual: String): String
+            = context.getString(R.string.ringtone_default_with_actual, actual)
 
-        fun getRingtoneSilentString(context: Context): String {
-            return context.getString(R.string.ringtone_silent)
-        }
+        fun getRingtoneSilentString(context: Context): String
+            = context.getString(R.string.ringtone_silent)
 
-        fun getRingtoneUnknownString(context: Context): String {
-            return context.getString(R.string.ringtone_unknown)
-        }
+        fun getRingtoneUnknownString(context: Context): String
+            = context.getString(R.string.ringtone_unknown)
 
-        fun getRingtonePickerTitleString(context: Context): String {
-            return context.getString(R.string.ringtone_picker_title)
-        }
+        fun getRingtonePickerTitleString(context: Context): String = context.getString(R.string.ringtone_picker_title)
 
-        fun getRingtonePickerTitleAlarmString(context: Context): String {
-            return context.applicationContext.getString(R.string.ringtone_picker_title_alarm)
-        }
+        fun getRingtonePickerTitleAlarmString(context: Context): String
+                = context.applicationContext.getString(R.string.ringtone_picker_title_alarm)
 
-        fun getRingtonePickerTitleNotificationString(context: Context): String {
-            return context.applicationContext.getString(R.string.ringtone_picker_title_notification)
-        }
+        fun getRingtonePickerTitleNotificationString(context: Context): String
+                = context.applicationContext.getString(R.string.ringtone_picker_title_notification)
     }
 }
