@@ -243,10 +243,13 @@ object FileUtils {
                 s.forEach {
                     if (currentDirectory != null) {
                         val documentFile = currentDirectory?.findFile(it)
-                        if (documentFile == null || documentFile.isFile)
-                            currentDirectory = currentDirectory?.createDirectory(it)
-                        else if (documentFile.isDirectory)
-                            currentDirectory = documentFile
+                        try {
+                            if (documentFile == null || documentFile.isFile)
+                                currentDirectory = currentDirectory?.createDirectory(it)
+                            else if (documentFile.isDirectory)
+                                currentDirectory = documentFile
+                        } catch (e: RuntimeException) {
+                        }
                     }
                 }
             }
@@ -726,25 +729,37 @@ object FileUtils {
     @Suppress("DEPRECATION")
     @SuppressLint("NewApi")
     fun availableSpace(context: Context, path: String): Long {
-        if (path.startsWith("/")) {
-            val stat = StatFs(path)
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-                stat.availableBytes
-            else
-                (stat.blockSize * stat.availableBlocks).toLong()
-        } else {
+        val createFolderAndGetSpace: () -> Long = {
             try {
+                val folder = mkdirs(context, path)
+                if (folder != null)
+                    availableSpace(context, path)
+                else
+                    0L
+            } catch (e: StoragePermissionDenialException) {
+                0L
+            }
+        }
+        try {
+            return if (path.startsWith("/")) {
+                val stat = StatFs(path)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                    stat.availableBytes
+                else
+                    (stat.blockSize * stat.availableBlocks).toLong()
+            } else {
                 val pfd = context.contentResolver
                         .openFileDescriptor(getExternalFolder(context, path)!!.uri, "r")!!
                 val stats = Os.fstatvfs(pfd.fileDescriptor)
-                return stats.f_bavail * stats.f_bsize
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
-            } catch (e: ErrnoException) {
-                e.printStackTrace()
-            } catch (e: StoragePermissionDenialException) {
-                e.printStackTrace()
+                stats.f_bavail * stats.f_bsize
             }
+        } catch (e: StoragePermissionDenialException) {
+        } catch (e: FileNotFoundException) {
+            return createFolderAndGetSpace()
+        } catch (e: SecurityException) {
+        } catch (e: ErrnoException) {
+            if (e.message?.contains("No such file or directory") == true)
+                return createFolderAndGetSpace()
         }
         return 0
     }
