@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.Menu
 import com.anggrayudi.materialpreference.PreferenceActivityMaterial
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial
+import com.anggrayudi.materialpreference.util.FileUtils
+import com.anggrayudi.materialpreference.util.SaveDir
 
 class SettingsActivity : PreferenceActivityMaterial() {
 
@@ -22,6 +24,8 @@ class SettingsActivity : PreferenceActivityMaterial() {
         } else {
             onBackStackChanged()
         }
+        val space = FileUtils.availableSpace(this, "${SaveDir.DOWNLOADS}/DWO")
+        println("$TAG $space")
     }
 
     override fun onBuildPreferenceFragment(rootKey: String?): PreferenceFragmentMaterial {

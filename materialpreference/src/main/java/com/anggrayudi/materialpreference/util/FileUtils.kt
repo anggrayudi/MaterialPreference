@@ -736,7 +736,7 @@ object FileUtils {
                     availableSpace(context, path)
                 else
                     0L
-            } catch (e: StoragePermissionDenialException) {
+            } catch (e: Throwable) {
                 0L
             }
         }
@@ -757,6 +757,9 @@ object FileUtils {
         } catch (e: FileNotFoundException) {
             return createFolderAndGetSpace()
         } catch (e: SecurityException) {
+        } catch (e: IllegalArgumentException) {
+            if (e.message?.contains("Invalid path: ") == true)
+                return createFolderAndGetSpace()
         } catch (e: ErrnoException) {
             if (e.message?.contains("No such file or directory") == true)
                 return createFolderAndGetSpace()
