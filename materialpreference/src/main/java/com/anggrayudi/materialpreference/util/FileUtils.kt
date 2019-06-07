@@ -1,6 +1,5 @@
 package com.anggrayudi.materialpreference.util
 
-import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
@@ -511,8 +510,9 @@ object FileUtils {
                     } catch (e: FileNotFoundException) {
                         e.printStackTrace()
                         callback.onMoveCompleted("File not found", false)
+                    } catch (e: IllegalStateException) {
+                        callback.onMoveCompleted("File $targetName already exists in target directory.", false)
                     }
-
                     return
                 }
                 // Under Nougat, we move the file by copying it, and delete the previous file.
@@ -727,31 +727,38 @@ object FileUtils {
 
     /** Get available space in bytes. */
     @Suppress("DEPRECATION")
-    @SuppressLint("NewApi")
-    fun availableSpace(context: Context, path: String): Long {
+    fun getFreeSpace(context: Context, path: String): Long {
         val createFolderAndGetSpace: () -> Long = {
             try {
-                val folder = mkdirs(context, path)
-                if (folder != null)
-                    availableSpace(context, path)
+                if (mkdirs(context, path) != null)
+                    getFreeSpace(context, path)
                 else
-                    0L
+                    0
             } catch (e: Throwable) {
-                0L
+                0
             }
         }
         try {
-            return if (path.startsWith("/")) {
-                val stat = StatFs(path)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-                    stat.availableBytes
-                else
-                    (stat.blockSize * stat.availableBlocks).toLong()
-            } else {
-                val pfd = context.contentResolver
-                        .openFileDescriptor(getExternalFolder(context, path)!!.uri, "r")!!
-                val stats = Os.fstatvfs(pfd.fileDescriptor)
-                stats.f_bavail * stats.f_bsize
+            when {
+                path.startsWith("/") -> {
+                    val stat = StatFs(path)
+                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                        stat.availableBytes
+                    else
+                        (stat.blockSize * stat.availableBlocks).toLong()
+                }
+                Build.VERSION.SDK_INT >= 21 -> {
+                    try {
+                        context.contentResolver.openFileDescriptor(getExternalFolder(context, path)?.uri
+                                ?: return 0, "r")?.use {
+                            val stats = Os.fstatvfs(it.fileDescriptor)
+                            return stats.f_bavail * stats.f_frsize
+                        }
+                    } catch (e: ErrnoException) {
+                        if (e.message?.contains("No such file or directory") == true)
+                            return createFolderAndGetSpace()
+                    }
+                }
             }
         } catch (e: StoragePermissionDenialException) {
         } catch (e: FileNotFoundException) {
@@ -760,8 +767,96 @@ object FileUtils {
         } catch (e: IllegalArgumentException) {
             if (e.message?.contains("Invalid path: ") == true)
                 return createFolderAndGetSpace()
-        } catch (e: ErrnoException) {
-            if (e.message?.contains("No such file or directory") == true)
+        }
+        return 0
+    }
+
+    /** Get available space in bytes. */
+    @Suppress("DEPRECATION")
+    fun getUsedSpace(context: Context, path: String): Long {
+        val createFolderAndGetSpace: () -> Long = {
+            try {
+                if (mkdirs(context, path) != null)
+                    getUsedSpace(context, path)
+                else
+                    0
+            } catch (e: Throwable) {
+                0
+            }
+        }
+        try {
+            when {
+                path.startsWith("/") -> {
+                    val stat = StatFs(path)
+                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                        stat.totalBytes - stat.availableBytes
+                    else
+                        (stat.blockSize * stat.blockCount - stat.blockSize * stat.availableBlocks).toLong()
+                }
+                Build.VERSION.SDK_INT >= 21 -> {
+                    try {
+                        context.contentResolver.openFileDescriptor(getExternalFolder(context, path)?.uri
+                                ?: return 0, "r")?.use {
+                            val stats = Os.fstatvfs(it.fileDescriptor)
+                            return stats.f_blocks * stats.f_frsize - stats.f_bavail * stats.f_frsize
+                        }
+                    } catch (e: ErrnoException) {
+                        if (e.message?.contains("No such file or directory") == true)
+                            return createFolderAndGetSpace()
+                    }
+                }
+            }
+        } catch (e: StoragePermissionDenialException) {
+        } catch (e: FileNotFoundException) {
+            return createFolderAndGetSpace()
+        } catch (e: SecurityException) {
+        } catch (e: IllegalArgumentException) {
+            if (e.message?.contains("Invalid path: ") == true)
+                return createFolderAndGetSpace()
+        }
+        return 0
+    }
+
+    @Suppress("DEPRECATION")
+    fun getStorageCapacity(context: Context, path: String): Long {
+        val createFolderAndGetSpace: () -> Long = {
+            try {
+                if (mkdirs(context, path) != null)
+                    getStorageCapacity(context, path)
+                else
+                    0
+            } catch (e: Throwable) {
+                0
+            }
+        }
+        try {
+            when {
+                path.startsWith("/") -> {
+                    val stat = StatFs(path)
+                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                        stat.totalBytes
+                    else
+                        (stat.blockSize * stat.blockCount).toLong()
+                }
+                Build.VERSION.SDK_INT >= 21 -> {
+                    try {
+                        context.contentResolver.openFileDescriptor(getExternalFolder(context, path)?.uri
+                                ?: return 0, "r")?.use {
+                            val stats = Os.fstatvfs(it.fileDescriptor)
+                            return stats.f_blocks * stats.f_frsize
+                        }
+                    } catch (e: ErrnoException) {
+                        if (e.message?.contains("No such file or directory") == true)
+                            return createFolderAndGetSpace()
+                    }
+                }
+            }
+        } catch (e: StoragePermissionDenialException) {
+        } catch (e: FileNotFoundException) {
+            return createFolderAndGetSpace()
+        } catch (e: SecurityException) {
+        } catch (e: IllegalArgumentException) {
+            if (e.message?.contains("Invalid path: ") == true)
                 return createFolderAndGetSpace()
         }
         return 0

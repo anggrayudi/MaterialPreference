@@ -908,24 +908,16 @@ open class Preference @JvmOverloads constructor(
     }
 
     /** Called when a click should be performed. */
-    @RestrictTo(LIBRARY_GROUP)
-    internal fun performClick() {
+    fun performClick() {
         if (!isEnabled) {
             return
         }
 
         onClick()
 
-        if (onPreferenceClickListener != null && onPreferenceClickListener!!.invoke(this)) {
+        if (onPreferenceClickListener?.invoke(this) == true ||
+                preferenceManager?.onPreferenceTreeClickListener?.onPreferenceTreeClick(this) == true) {
             return
-        }
-
-        val preferenceManager = preferenceManager
-        if (preferenceManager != null) {
-            val listener = preferenceManager.onPreferenceTreeClickListener
-            if (listener != null && listener.onPreferenceTreeClick(this)) {
-                return
-            }
         }
 
         if (intent != null) {
