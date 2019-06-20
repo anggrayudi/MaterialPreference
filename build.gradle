@@ -39,7 +39,7 @@ ext {
     minSdkVersion = 17
     targetSdkVersion = 28
     compileSdkVersion = 28
-    buildToolsVersion = '29-rc2'
+    buildToolsVersion = '29.0.0'
     dialogVersion = '2.8.1'
     coroutinesVersion = '1.2.1'
 }

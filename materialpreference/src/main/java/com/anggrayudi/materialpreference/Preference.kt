@@ -35,11 +35,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.CallSuper
-import androidx.annotation.DrawableRes
-import androidx.annotation.RestrictTo
+import androidx.annotation.*
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
-import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.res.TypedArrayUtils
@@ -126,13 +123,10 @@ open class Preference @JvmOverloads constructor(
      * @see PreferenceManager.preferenceDataStore
      */
     var preferenceDataStore: PreferenceDataStore? = null
-        get() {
-            if (field != null) {
-                return field
-            } else if (preferenceManager != null) {
-                return preferenceManager!!.preferenceDataStore
-            }
-            return null
+        get() = when {
+            field != null -> field
+            preferenceManager != null -> preferenceManager!!.preferenceDataStore
+            else -> null
         }
 
     /**
@@ -380,7 +374,7 @@ open class Preference @JvmOverloads constructor(
 
     var tintIcon: Int
         get() = _tintIcon
-        set(color) {
+        set(@ColorInt color) {
             _tintIcon = color
             if (_icon != null && color != Color.TRANSPARENT) {
                 notifyChanged()
@@ -408,7 +402,7 @@ open class Preference @JvmOverloads constructor(
         }
     private var _icon: Drawable? = null
 
-    /** iconResId is overridden by [icon], if [icon] is specified. */
+    /** `iconResId` is overridden by [icon], if [icon] is specified. */
     private var iconResId: Int = 0
 
     // TODO 31-Dec-18: Icon size
@@ -698,17 +692,13 @@ open class Preference @JvmOverloads constructor(
     @Deprecated("It causes complexity and unreliable for preference's default value. Since v3.0.0 this method always returns null." +
             " Use your own method to set the default values as described in the com.anggrayudi.materialpreference.sample.App.kt",
             ReplaceWith(""))
-    protected fun onGetDefaultValue(a: TypedArray, index: Int): Any? {
-        return null
-    }
+    protected fun onGetDefaultValue(a: TypedArray, index: Int): Any? = null
 
     /**
      * Return the extras Bundle object associated with this preference,
      * returning null if there is not currently one.
      */
-    fun peekExtras(): Bundle? {
-        return _extras
-    }
+    fun peekExtras(): Bundle? = _extras
 
     /**
      * Binds the created View to the data for this Preference.
@@ -874,9 +864,7 @@ open class Preference @JvmOverloads constructor(
      *
      * @return True if the key exists and is not a blank string, false otherwise.
      */
-    fun hasKey(): Boolean {
-        return !key.isNullOrEmpty()
-    }
+    fun hasKey(): Boolean = !key.isNullOrEmpty()
 
     /**
      * Checks whether, at the given time this method is called, this Preference should store/restore
@@ -886,9 +874,7 @@ open class Preference @JvmOverloads constructor(
      *
      * @return `true` if it should persist the value
      */
-    protected fun shouldPersist(): Boolean {
-        return preferenceManager != null && isPersistent && hasKey()
-    }
+    protected fun shouldPersist(): Boolean = preferenceManager != null && isPersistent && hasKey()
 
     /**
      * Call this method after the user changes the preference, but before the
@@ -898,9 +884,7 @@ open class Preference @JvmOverloads constructor(
      * @return True if the user value should be set as the preference
      * value (and persisted).
      */
-    fun callChangeListener(newValue: Any?): Boolean {
-        return onPreferenceChangeListener == null || onPreferenceChangeListener!!.invoke(this, newValue)
-    }
+    fun callChangeListener(newValue: Any?): Boolean = onPreferenceChangeListener?.invoke(this, newValue) == true
 
     @RestrictTo(LIBRARY_GROUP)
     internal open fun performClick(view: View) {
@@ -1086,11 +1070,7 @@ open class Preference @JvmOverloads constructor(
      * @param disableDependents Whether this Preference should disable its dependents.
      */
     open fun notifyDependencyChange(disableDependents: Boolean) {
-        val dependents = dependents ?: return
-        val dependentsCount = dependents.size
-        for (i in 0 until dependentsCount) {
-            dependents[i].onDependencyChanged(this, disableDependents)
-        }
+        dependents?.forEach { it.onDependencyChanged(this, disableDependents) }
     }
 
     /**
@@ -1132,9 +1112,7 @@ open class Preference @JvmOverloads constructor(
      *
      * @return True if the dependents should be disabled, otherwise false.
      */
-    open fun shouldDisableDependents(): Boolean {
-        return !isEnabled
-    }
+    open fun shouldDisableDependents(): Boolean = !isEnabled
 
     /**
      * Called when this Preference is being removed from the hierarchy. You
@@ -1306,8 +1284,7 @@ open class Preference @JvmOverloads constructor(
             return defaultReturnValue
         }
 
-        val dataStore = preferenceDataStore
-        return dataStore?.getInt(key!!, defaultReturnValue)
+        return preferenceDataStore?.getInt(key!!, defaultReturnValue)
                 ?: preferenceManager!!.sharedPreferences!!.getInt(key, defaultReturnValue)
     }
 
@@ -1357,8 +1334,7 @@ open class Preference @JvmOverloads constructor(
             return defaultReturnValue
         }
 
-        val dataStore = preferenceDataStore
-        return dataStore?.getFloat(key!!, defaultReturnValue)
+        return preferenceDataStore?.getFloat(key!!, defaultReturnValue)
                 ?: preferenceManager!!.sharedPreferences!!.getFloat(key, defaultReturnValue)
     }
 
@@ -1408,8 +1384,7 @@ open class Preference @JvmOverloads constructor(
             return defaultReturnValue
         }
 
-        val dataStore = preferenceDataStore
-        return dataStore?.getLong(key!!, defaultReturnValue)
+        return preferenceDataStore?.getLong(key!!, defaultReturnValue)
                 ?: preferenceManager!!.sharedPreferences!!.getLong(key, defaultReturnValue)
     }
 
@@ -1459,14 +1434,11 @@ open class Preference @JvmOverloads constructor(
             return defaultReturnValue
         }
 
-        val dataStore = preferenceDataStore
-        return dataStore?.getBoolean(key!!, defaultReturnValue)
+        return preferenceDataStore?.getBoolean(key!!, defaultReturnValue)
                 ?: preferenceManager!!.sharedPreferences!!.getBoolean(key, defaultReturnValue)
     }
 
-    override fun toString(): String {
-        return filterableStringBuilder.toString()
-    }
+    override fun toString(): String = filterableStringBuilder.toString()
 
     /**
      * Store this Preference hierarchy's frozen state into the given container.
@@ -1541,13 +1513,11 @@ open class Preference @JvmOverloads constructor(
      */
     internal open fun dispatchRestoreInstanceState(container: Bundle) {
         if (hasKey()) {
-            val state = container.getParcelable<Parcelable>(key)
-            if (state != null) {
-                baseMethodCalled = false
-                onRestoreInstanceState(state)
-                if (!baseMethodCalled) {
-                    throw IllegalStateException("Derived class did not call super.onRestoreInstanceState()")
-                }
+            val state = container.getParcelable<Parcelable>(key) ?: return
+            baseMethodCalled = false
+            onRestoreInstanceState(state)
+            if (!baseMethodCalled) {
+                throw IllegalStateException("Derived class did not call super.onRestoreInstanceState()")
             }
         }
     }

@@ -106,3 +106,6 @@ bintray {
         publicDownloadNumbers = true
     }
 }
+
+// https://github.com/sky-uk/gradle-maven-plugin
+//apply from: 'https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle'
