@@ -24,11 +24,11 @@ Writing code in Java is slow, and that's why I decided to migrate to Kotlin.
 
 ## Usage
 
-### Basic
+### Basic [ ![jcenter](https://api.bintray.com/packages/anggrayudi/maven/materialpreference/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference/_latestVersion)
 
 ```gradle
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.2.0'
+    implementation 'com.anggrayudi:materialpreference:3.2.1'
 }
 ```
 
@@ -120,7 +120,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.2.0'
+    implementation 'com.anggrayudi:materialpreference:3.2.1'
     kapt 'com.anggrayudi:materialpreference-compiler:1.1'
 }
 ````
