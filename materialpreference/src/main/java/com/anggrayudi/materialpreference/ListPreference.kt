@@ -20,7 +20,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import android.text.TextUtils
 import android.util.AttributeSet
 import androidx.annotation.ArrayRes
 import androidx.core.content.res.TypedArrayUtils
@@ -58,8 +57,7 @@ class ListPreference @JvmOverloads constructor(
     override var value: String?
         get() = _value
         set(v) {
-            val changed = !TextUtils.equals(value, v)
-            if (changed && callChangeListener(v)) {
+            if (_value != v && callChangeListener(v)) {
                 _value = v
                 persistString(v)
                 if (isBindValueToSummary) {

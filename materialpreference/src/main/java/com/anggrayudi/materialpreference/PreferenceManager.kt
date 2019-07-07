@@ -20,7 +20,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
-import android.text.TextUtils
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
 import androidx.core.content.ContextCompat
@@ -390,10 +389,7 @@ constructor(val context: Context) {
                 // Hopefully this is rare.
                 return false
             }
-            if (!TextUtils.equals(p1.title, p2.title)) {
-                return false
-            }
-            if (!TextUtils.equals(p1.summary, p2.summary)) {
+            if (p1.title != p2.title || p1.summary != p2.summary) {
                 return false
             }
             val p1Icon = p1.icon

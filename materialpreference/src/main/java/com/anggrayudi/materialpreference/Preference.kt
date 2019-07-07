@@ -27,7 +27,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.AbsSavedState
 import android.view.ContextThemeWrapper
@@ -1151,7 +1150,7 @@ open class Preference @JvmOverloads constructor(
         }
 
         // Shouldn't store null
-        if (TextUtils.equals(value, getPersistedString(null))) {
+        if (value == getPersistedString(null)) {
             // It's already there, so the same as persisting
             return true
         }

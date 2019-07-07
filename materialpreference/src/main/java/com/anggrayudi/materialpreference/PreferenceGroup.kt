@@ -20,7 +20,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
-import android.text.TextUtils
 import android.util.AttributeSet
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
@@ -254,7 +253,7 @@ abstract class PreferenceGroup @JvmOverloads constructor(
      * @return The [Preference] with the key, or null.
      */
     fun findPreference(key: CharSequence): Preference? {
-        if (TextUtils.equals(key, this.key)) {
+        if (key == this.key) {
             return this
         }
         for (i in 0 until preferenceCount) {

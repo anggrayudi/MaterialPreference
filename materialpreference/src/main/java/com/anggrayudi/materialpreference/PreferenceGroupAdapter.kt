@@ -17,7 +17,6 @@
 package com.anggrayudi.materialpreference
 
 import android.os.Handler
-import android.text.TextUtils
 import android.util.Log
 import android.view.InflateException
 import android.view.LayoutInflater
@@ -84,7 +83,7 @@ internal class PreferenceGroupAdapter internal constructor(
             return other is PreferenceLayout
                     && resId == other.resId
                     && widgetResId == other.widgetResId
-                    && TextUtils.equals(name, other.name)
+                    && name == other.name
         }
 
         override fun hashCode(): Int {

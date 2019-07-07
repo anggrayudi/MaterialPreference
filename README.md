@@ -27,6 +27,13 @@ Writing code in Java is slow, and that's why I decided to migrate to Kotlin.
 ### Basic [ ![jcenter](https://api.bintray.com/packages/anggrayudi/maven/materialpreference/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference/_latestVersion)
 
 ```gradle
+android {
+    // add these lines
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
 dependencies {
     implementation 'com.anggrayudi:materialpreference:3.2.1'
 }
