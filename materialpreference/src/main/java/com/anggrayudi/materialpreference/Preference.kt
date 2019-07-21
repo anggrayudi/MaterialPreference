@@ -883,7 +883,8 @@ open class Preference @JvmOverloads constructor(
      * @return True if the user value should be set as the preference
      * value (and persisted).
      */
-    fun callChangeListener(newValue: Any?): Boolean = onPreferenceChangeListener?.invoke(this, newValue) == true
+    fun callChangeListener(newValue: Any?): Boolean = onPreferenceChangeListener == null
+            || onPreferenceChangeListener!!(this, newValue)
 
     @RestrictTo(LIBRARY_GROUP)
     internal open fun performClick(view: View) {
