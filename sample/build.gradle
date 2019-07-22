@@ -33,13 +33,13 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            buildConfigField 'String', "BASE_64_ENCODED_PUBLIC_KEY", Base64PublicKey
+            buildConfigField 'String', "BASE_64_ENCODED_PUBLIC_KEY", Base64PublicKey_MaterialPreference
         }
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            buildConfigField 'String', "BASE_64_ENCODED_PUBLIC_KEY", Base64PublicKey
+            buildConfigField 'String', "BASE_64_ENCODED_PUBLIC_KEY", Base64PublicKey_MaterialPreference
         }
     }
     compileOptions {
