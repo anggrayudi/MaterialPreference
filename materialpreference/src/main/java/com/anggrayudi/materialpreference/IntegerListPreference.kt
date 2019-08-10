@@ -96,7 +96,7 @@ open class IntegerListPreference @JvmOverloads constructor(
             defStyleAttr, defStyleRes)
 
         val entries = a.getTextArray(R.styleable.ListPreference_android_entries)
-        _entries = if (entries != null)
+        _entries = if (entries != null && entries[0] != null)
             entries
         else {
             val entriesResId = a.getResourceId(R.styleable.ListPreference_android_entries, 0)

@@ -27,6 +27,7 @@
 -keepnames class com.anggrayudi.materialpreference.SeekBarDialogPreference
 -keepnames class com.anggrayudi.materialpreference.RingtonePreference
 -keepnames class com.anggrayudi.materialpreference.ListPreference
+-keepnames class com.anggrayudi.materialpreference.IntegerListPreference
 -keepnames class com.anggrayudi.materialpreference.MultiSelectListPreference
 -keepnames class com.anggrayudi.materialpreference.EditTextPreference
 -keepnames class com.anggrayudi.materialpreference.IndicatorPreference
