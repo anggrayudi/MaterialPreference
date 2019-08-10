@@ -157,6 +157,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 - `SwitchPreference`
 - `EditTextPreference`
 - `ListPreference`
+- `IntegerListPreference`
 - `MultiSelectListPreference`
 - `SeekBarDialogPreference`
 - `SeekBarPreference`
