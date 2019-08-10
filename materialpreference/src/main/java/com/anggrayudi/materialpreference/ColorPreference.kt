@@ -18,11 +18,13 @@ import com.anggrayudi.materialpreference.widget.ColorCircleView
  *      | app:defaultColor | Color      |
  */
 @SuppressLint("RestrictedApi")
-class ColorPreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.colorPreferenceStyle,
-                android.R.attr.dialogPreferenceStyle), defStyleRes: Int = 0)
-    : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
+open class ColorPreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.colorPreferenceStyle,
+        android.R.attr.dialogPreferenceStyle),
+    defStyleRes: Int = 0
+) : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
 
     var colorList = DEFAULT_COLOR_LIST
         set(a) {
@@ -41,7 +43,8 @@ class ColorPreference @JvmOverloads constructor(
     var defaultColor: Int
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.ColorPreference, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.ColorPreference,
+            defStyleAttr, defStyleRes)
         defaultColor = a.getColor(R.styleable.ColorPreference_defaultColor, colorList[0])
         a.recycle()
     }
@@ -138,25 +141,25 @@ class ColorPreference @JvmOverloads constructor(
     companion object {
 
         val DEFAULT_COLOR_LIST = intArrayOf(
-                Color.parseColor("#F44336"), // red
-                Color.parseColor("#E91E63"), // pink
-                Color.parseColor("#9C27B0"), // purple
-                Color.parseColor("#673AB7"), // deep purple
-                Color.parseColor("#3F51B5"), // indigo
-                Color.parseColor("#2196F3"), // blue
-                Color.parseColor("#03A9F4"), // light blue
-                Color.parseColor("#00BCD4"), // cyan
-                Color.parseColor("#009688"), // teal
-                Color.parseColor("#4CAF50"), // green
-                Color.parseColor("#8BC34A"), // light green
-                Color.parseColor("#CDDC39"), // lime
-                Color.parseColor("#FFEB3B"), // yellow
-                Color.parseColor("#FFC107"), // amber
-                Color.parseColor("#FF9800"), // orange
-                Color.parseColor("#FF5722"), // deep orange
-                Color.parseColor("#795548"), // brown
-                Color.parseColor("#9E9E9E"), // gray
-                Color.parseColor("#607D8B"), // blue gray
-                Color.parseColor("#000000")) // black
+            Color.parseColor("#F44336"), // red
+            Color.parseColor("#E91E63"), // pink
+            Color.parseColor("#9C27B0"), // purple
+            Color.parseColor("#673AB7"), // deep purple
+            Color.parseColor("#3F51B5"), // indigo
+            Color.parseColor("#2196F3"), // blue
+            Color.parseColor("#03A9F4"), // light blue
+            Color.parseColor("#00BCD4"), // cyan
+            Color.parseColor("#009688"), // teal
+            Color.parseColor("#4CAF50"), // green
+            Color.parseColor("#8BC34A"), // light green
+            Color.parseColor("#CDDC39"), // lime
+            Color.parseColor("#FFEB3B"), // yellow
+            Color.parseColor("#FFC107"), // amber
+            Color.parseColor("#FF9800"), // orange
+            Color.parseColor("#FF5722"), // deep orange
+            Color.parseColor("#795548"), // brown
+            Color.parseColor("#9E9E9E"), // gray
+            Color.parseColor("#607D8B"), // blue gray
+            Color.parseColor("#000000")) // black
     }
 }

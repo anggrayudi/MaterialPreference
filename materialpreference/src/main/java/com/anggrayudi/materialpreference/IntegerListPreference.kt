@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License
- */
-
 package com.anggrayudi.materialpreference
 
 import android.annotation.SuppressLint
@@ -32,20 +16,20 @@ import com.anggrayudi.materialpreference.util.EntrySummaryFormatter
  * This preference will store a string into the SharedPreferences.
  * This string will be the value from the [entryValues] array.
  *
- *       |       Attribute     |   Value Type   |
- *       |:-------------------:|:--------------:|
- *       | android:entries     | String array   |
- *       | android:entryValues | String array   |
- *       | app:entryIcons      | Drawable array |
+ *       |       Attribute     |   Value Type              |
+ *       |:-------------------:|:-------------------------:|
+ *       | android:entries     | String or integer array   |
+ *       | android:entryValues | Integer array             |
+ *       | app:entryIcons      | Drawable array            |
  */
 @SuppressLint("RestrictedApi")
-open class ListPreference @JvmOverloads constructor(
+open class IntegerListPreference @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.dialogPreferenceStyle,
         android.R.attr.dialogPreferenceStyle),
     defStyleRes: Int = 0
-) : DialogPreference(context, attrs, defStyleAttr, defStyleRes), ArrayPreference<String> {
+) : DialogPreference(context, attrs, defStyleAttr, defStyleRes), ArrayPreference<Int> {
 
     override var entries: Array<CharSequence>?
         get() = _entries
@@ -54,27 +38,27 @@ open class ListPreference @JvmOverloads constructor(
         }
     private var _entries: Array<CharSequence>? = null
 
-    override var entryValues: Array<String>?
+    override var entryValues: Array<Int>?
         get() = _entryValues
         set(value) {
             _entryValues = value
         }
-    private var _entryValues: Array<String>? = null
+    private var _entryValues: Array<Int>? = null
 
     /** Get or set value to this preference */
-    var value: String?
+    var value: Int
         get() = _value
         set(v) {
             if (_value != v && callChangeListener(v)) {
                 _value = v
                 // Always persist/notify the first time.
-                persistString(v)
+                persistInt(v)
                 if (isBindValueToSummary) {
-                    summary = summaryFormatter?.invoke(entry, v) ?: entry
+                    summary = summaryFormatter?.invoke(entry, v.toString()) ?: entry
                 }
             }
         }
-    private var _value: String? = null
+    private var _value: Int = 0
 
     /**
      * Lets you control how displaying value to summary. Suppose that the selected entry is
@@ -90,11 +74,11 @@ open class ListPreference @JvmOverloads constructor(
         set(f) {
             field = f
             if (isBindValueToSummary) {
-                summary = f?.invoke(entry, value) ?: entry
+                summary = f?.invoke(entry, value.toString()) ?: entry
             }
         }
 
-    var disabledEntryValues: Array<CharSequence>? = null
+    var disabledEntryValues: Array<Int>? = null
 
     /**
      * Returns the entry corresponding to the current value.
@@ -110,10 +94,20 @@ open class ListPreference @JvmOverloads constructor(
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.ListPreference,
             defStyleAttr, defStyleRes)
-        _entries = a.getTextArray(R.styleable.ListPreference_android_entries)
-        _entryValues = a.getTextArray(R.styleable.ListPreference_android_entryValues)
-            .map { it.toString() }
-            .toTypedArray()
+
+        val entries = a.getTextArray(R.styleable.ListPreference_android_entries)
+        _entries = if (entries != null)
+            entries
+        else {
+            val entriesResId = a.getResourceId(R.styleable.ListPreference_android_entries, 0)
+            context.resources.getIntArray(entriesResId)
+                .map { it.toString() }
+                .toTypedArray()
+        }
+
+        val entryValuesResId = a.getResourceId(R.styleable.ListPreference_android_entryValues, 0)
+        _entryValues = context.resources.getIntArray(entryValuesResId).toTypedArray()
+
         a.recycle()
 
         negativeButtonText = null
@@ -121,17 +115,25 @@ open class ListPreference @JvmOverloads constructor(
     }
 
     override fun setEntries(@ArrayRes entriesResId: Int) {
-        entries = context.resources.getTextArray(entriesResId)
+        val e = context.resources.getTextArray(entriesResId)
+        entries = if (e[0] != null)
+            e
+        else {
+            // the array resource ID contains integer-array
+            context.resources.getIntArray(entriesResId)
+                .map { it.toString() }
+                .toTypedArray()
+        }
     }
 
     override fun setEntryValues(@ArrayRes entryValuesResId: Int) {
-        entryValues = context.resources.getStringArray(entryValuesResId)
+        entryValues = context.resources.getIntArray(entryValuesResId).toTypedArray()
     }
 
     override fun onSetInitialValue() {
-        _value = getPersistedString(value)
+        _value = getPersistedInt(value)
         if (isBindValueToSummary)
-            summary = summaryFormatter?.invoke(entry, _value) ?: entry
+            summary = summaryFormatter?.invoke(entry, _value.toString()) ?: entry
     }
 
     override fun onSaveInstanceState(): Parcelable? {
@@ -159,15 +161,15 @@ open class ListPreference @JvmOverloads constructor(
     }
 
     private class SavedState : BaseSavedState {
-        internal var value: String? = null
+        internal var value: Int = 0
 
         constructor(source: Parcel) : super(source) {
-            value = source.readString()
+            value = source.readInt()
         }
 
         override fun writeToParcel(dest: Parcel, flags: Int) {
             super.writeToParcel(dest, flags)
-            dest.writeString(value)
+            dest.writeInt(value)
         }
 
         constructor(superState: Parcelable) : super(superState)

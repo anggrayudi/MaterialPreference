@@ -144,7 +144,7 @@ object FileUtils {
     private fun getExternalFile(context: Context, file: String): DocumentFile? {
         var current = getExternalRoot(context, file)
         val cleanedPath = cleanSdCardPath(file)
-        if (!cleanedPath.isEmpty()) {
+        if (cleanedPath.isNotEmpty()) {
             val dirs = if (cleanedPath.contains("/")) cleanedPath.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() else arrayOf(cleanedPath)
             var i = 0
             while (i < dirs.size && current != null) {

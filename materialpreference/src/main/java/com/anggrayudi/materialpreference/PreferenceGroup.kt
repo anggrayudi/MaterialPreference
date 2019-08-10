@@ -38,8 +38,11 @@ import kotlin.collections.ArrayList
  */
 @SuppressLint("RestrictedApi")
 abstract class PreferenceGroup @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0, defStyleRes: Int = 0)
-    : Preference(context, attrs, defStyleAttr, defStyleRes) {
+    context: Context,
+    attrs: AttributeSet?,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
+) : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
     /**
      * The container for child [Preference]s. This is sorted based on the
@@ -99,7 +102,8 @@ abstract class PreferenceGroup @JvmOverloads constructor(
 
     init {
         isPersistent = false
-        val a = context.obtainStyledAttributes(attrs, R.styleable.PreferenceGroup, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.PreferenceGroup,
+            defStyleAttr, defStyleRes)
         isOrderingAsAdded = a.getBoolean(R.styleable.PreferenceGroup_android_orderingFromXml, true)
         a.recycle()
     }

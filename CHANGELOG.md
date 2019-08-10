@@ -1,4 +1,11 @@
 
+## 3.3.0 (2019-11-08)
+
+### Enhancements
+* Introducing `IntegerListPreference` for `integer-array` type entry values.
+* Added `OnBindTextInputLayoutListener` as replacement for `OnBindEditTextListener`.
+* All preference classes are now `open`.
+
 ## 3.1.8 (2019-23-04)
 
 ### Enhancements

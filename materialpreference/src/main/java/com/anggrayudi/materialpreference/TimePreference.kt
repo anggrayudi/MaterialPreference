@@ -11,26 +11,31 @@ import java.util.*
  *
  * @see DatePreference
  */
-class TimePreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = R.attr.preferenceStyle, defStyleRes: Int = 0)
-    : Preference(context, attrs, defStyleAttr, defStyleRes), TimePickerDialog.OnTimeSetListener {
+open class TimePreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.preferenceStyle,
+    defStyleRes: Int = 0
+) : Preference(context, attrs, defStyleAttr, defStyleRes), TimePickerDialog.OnTimeSetListener {
 
     var enableMinute = true
+
     var enableSecond = false
+
     var minTime: Timepoint? = null
+
     var maxTime: Timepoint? = null
 
     var is24HourMode = DateFormat.is24HourFormat(context)
 
     var timeFormatter: java.text.DateFormat = DateFormat.getTimeFormat(context)
-    set(f) {
-        field = f
-        val v = value
-        if (isBindValueToSummary && v != null) {
-            summary = f.format(v)
+        set(f) {
+            field = f
+            val v = value
+            if (isBindValueToSummary && v != null) {
+                summary = f.format(v)
+            }
         }
-    }
 
     /**
      * Get saved value from this preference
@@ -58,7 +63,7 @@ class TimePreference @JvmOverloads constructor(
                 time = Time(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND))
             }
             val dialog = TimePickerDialog.newInstance(this,
-                    time.hourOfDay, time.minute, time.second, is24HourMode)
+                time.hourOfDay, time.minute, time.second, is24HourMode)
             dialog.version = TimePickerDialog.Version.VERSION_2
             dialog.dismissOnPause(false)
             dialog.enableMinutes(enableMinute)
@@ -96,8 +101,10 @@ class TimePreference @JvmOverloads constructor(
     }
 
     class Time constructor(
-            /** 24 hours format  */
-            var hourOfDay: Int, var minute: Int, var second: Int) {
+        /** 24 hours format  */
+        var hourOfDay: Int,
+        var minute: Int,
+        var second: Int) {
 
         override fun toString(): String = "$hourOfDay:$minute:$second"
 

@@ -42,14 +42,15 @@ import androidx.core.content.res.TypedArrayUtils
  * @see SwitchPreference
  */
 @SuppressLint("RestrictedApi")
-class CheckBoxPreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.checkBoxPreferenceStyle,
-                android.R.attr.checkBoxPreferenceStyle), defStyleRes: Int = 0)
-    : TwoStatePreference(context, attrs, defStyleAttr, defStyleRes) {
+open class CheckBoxPreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.checkBoxPreferenceStyle,
+        android.R.attr.checkBoxPreferenceStyle),
+    defStyleRes: Int = 0
+) : TwoStatePreference(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val listener = CompoundButton.OnCheckedChangeListener {
-        buttonView, isChecked ->
+    private val listener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
         if (!callChangeListener(isChecked)) {
             // Listener didn't like it, change it back.
             // CompoundButton will make sure we don't recurse.

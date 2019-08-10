@@ -88,10 +88,12 @@ import java.util.*
  */
 @SuppressLint("RestrictedApi")
 open class Preference @JvmOverloads constructor(
-        val context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.preferenceStyle,
-                android.R.attr.preferenceStyle), defStyleRes: Int = 0)
-    : Comparable<Preference> {
+    val context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.preferenceStyle,
+        android.R.attr.preferenceStyle),
+    defStyleRes: Int = 0
+) : Comparable<Preference> {
 
     /**
      * Gets the [PreferenceManager] that manages this Preference object's tree.
@@ -251,7 +253,7 @@ open class Preference @JvmOverloads constructor(
     internal var onPreferenceChangeInternalListener: OnPreferenceChangeInternalListener? = null
 
     private var dependents: MutableList<Preference>? = null
-    
+
     /**
      * Returns the [PreferenceGroup] which is this Preference assigned to or null if this
      * preference is not assigned to any group or is a root Preference.
@@ -268,7 +270,9 @@ open class Preference @JvmOverloads constructor(
     private val clickListener = View.OnClickListener { v -> performClick(v) }
 
     private val longClickListener = View.OnLongClickListener {
-        onPreferenceLongClickListener != null && onPreferenceLongClickListener!!.invoke(this@Preference) }
+        onPreferenceLongClickListener != null
+            && onPreferenceLongClickListener!!.invoke(this@Preference)
+    }
 
     /**
      * Set to `true` if you want to put the summary horizontally with this preference's title.
@@ -288,7 +292,7 @@ open class Preference @JvmOverloads constructor(
         set(enable) {
             if (javaClass != Preference::class.java) {
                 _legacySummary = (this is TwoStatePreference || this is PreferenceGroup
-                        || enable && this !is SeekBarPreference)
+                    || enable && this !is SeekBarPreference)
                 notifyChanged()
             }
         }
@@ -614,6 +618,7 @@ open class Preference @JvmOverloads constructor(
      * addition/removal of [Preference](s). This is used internally.
      */
     internal interface OnPreferenceChangeInternalListener {
+
         /**
          * Called when this Preference has changed.
          *
@@ -637,7 +642,8 @@ open class Preference @JvmOverloads constructor(
     }
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.Preference, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.Preference,
+            defStyleAttr, defStyleRes)
         _key = a.getString(R.styleable.Preference_android_key)
         _title = a.getText(R.styleable.Preference_android_title)
         _summary = a.getText(R.styleable.Preference_android_summary)
@@ -688,9 +694,10 @@ open class Preference @JvmOverloads constructor(
      * @param index The index of the default value attribute.
      * @return The default value of this preference type.
      */
-    @Deprecated("It causes complexity and unreliable for preference's default value. Since v3.0.0 this method always returns null." +
-            " Use your own method to set the default values as described in the com.anggrayudi.materialpreference.sample.App.kt",
-            ReplaceWith(""))
+    @Deprecated("It causes complexity and unreliable for preference's default value." +
+        " Since v3.0.0 this method always returns null." +
+        " Use your own method to set the default values as described in the com.anggrayudi.materialpreference.sample.App.kt",
+        ReplaceWith(""))
     protected fun onGetDefaultValue(a: TypedArray, index: Int): Any? = null
 
     /**
@@ -822,7 +829,7 @@ open class Preference @JvmOverloads constructor(
      * @see title
      * @param titleResId The title as a resource ID.
      */
-    fun setTitle(@StringRes titleResId: Int) {
+    open fun setTitle(@StringRes titleResId: Int) {
         title = context.getString(titleResId)
     }
 
@@ -832,7 +839,7 @@ open class Preference @JvmOverloads constructor(
      * @see summary
      * @param summaryResId The summary as a resource.
      */
-    fun setSummary(@StringRes summaryResId: Int) {
+    open fun setSummary(@StringRes summaryResId: Int) {
         summary = context.getString(summaryResId)
     }
 
@@ -856,6 +863,7 @@ open class Preference @JvmOverloads constructor(
         }
         _requiresKey = true
     }
+
     private var _requiresKey: Boolean = false
 
     /**
@@ -873,7 +881,7 @@ open class Preference @JvmOverloads constructor(
      *
      * @return `true` if it should persist the value
      */
-    protected fun shouldPersist(): Boolean = preferenceManager != null && isPersistent && hasKey()
+    protected open fun shouldPersist(): Boolean = preferenceManager != null && isPersistent && hasKey()
 
     /**
      * Call this method after the user changes the preference, but before the
@@ -884,7 +892,7 @@ open class Preference @JvmOverloads constructor(
      * value (and persisted).
      */
     fun callChangeListener(newValue: Any?): Boolean = onPreferenceChangeListener == null
-            || onPreferenceChangeListener!!(this, newValue)
+        || onPreferenceChangeListener!!(this, newValue)
 
     @RestrictTo(LIBRARY_GROUP)
     internal open fun performClick(view: View) {
@@ -900,7 +908,7 @@ open class Preference @JvmOverloads constructor(
         onClick()
 
         if (onPreferenceClickListener?.invoke(this) == true ||
-                preferenceManager?.onPreferenceTreeClickListener?.onPreferenceTreeClick(this) == true) {
+            preferenceManager?.onPreferenceTreeClickListener?.onPreferenceTreeClick(this) == true) {
             return
         }
 
@@ -1010,7 +1018,7 @@ open class Preference @JvmOverloads constructor(
             preference.registerDependent(this)
         } else {
             throw IllegalStateException("Dependency \"$_dependencyKey\" " +
-                    "not found for preference \"$key\" (title: \"$_title\"")
+                "not found for preference \"$key\" (title: \"$_title\"")
         }
     }
 
@@ -1145,7 +1153,7 @@ open class Preference @JvmOverloads constructor(
      * @return `true` if the Preference is persistent, `false` otherwise
      * @see getPersistedString
      */
-    fun persistString(value: String?): Boolean {
+    open fun persistString(value: String?): Boolean {
         if (!shouldPersist()) {
             return false
         }
@@ -1175,7 +1183,7 @@ open class Preference @JvmOverloads constructor(
      * @return the value from the storage or the default return value
      * @see persistString
      */
-    protected fun getPersistedString(defaultReturnValue: String?): String? {
+    protected open fun getPersistedString(defaultReturnValue: String?): String? {
         if (!shouldPersist()) {
             return defaultReturnValue
         }
@@ -1196,7 +1204,7 @@ open class Preference @JvmOverloads constructor(
      * @return `true` if the Preference is persistent, `false` otherwise
      * @see getPersistedStringSet
      */
-    fun persistStringSet(values: Set<String>?): Boolean {
+    open fun persistStringSet(values: Set<String>?): Boolean {
         if (!shouldPersist()) {
             return false
         }
@@ -1226,7 +1234,7 @@ open class Preference @JvmOverloads constructor(
      * @return the value from the storage or the default return value
      * @see persistStringSet
      */
-    fun getPersistedStringSet(defaultReturnValue: Set<String>?): Set<String>? {
+    open fun getPersistedStringSet(defaultReturnValue: Set<String>?): Set<String>? {
         if (!shouldPersist()) {
             return defaultReturnValue
         }
@@ -1249,7 +1257,7 @@ open class Preference @JvmOverloads constructor(
      * @see persistString
      * @see getPersistedInt
      */
-    protected fun persistInt(value: Int): Boolean {
+    protected open fun persistInt(value: Int): Boolean {
         if (!shouldPersist()) {
             return false
         }
@@ -1279,13 +1287,13 @@ open class Preference @JvmOverloads constructor(
      * @see getPersistedString
      * @see persistInt
      */
-    protected fun getPersistedInt(defaultReturnValue: Int): Int {
+    protected open fun getPersistedInt(defaultReturnValue: Int): Int {
         if (!shouldPersist()) {
             return defaultReturnValue
         }
 
         return preferenceDataStore?.getInt(key!!, defaultReturnValue)
-                ?: preferenceManager!!.sharedPreferences!!.getInt(key, defaultReturnValue)
+            ?: preferenceManager!!.sharedPreferences!!.getInt(key, defaultReturnValue)
     }
 
     /**
@@ -1299,7 +1307,7 @@ open class Preference @JvmOverloads constructor(
      * @see persistString
      * @see getPersistedFloat
      */
-    protected fun persistFloat(value: Float): Boolean {
+    protected open fun persistFloat(value: Float): Boolean {
         if (!shouldPersist()) {
             return false
         }
@@ -1329,13 +1337,13 @@ open class Preference @JvmOverloads constructor(
      * @see getPersistedString
      * @see persistFloat
      */
-    protected fun getPersistedFloat(defaultReturnValue: Float): Float {
+    protected open fun getPersistedFloat(defaultReturnValue: Float): Float {
         if (!shouldPersist()) {
             return defaultReturnValue
         }
 
         return preferenceDataStore?.getFloat(key!!, defaultReturnValue)
-                ?: preferenceManager!!.sharedPreferences!!.getFloat(key, defaultReturnValue)
+            ?: preferenceManager!!.sharedPreferences!!.getFloat(key, defaultReturnValue)
     }
 
     /**
@@ -1349,7 +1357,7 @@ open class Preference @JvmOverloads constructor(
      * @see persistString
      * @see getPersistedLong
      */
-    protected fun persistLong(value: Long): Boolean {
+    protected open fun persistLong(value: Long): Boolean {
         if (!shouldPersist()) {
             return false
         }
@@ -1379,13 +1387,13 @@ open class Preference @JvmOverloads constructor(
      * @see getPersistedString
      * @see persistLong
      */
-    protected fun getPersistedLong(defaultReturnValue: Long): Long {
+    protected open fun getPersistedLong(defaultReturnValue: Long): Long {
         if (!shouldPersist()) {
             return defaultReturnValue
         }
 
         return preferenceDataStore?.getLong(key!!, defaultReturnValue)
-                ?: preferenceManager!!.sharedPreferences!!.getLong(key, defaultReturnValue)
+            ?: preferenceManager!!.sharedPreferences!!.getLong(key, defaultReturnValue)
     }
 
     /**
@@ -1399,7 +1407,7 @@ open class Preference @JvmOverloads constructor(
      * @see persistString
      * @see getPersistedBoolean
      */
-    protected fun persistBoolean(value: Boolean): Boolean {
+    protected open fun persistBoolean(value: Boolean): Boolean {
         if (!shouldPersist()) {
             return false
         }
@@ -1429,13 +1437,13 @@ open class Preference @JvmOverloads constructor(
      * @see getPersistedString
      * @see persistBoolean
      */
-    protected fun getPersistedBoolean(defaultReturnValue: Boolean): Boolean {
+    protected open fun getPersistedBoolean(defaultReturnValue: Boolean): Boolean {
         if (!shouldPersist()) {
             return defaultReturnValue
         }
 
         return preferenceDataStore?.getBoolean(key!!, defaultReturnValue)
-                ?: preferenceManager!!.sharedPreferences!!.getBoolean(key, defaultReturnValue)
+            ?: preferenceManager!!.sharedPreferences!!.getBoolean(key, defaultReturnValue)
     }
 
     override fun toString(): String = filterableStringBuilder.toString()
@@ -1465,7 +1473,8 @@ open class Preference @JvmOverloads constructor(
             baseMethodCalled = false
             val state = onSaveInstanceState()
             if (!baseMethodCalled) {
-                throw IllegalStateException("Derived class did not call super.onSaveInstanceState()")
+                throw IllegalStateException(
+                    "Derived class did not call super.onSaveInstanceState()")
             }
             if (state != null) {
                 container.putParcelable(key, state)
@@ -1517,7 +1526,8 @@ open class Preference @JvmOverloads constructor(
             baseMethodCalled = false
             onRestoreInstanceState(state)
             if (!baseMethodCalled) {
-                throw IllegalStateException("Derived class did not call super.onRestoreInstanceState()")
+                throw IllegalStateException(
+                    "Derived class did not call super.onRestoreInstanceState()")
             }
         }
     }
@@ -1548,6 +1558,7 @@ open class Preference @JvmOverloads constructor(
 
     /** A base class for managing the instance state of a [Preference]. */
     open class BaseSavedState : AbsSavedState {
+
         constructor(source: Parcel) : super(source)
 
         constructor(superState: Parcelable) : super(superState)

@@ -6,10 +6,7 @@ import androidx.annotation.ArrayRes
  * @see ListPreference
  * @see MultiSelectListPreference
  */
-interface ArrayPreference<ValueType> {
-
-    /** Get or set value to this preference */
-    var value: ValueType?
+internal interface ArrayPreference<EntryValuesType> {
 
     /**
      * Sets the human-readable entries to be shown in the list. This will be
@@ -29,7 +26,7 @@ interface ArrayPreference<ValueType> {
      *
      * @return The array of values to be saved for the preference.
      */
-    var entryValues: Array<CharSequence>?
+    var entryValues: Array<EntryValuesType>?
 
     /**
      * @param entriesResId The entries array as a resource.
@@ -49,7 +46,7 @@ interface ArrayPreference<ValueType> {
      * @param value The value whose index should be returned.
      * @return The index of the value, or -1 if not found.
      */
-    fun findIndexOfValue(value: String?): Int {
+    fun <T> findIndexOfValue(value: T?): Int {
         if (value != null && entryValues != null) {
             for (i in entryValues!!.indices.reversed()) {
                 if (entryValues!![i] == value) {

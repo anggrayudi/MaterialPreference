@@ -45,10 +45,12 @@ import com.anggrayudi.materialpreference.widget.AspSwitchCompat
  * @see CheckBoxPreference
  */
 @SuppressLint("RestrictedApi")
-class SwitchPreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = R.attr.switchPreferenceStyle, defStyleRes: Int = 0) :
-        TwoStatePreference(context, attrs, defStyleAttr, defStyleRes) {
+open class SwitchPreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.switchPreferenceStyle,
+    defStyleRes: Int = 0
+) : TwoStatePreference(context, attrs, defStyleAttr, defStyleRes) {
 
     private val listener = Listener()
 
@@ -93,7 +95,8 @@ class SwitchPreference @JvmOverloads constructor(
     }
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.SwitchPreference, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.SwitchPreference,
+            defStyleAttr, defStyleRes)
         _switchTextOn = a.getString(R.styleable.SwitchPreference_android_switchTextOn)
         _switchTextOff = a.getString(R.styleable.SwitchPreference_android_switchTextOff)
         a.recycle()

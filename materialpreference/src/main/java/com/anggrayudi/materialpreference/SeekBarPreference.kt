@@ -41,14 +41,17 @@ import com.anggrayudi.materialpreference.util.IntSummaryFormatter
  *
  * @see SeekBarDialogPreference
  */
-class SeekBarPreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = R.attr.seekBarPreferenceStyle, defStyleRes: Int = 0)
-    : Preference(context, attrs, defStyleAttr, defStyleRes) {
+open class SeekBarPreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.seekBarPreferenceStyle,
+    defStyleRes: Int = 0
+) : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
     private var seekBarValue: Int = 0
     private var trackingTouch: Boolean = false
     private var seekBar: SeekBar? = null
+
     var isAdjustable: Boolean = false // whether the seekbar should respond to the left/right keys
 
     var summaryFormatter: IntSummaryFormatter? = null
@@ -161,7 +164,8 @@ class SeekBarPreference @JvmOverloads constructor(
         set(seekBarValue) = setValueInternal(seekBarValue, true)
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference,
+            defStyleAttr, defStyleRes)
         /*
          * The ordering of these two statements are important. If we want to set max first, we need
          * to perform the same steps by changing min/max to max/min as following:
@@ -276,6 +280,7 @@ class SeekBarPreference @JvmOverloads constructor(
      * It is important to always call through to super methods.
      */
     private class SavedState : BaseSavedState {
+
         internal var seekBarValue: Int = 0
         internal var min: Int = 0
         internal var max: Int = 0

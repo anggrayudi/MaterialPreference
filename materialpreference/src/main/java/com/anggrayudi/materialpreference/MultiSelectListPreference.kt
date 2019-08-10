@@ -39,20 +39,34 @@ import kotlin.collections.HashSet
  *      | app:entryIcons      | Drawable array |
  *      | app:summaryNothing  | String         |
  */
-class MultiSelectListPreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = R.attr.multiSelectListPreferenceStyle,
-        defStyleRes: Int = R.style.Preference_DialogPreference)
-    : DialogPreference(context, attrs, defStyleAttr, defStyleRes), ArrayPreference<Set<String>> {
+open class MultiSelectListPreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.multiSelectListPreferenceStyle,
+    defStyleRes: Int = R.style.Preference_DialogPreference
+) : DialogPreference(context, attrs, defStyleAttr, defStyleRes), ArrayPreference<String> {
 
-    override var entries: Array<CharSequence>? = null
-    override var entryValues: Array<CharSequence>? = null
+    override var entries: Array<CharSequence>?
+        get() = _entries
+        set(value) {
+            _entries = value
+        }
+    private var _entries: Array<CharSequence>? = null
+
+    override var entryValues: Array<String>?
+        get() = _entryValues
+        set(value) {
+            _entryValues = value
+        }
+    private var _entryValues: Array<String>? = null
+
     var disabledEntryValues: Array<CharSequence>? = null
 
     private val values = HashSet<String>()
     private var _nothingText: CharSequence? = null
 
-    override var value: Set<String>?
+    /** Get or set value to this preference */
+    var value: Set<String>?
         get() = values
         set(v) {
             values.clear()
@@ -61,8 +75,11 @@ class MultiSelectListPreference @JvmOverloads constructor(
             }
             if (persistStringSet(v ?: HashSet()) && isBindValueToSummary) {
                 summary = when {
-                    value!!.isEmpty() -> if (summaryFormatter == null) nothingText else summaryFormatter!!.invoke(value!!.toTypedArray())
+                    value!!.isEmpty() -> if (summaryFormatter == null) nothingText
+                    else summaryFormatter!!.invoke(value!!.toTypedArray())
+
                     summaryFormatter != null -> summaryFormatter!!.invoke(value!!.toTypedArray())
+
                     else -> "${value!!.size}/${entryValues!!.size}"
                 }
             }
@@ -76,8 +93,11 @@ class MultiSelectListPreference @JvmOverloads constructor(
             field = f
             if (isBindValueToSummary) {
                 summary = when {
-                    value!!.isEmpty() -> if (f == null) nothingText else f.invoke(value!!.toTypedArray())
+                    value!!.isEmpty() -> if (f == null) nothingText
+                    else f.invoke(value!!.toTypedArray())
+
                     f != null -> f.invoke(value!!.toTypedArray())
+
                     else -> "${value!!.size}/${entryValues!!.size}"
                 }
             }
@@ -93,18 +113,24 @@ class MultiSelectListPreference @JvmOverloads constructor(
             _nothingText = nothing
             if (isBindValueToSummary) {
                 summary = when {
-                    value!!.isEmpty() -> if (summaryFormatter == null) nothing else summaryFormatter!!.invoke(value!!.toTypedArray())
+                    value!!.isEmpty() -> if (summaryFormatter == null) nothing
+                    else summaryFormatter!!.invoke(value!!.toTypedArray())
+
                     summaryFormatter != null -> summaryFormatter!!.invoke(value!!.toTypedArray())
+
                     else -> "${value!!.size}/${entryValues!!.size}"
                 }
             }
         }
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.MultiSelectListPreference, defStyleAttr, defStyleRes)
-        entries = a.getTextArray(R.styleable.MultiSelectListPreference_android_entries)
-        entryValues = a.getTextArray(R.styleable.MultiSelectListPreference_android_entryValues)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.MultiSelectListPreference,
+            defStyleAttr, defStyleRes)
         _nothingText = a.getText(R.styleable.MultiSelectListPreference_summaryNothing)
+        _entries = a.getTextArray(R.styleable.MultiSelectListPreference_android_entries)
+        _entryValues = a.getTextArray(R.styleable.MultiSelectListPreference_android_entryValues)
+            .map { it.toString() }
+            .toTypedArray()
         a.recycle()
     }
 
@@ -121,7 +147,7 @@ class MultiSelectListPreference @JvmOverloads constructor(
      * @see entryValues
      */
     override fun setEntryValues(@ArrayRes entryValuesResId: Int) {
-        entryValues = context.resources.getTextArray(entryValuesResId)
+        entryValues = context.resources.getStringArray(entryValuesResId)
     }
 
     fun setPrettySummaryFormatter() {
@@ -141,8 +167,11 @@ class MultiSelectListPreference @JvmOverloads constructor(
         values.addAll(getPersistedStringSet(value)!!)
         if (isBindValueToSummary) {
             summary = when {
-                value!!.isEmpty() -> if (summaryFormatter == null) nothingText else summaryFormatter!!.invoke(value!!.toTypedArray())
+                value!!.isEmpty() -> if (summaryFormatter == null) nothingText
+                else summaryFormatter!!.invoke(value!!.toTypedArray())
+
                 summaryFormatter != null -> summaryFormatter!!.invoke(value!!.toTypedArray())
+
                 else -> "${value!!.size}/${entryValues!!.size}"
             }
         }

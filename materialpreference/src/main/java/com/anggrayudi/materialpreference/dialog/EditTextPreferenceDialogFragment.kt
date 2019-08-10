@@ -57,11 +57,11 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
         return dialog
-                .positiveButton(text = positiveButtonText ?: getString(android.R.string.ok)) {
-                    whichButtonClicked = WhichButton.POSITIVE
-                }.negativeButton(text = negativeButtonText ?: getString(android.R.string.cancel)) {
-                    whichButtonClicked = WhichButton.NEGATIVE
-                }
+            .positiveButton(text = positiveButtonText ?: getString(android.R.string.ok)) {
+                whichButtonClicked = WhichButton.POSITIVE
+            }.negativeButton(text = negativeButtonText ?: getString(android.R.string.cancel)) {
+                whichButtonClicked = WhichButton.NEGATIVE
+            }
     }
 
     override fun onBindDialogView(view: View) {
@@ -91,7 +91,7 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
                 val underMinChars = text == null || preference.minLength > 0 && text.length < preference.minLength
 
                 (dialog as MaterialDialog).getActionButton(WhichButton.POSITIVE).isEnabled =
-                        !underMinChars && text!!.length <= preference.maxLength
+                    !underMinChars && text!!.length <= preference.maxLength
 
                 textInputLayout!!.error = if (underMinChars && preference.minLength > 0)
                     getString(R.string.min_preference_input_chars_, preference.minLength)
@@ -103,6 +103,8 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
         }
         editText!!.addTextChangedListener(textWatcher)
         editText!!.post { textWatcher.onTextChanged(text, 0, 0, 0) }
+
+        preference.onBindTextInputLayoutListener?.invoke(textInputLayout!!)
     }
 
     @RestrictTo(LIBRARY_GROUP)

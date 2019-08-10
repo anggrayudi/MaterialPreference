@@ -35,4 +35,11 @@
         <item>Monthly</item>
         <item>Whenever ready</item>
     </string-array>
+
+    <integer-array name="entries_max_threads">
+        <item>1</item>
+        <item>2</item>
+        <item>4</item>
+        <item>8</item>
+    </integer-array>
 </resources>

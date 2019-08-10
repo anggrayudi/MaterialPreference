@@ -458,7 +458,12 @@ constructor(val context: Context) {
 
     companion object {
 
+        /**
+         * Use this constant to prevents preferences from being reset after boot,
+         * instead of [android.preference.PreferenceManager.KEY_HAS_SET_DEFAULT_VALUES].
+         */
         const val KEY_HAS_SET_DEFAULT_VALUES = "hasSetDefaultValues"
+
         private const val STORAGE_DEFAULT = 0
         private const val STORAGE_DEVICE_PROTECTED = 1
 

@@ -27,11 +27,12 @@ import com.anggrayudi.materialpreference.util.IntSummaryFormatter
  *
  * @see SeekBarPreference
  */
-class SeekBarDialogPreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, 
-        defStyleAttr: Int = R.attr.seekBarDialogPreferenceStyle, 
-        defStyleRes: Int = R.style.Preference_DialogPreference_SeekBarDialogPreference) 
-    : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
+open class SeekBarDialogPreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.seekBarDialogPreferenceStyle,
+    defStyleRes: Int = R.style.Preference_DialogPreference_SeekBarDialogPreference
+) : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
 
     private var progress: Int = 0
     private var preferredMax = 100
@@ -71,7 +72,8 @@ class SeekBarDialogPreference @JvmOverloads constructor(
         }
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference,
+            defStyleAttr, defStyleRes)
         preferredMax = a.getInt(R.styleable.SeekBarPreference_android_max, preferredMax)
         val hasAspMin = a.hasValue(R.styleable.SeekBarPreference_min)
         if (hasAspMin) {

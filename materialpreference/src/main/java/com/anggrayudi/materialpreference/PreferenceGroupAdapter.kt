@@ -252,10 +252,10 @@ internal class PreferenceGroupAdapter internal constructor(
             return rootParent
 
         if (preference.parent!!.preferenceViewHolder == null) {
-            var message = ("Make sure that you wrap " + preference.javaClass.simpleName
+            var message = ("Make sure that you wrap ${preference.javaClass.simpleName}"
                     + " inside PreferenceCategory in the XML.")
             if (preference.key != null)
-                message += " Key=\"" + preference.key + "\""
+                message += " Key=\"${preference.key}\""
 
             throw InflateException(message)
         }

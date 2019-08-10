@@ -1,6 +1,7 @@
 package com.anggrayudi.materialpreference.callback
 
 import com.anggrayudi.materialpreference.Preference
+import com.google.android.material.textfield.TextInputLayout
 
 /**
  * Called when a Preference has been clicked.
@@ -21,3 +22,11 @@ typealias OnPreferenceLongClickListener = (preference: Preference) -> Boolean
  * @return True to update the state of the Preference with the new value.
  */
 typealias OnPreferenceChangeListener = (preference: Preference, newValue: Any?) -> Boolean
+
+/**
+ * Called when the dialog view for this preference has been bound,
+ * allowing you to customize the [TextInputLayout] displayed in the dialog.
+ * It has the same function with [OnBindEditTextListener](https://developer.android.com/reference/androidx/preference/EditTextPreference.OnBindEditTextListener),
+ * except it uses [TextInputLayout] as the callback's parameter.
+ */
+typealias OnBindTextInputLayoutListener = (textInputLayout: TextInputLayout) -> Unit

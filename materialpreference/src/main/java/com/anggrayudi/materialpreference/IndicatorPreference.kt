@@ -18,11 +18,12 @@ import com.anggrayudi.materialpreference.util.applyTint
  *      | app:tint    | Color      |
  */
 @SuppressLint("RestrictedApi")
-class IndicatorPreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.indicatorPreferenceStyle, 0),
-        defStyleRes: Int = 0)
-    : Preference(context, attrs, defStyleAttr, defStyleRes) {
+open class IndicatorPreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.indicatorPreferenceStyle, 0),
+    defStyleRes: Int = 0
+) : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
     override var isLegacySummary: Boolean
         get() = true
@@ -48,7 +49,8 @@ class IndicatorPreference @JvmOverloads constructor(
     private var _tint: Int = 0
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.IndicatorPreference, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.IndicatorPreference,
+            defStyleAttr, defStyleRes)
         _tint = a.getColor(R.styleable.IndicatorPreference_tint, 0)
         _drawable = a.getDrawable(R.styleable.IndicatorPreference_android_src)
         a.recycle()
@@ -62,6 +64,7 @@ class IndicatorPreference @JvmOverloads constructor(
 
     override fun onSetupFinished(fragment: PreferenceFragmentMaterial) {
         tint = _tint
-        preferenceViewHolder?.itemView?.findViewById<View>(R.id.material_summary)!!.visibility = View.GONE
+        preferenceViewHolder?.itemView?.findViewById<View>(
+            R.id.material_summary)!!.visibility = View.GONE
     }
 }

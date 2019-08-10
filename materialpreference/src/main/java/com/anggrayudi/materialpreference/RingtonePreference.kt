@@ -43,11 +43,12 @@ import com.anggrayudi.materialpreference.dialog.DialogPreference
  *      | android:showDefault  | Boolean                            |
  *      | android:showSilent   | Boolean                            |
  */
-class RingtonePreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = R.attr.ringtonePreferenceStyle,
-        defStyleRes: Int = R.style.Preference_DialogPreference_RingtonePreference)
-    : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
+open class RingtonePreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.ringtonePreferenceStyle,
+    defStyleRes: Int = R.style.Preference_DialogPreference_RingtonePreference
+) : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
 
     /**
      * Sets the sound type(s) that are shown in the picker.
@@ -109,7 +110,8 @@ class RingtonePreference @JvmOverloads constructor(
         }
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.RingtonePreference, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.RingtonePreference,
+            defStyleAttr, defStyleRes)
         ringtoneType = a.getInt(R.styleable.RingtonePreference_android_ringtoneType, RingtoneManager.TYPE_RINGTONE)
         showDefault = a.getBoolean(R.styleable.RingtonePreference_android_showDefault, true)
         showSilent = a.getBoolean(R.styleable.RingtonePreference_android_showSilent, true)
@@ -163,12 +165,12 @@ class RingtonePreference @JvmOverloads constructor(
     fun buildRingtonePickerIntent(): Intent {
         val type = ringtoneType
         return Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
-                .putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, onRestoreRingtone())
-                .putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, RingtoneManager.getDefaultUri(type))
-                .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, showDefault)
-                .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, showSilent)
-                .putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, type)
-                .putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, nonEmptyDialogTitle)
+            .putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, onRestoreRingtone())
+            .putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, RingtoneManager.getDefaultUri(type))
+            .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, showDefault)
+            .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, showSilent)
+            .putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, type)
+            .putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, nonEmptyDialogTitle)
     }
 
     /**
@@ -208,30 +210,31 @@ class RingtonePreference @JvmOverloads constructor(
             }
         }
 
-        fun getNotificationSoundDefaultString(context: Context): String
-            = context.getString(R.string.notification_sound_default)
+        fun getNotificationSoundDefaultString(context: Context): String =
+            context.getString(R.string.notification_sound_default)
 
-        fun getAlarmSoundDefaultString(context: Context): String
-            = context.getString(R.string.alarm_sound_default)
+        fun getAlarmSoundDefaultString(context: Context): String =
+            context.getString(R.string.alarm_sound_default)
 
-        fun getRingtoneDefaultString(context: Context): String
-            = context.getString(R.string.ringtone_default)
+        fun getRingtoneDefaultString(context: Context): String =
+            context.getString(R.string.ringtone_default)
 
-        fun getRingtoneDefaultWithActualString(context: Context, actual: String): String
-            = context.getString(R.string.ringtone_default_with_actual, actual)
+        fun getRingtoneDefaultWithActualString(context: Context, actual: String): String =
+            context.getString(R.string.ringtone_default_with_actual, actual)
 
-        fun getRingtoneSilentString(context: Context): String
-            = context.getString(R.string.ringtone_silent)
+        fun getRingtoneSilentString(context: Context): String =
+            context.getString(R.string.ringtone_silent)
 
-        fun getRingtoneUnknownString(context: Context): String
-            = context.getString(R.string.ringtone_unknown)
+        fun getRingtoneUnknownString(context: Context): String =
+            context.getString(R.string.ringtone_unknown)
 
-        fun getRingtonePickerTitleString(context: Context): String = context.getString(R.string.ringtone_picker_title)
+        fun getRingtonePickerTitleString(context: Context): String =
+            context.getString(R.string.ringtone_picker_title)
 
-        fun getRingtonePickerTitleAlarmString(context: Context): String
-                = context.applicationContext.getString(R.string.ringtone_picker_title_alarm)
+        fun getRingtonePickerTitleAlarmString(context: Context): String =
+            context.applicationContext.getString(R.string.ringtone_picker_title_alarm)
 
-        fun getRingtonePickerTitleNotificationString(context: Context): String
-                = context.applicationContext.getString(R.string.ringtone_picker_title_notification)
+        fun getRingtonePickerTitleNotificationString(context: Context): String =
+            context.applicationContext.getString(R.string.ringtone_picker_title_notification)
     }
 }

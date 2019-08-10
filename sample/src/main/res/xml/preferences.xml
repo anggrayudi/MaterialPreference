@@ -28,6 +28,14 @@
             android:entryValues="@array/entries_update_interval"
             app:bindValueToSummary="true"/>
 
+        <IntegerListPreference
+            android:key="max_threads"
+            android:title="Max threads"
+            android:dependency="auto_update"
+            android:entries="@array/entries_max_threads"
+            android:entryValues="@array/entries_max_threads"
+            app:bindValueToSummary="true"/>
+
         <TimePreference
             android:key="syncTime"
             android:title="Sync active hours"/>

@@ -28,7 +28,7 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
     private val newValues = HashSet<String>()
     private var preferenceChanged: Boolean = false
     private var entries: Array<CharSequence>? = null
-    private var entryValues: Array<CharSequence>? = null
+    private var entryValues: Array<String>? = null
 
     private val listPreference: MultiSelectListPreference
         get() = preference as MultiSelectListPreference
@@ -53,7 +53,7 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
             newValues.addAll(savedInstanceState.getStringArrayList(SAVE_STATE_VALUES)!!)
             preferenceChanged = savedInstanceState.getBoolean(SAVE_STATE_CHANGED, false)
             entries = savedInstanceState.getCharSequenceArray(SAVE_STATE_ENTRIES)
-            entryValues = savedInstanceState.getCharSequenceArray(SAVE_STATE_ENTRY_VALUES)
+            entryValues = savedInstanceState.getStringArray(SAVE_STATE_ENTRY_VALUES)
         }
     }
 
@@ -62,19 +62,17 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
         outState.putStringArrayList(SAVE_STATE_VALUES, ArrayList(newValues))
         outState.putBoolean(SAVE_STATE_CHANGED, preferenceChanged)
         outState.putCharSequenceArray(SAVE_STATE_ENTRIES, entries)
-        outState.putCharSequenceArray(SAVE_STATE_ENTRY_VALUES, entryValues)
+        outState.putStringArray(SAVE_STATE_ENTRY_VALUES, entryValues)
     }
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
         val integers = ArrayList<Int>(entryValues!!.size)
         entryValues!!.indices.forEach {
-            if (newValues.contains(entryValues!![it].toString()))
+            if (newValues.contains(entryValues!![it]))
                 integers.add(it)
         }
-        val checkedItems = IntArray(integers.size) {integers[it]}
-
-        val listItem = mutableListOf<String>()
-        entries!!.forEach { listItem.add(it.toString()) }
+        val checkedItems = IntArray(integers.size) { integers[it] }
+        val listItem = entries!!.map { it.toString() }
 
         preferenceChanged = false
         return dialog

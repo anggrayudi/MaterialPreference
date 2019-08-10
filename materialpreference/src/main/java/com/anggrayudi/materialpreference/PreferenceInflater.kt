@@ -31,7 +31,8 @@ import java.util.*
 /**
  * The [PreferenceInflater] is used to inflate preference hierarchies from XML files.
  */
-internal class PreferenceInflater(val context: Context, private val preferenceManager: PreferenceManager) {
+internal class PreferenceInflater(val context: Context,
+                                  private val preferenceManager: PreferenceManager) {
 
     private val constructorArgs = arrayOfNulls<Any>(2)
 
@@ -171,7 +172,7 @@ internal class PreferenceInflater(val context: Context, private val preferenceMa
                     }
                     if (clazz == null) {
                         if (notFoundException == null) {
-                            throw InflateException(attrs.positionDescription + ": Error inflating class " + name)
+                            throw InflateException(attrs.positionDescription + ": Error inflating class $name")
                         } else {
                             throw notFoundException as ClassNotFoundException
                         }
@@ -190,7 +191,7 @@ internal class PreferenceInflater(val context: Context, private val preferenceMa
             // If loadClass fails, we should propagate the exception.
             throw e
         } catch (e: Exception) {
-            val ie = InflateException(attrs.positionDescription + ": Error inflating class " + name)
+            val ie = InflateException(attrs.positionDescription + ": Error inflating class $name")
             ie.initCause(e)
             throw ie
         }
@@ -221,11 +222,11 @@ internal class PreferenceInflater(val context: Context, private val preferenceMa
         } catch (e: InflateException) {
             throw e
         } catch (e: ClassNotFoundException) {
-            val ie = InflateException(attrs.positionDescription + ": Error inflating class (not found)" + name)
+            val ie = InflateException(attrs.positionDescription + ": Error inflating class (not found) $name")
             ie.initCause(e)
             throw ie
         } catch (e: Exception) {
-            val ie = InflateException(attrs.positionDescription + ": Error inflating class " + name)
+            val ie = InflateException(attrs.positionDescription + ": Error inflating class $name")
             ie.initCause(e)
             throw ie
         }

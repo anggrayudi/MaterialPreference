@@ -29,10 +29,12 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.CollectionIt
  */
 @SuppressLint("RestrictedApi")
 class PreferenceCategory @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.preferenceCategoryStyle,
-                android.R.attr.preferenceCategoryStyle), defStyleRes: Int = 0)
-    : PreferenceGroup(context, attrs, defStyleAttr, defStyleRes) {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.preferenceCategoryStyle,
+        android.R.attr.preferenceCategoryStyle),
+    defStyleRes: Int = 0
+) : PreferenceGroup(context, attrs, defStyleAttr, defStyleRes) {
 
     override var isEnabled: Boolean
         get() = false

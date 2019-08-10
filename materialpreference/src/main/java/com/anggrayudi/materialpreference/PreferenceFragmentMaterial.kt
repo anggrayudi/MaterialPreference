@@ -267,8 +267,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         if (key != null) {
             root = xmlRoot.findPreference(key)
             if (root !is PreferenceScreen) {
-                throw IllegalArgumentException("Preference object with key " + key
-                        + " is not a PreferenceScreen")
+                throw IllegalArgumentException("Preference object with key $key is not a PreferenceScreen")
             }
         } else {
             root = xmlRoot
@@ -436,6 +435,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         val f: DialogFragment = when (preference) {
             is EditTextPreference -> EditTextPreferenceDialogFragment.newInstance(preference.key!!)
             is ListPreference -> ListPreferenceDialogFragment.newInstance(preference.key!!)
+            is IntegerListPreference -> IntegerListPreferenceDialogFragment.newInstance(preference.key!!)
             is MultiSelectListPreference -> MultiSelectListPreferenceDialogFragment.newInstance(preference.key!!)
             is SeekBarDialogPreference -> SeekBarPreferenceDialogFragment.newInstance(preference.key!!)
             is ColorPreference -> ColorPreferenceDialogFragment.newInstance(preference.key!!)

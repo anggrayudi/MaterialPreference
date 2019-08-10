@@ -25,6 +25,7 @@ import android.text.InputType
 import android.util.AttributeSet
 import android.widget.EditText
 import androidx.core.content.res.TypedArrayUtils
+import com.anggrayudi.materialpreference.callback.OnBindTextInputLayoutListener
 import com.anggrayudi.materialpreference.dialog.DialogPreference
 import com.anggrayudi.materialpreference.util.StringSummaryFormatter
 
@@ -50,11 +51,13 @@ import com.anggrayudi.materialpreference.util.StringSummaryFormatter
  *      | app:counterEnabled    | Boolean                    |
  */
 @SuppressLint("RestrictedApi")
-class EditTextPreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.editTextPreferenceStyle,
-                android.R.attr.editTextPreferenceStyle), defStyleRes: Int = 0)
-    : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
+open class EditTextPreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.editTextPreferenceStyle,
+        android.R.attr.editTextPreferenceStyle),
+    defStyleRes: Int = 0
+) : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
 
     /**
      * Saves the text to the [android.content.SharedPreferences].
@@ -93,22 +96,32 @@ class EditTextPreference @JvmOverloads constructor(
             updateSummary()
         }
 
+    var onBindTextInputLayoutListener: OnBindTextInputLayoutListener? = null
+
     var hint: String? = null
+
     var message: String? = null
+
     var inputType: Int = 0
+
     var maxLength: Int = 0
+
     var minLength: Int = 0
+
     var isCounterEnabled: Boolean = false
+
     var inputFilters: Array<InputFilter>? = null
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.EditTextPreference, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.EditTextPreference,
+            defStyleAttr, defStyleRes)
         isCounterEnabled = a.getBoolean(R.styleable.EditTextPreference_counterEnabled, true)
         hint = a.getString(R.styleable.EditTextPreference_android_hint)
         message = a.getString(R.styleable.EditTextPreference_android_dialogMessage)
         maxLength = a.getInt(R.styleable.EditTextPreference_android_maxLength, 100)
         minLength = a.getInt(R.styleable.EditTextPreference_minLength, 0)
-        inputType = a.getInt(R.styleable.EditTextPreference_android_inputType, InputType.TYPE_CLASS_TEXT)
+        inputType = a.getInt(R.styleable.EditTextPreference_android_inputType,
+            InputType.TYPE_CLASS_TEXT)
         a.recycle()
     }
 

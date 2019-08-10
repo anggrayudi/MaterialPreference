@@ -32,9 +32,11 @@ import androidx.annotation.StringRes
  * enabled/disabled based on the current state.
  */
 abstract class TwoStatePreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0, defStyleRes: Int = 0)
-    : Preference(context, attrs, defStyleAttr, defStyleRes) {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
+) : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
     /**
      * Sets the summary to be shown when checked.
@@ -106,7 +108,8 @@ abstract class TwoStatePreference @JvmOverloads constructor(
         }
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.TwoStatePreference, defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.TwoStatePreference,
+            defStyleAttr, defStyleRes)
         disableDependentsState = a.getBoolean(R.styleable.TwoStatePreference_android_disableDependentsState, false)
         _summaryOn = a.getString(R.styleable.TwoStatePreference_android_summaryOn)
         _summaryOff = a.getString(R.styleable.TwoStatePreference_android_summaryOff)

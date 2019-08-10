@@ -4,26 +4,30 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- *
  * @see TimePreference
  */
 @SuppressLint("RestrictedApi")
-class DatePreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = R.attr.preferenceStyle, defStyleRes: Int = 0)
-    : Preference(context, attrs, defStyleAttr, defStyleRes),
-        DatePickerDialog.OnDateSetListener {
+open class DatePreference @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.preferenceStyle,
+    defStyleRes: Int = 0
+) : Preference(context, attrs, defStyleAttr, defStyleRes), DatePickerDialog.OnDateSetListener {
 
     var minDate: Long = 0
+
     var maxDate: Long = 0
+
     var disabledDays: Array<Calendar>? = null
+
     var highlightedDays: Array<Calendar>? = null
 
-    var dateFormatter = SimpleDateFormat.getDateInstance()
+    var dateFormatter: DateFormat = SimpleDateFormat.getDateInstance()
         set(f) {
             field = f
             val v = value
@@ -54,9 +58,9 @@ class DatePreference @JvmOverloads constructor(
             val now = Calendar.getInstance()
             now.timeInMillis = millis
             val dialog = DatePickerDialog.newInstance(this,
-                    now.get(Calendar.YEAR),
-                    now.get(Calendar.MONTH),
-                    now.get(Calendar.DAY_OF_MONTH))
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH))
             dialog.version = DatePickerDialog.Version.VERSION_2
             dialog.dismissOnPause(false)
 

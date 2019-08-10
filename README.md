@@ -35,7 +35,7 @@ android {
     }
 }
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.2.3'
+    implementation 'com.anggrayudi:materialpreference:3.3.0'
 }
 ```
 
@@ -127,7 +127,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.2.3'
+    implementation 'com.anggrayudi:materialpreference:3.3.0'
     kapt 'com.anggrayudi:materialpreference-compiler:1.1'
 }
 ````
@@ -141,7 +141,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
         // You can access the constant values with auto-generated class named PrefKey
-        findPreference(PrefKey.ABOUT)!!.summary = BuildConfig.VERSION_NAME
+        findPreference(PrefKey.ABOUT)?.summary = BuildConfig.VERSION_NAME
     }
 }
 ````

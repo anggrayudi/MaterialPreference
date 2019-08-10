@@ -31,7 +31,7 @@ import java.io.File
  */
 @TargetApi(21)
 @SuppressLint("RestrictedApi")
-class FolderPreference @JvmOverloads constructor(
+open class FolderPreference @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null,
         defStyleAttr: Int = 0, defStyleRes: Int = 0)
     : Preference(context, attrs, defStyleAttr, defStyleRes) {
