@@ -21,6 +21,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.WhichButton
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.anggrayudi.materialpreference.MultiSelectListPreference
+import com.anggrayudi.materialpreference.dialog.ListPreferenceDialogFragment.Companion.getDisabledIndices
 import java.util.*
 
 class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
@@ -66,15 +67,9 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
     }
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
-        val integers = ArrayList<Int>(entryValues!!.size)
-        entryValues!!.indices.forEach {
-            if (newValues.contains(entryValues!![it]))
-                integers.add(it)
-        }
-        val checkedItems = IntArray(integers.size) { integers[it] }
-        val listItem = entries!!.map { it.toString() }
-
+        val integers = entryValues!!.indices.filter { newValues.contains(entryValues!![it]) }
         preferenceChanged = false
+
         return dialog
                 .positiveButton(text = positiveButtonText ?: getString(android.R.string.ok)) {
                     whichButtonClicked = WhichButton.POSITIVE
@@ -82,9 +77,9 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
                 .negativeButton(text = negativeButtonText ?: getString(android.R.string.cancel)) {
                     whichButtonClicked = WhichButton.NEGATIVE
                 }
-                .listItemsMultiChoice(items = listItem,
-                        initialSelection = checkedItems,
-                        disabledIndices = getDisabledIndices(),
+                .listItemsMultiChoice(items = entries!!.map { it.toString() },
+                        initialSelection = IntArray(integers.size) { integers[it] },
+                        disabledIndices = getDisabledIndices(listPreference.disabledEntryValues, entryValues!!),
                         waitForPositiveButton = false,
                         allowEmptySelection = true) { d, _, items ->
                     if (d.isShowing) {
@@ -93,19 +88,6 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
                         newValues.addAll(items)
                     }
                 }
-    }
-
-    private fun getDisabledIndices(): IntArray? {
-        val e = listPreference.disabledEntryValues
-        if (e != null && e.size <= entryValues!!.size) {
-            val a = mutableListOf<Int>()
-            for (item in entryValues!!.withIndex()) {
-                if (e.contains(item.value))
-                    a.add(item.index)
-            }
-            return a.toIntArray()
-        }
-        return null
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {

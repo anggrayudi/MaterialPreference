@@ -212,15 +212,14 @@ object FileUtils {
     }
 
     private fun cleanSdCardPath(file: String): String {
-        val tree = file.substring(file.indexOf(':') + 1, file.length)
         var resolvedPath = StringBuilder()
-        val directories = tree.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        directories.forEach { directory ->
-            val dir = directory.trim { it <= ' ' }
-            if (dir.isNotEmpty()) {
-                resolvedPath.append(dir).append("/")
-            }
-        }
+        val tree = file.substring(file.indexOf(':') + 1, file.length)
+        tree.split("/".toRegex())
+            .dropLastWhile { it.isEmpty() }
+            .map { it.trim { c -> c <= ' ' } }
+            .filter { it.isNotEmpty() }
+            .forEach { directory -> resolvedPath.append(directory).append("/") }
+
         if (resolvedPath.toString().endsWith("/"))
             resolvedPath = StringBuilder(resolvedPath.substring(0, resolvedPath.length - 1))
 

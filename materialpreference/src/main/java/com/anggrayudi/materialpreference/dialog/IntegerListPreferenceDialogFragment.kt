@@ -44,9 +44,11 @@ class IntegerListPreferenceDialogFragment : PreferenceDialogFragment() {
     }
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
-        return dialog.listItemsSingleChoice(items = entries!!.map { it.toString() },
+        return dialog.listItemsSingleChoice(
+            items = entries!!.map { it.toString() },
             initialSelection = clickedDialogEntryIndex,
-            waitForPositiveButton = false, disabledIndices = getDisabledIndices()) { _, index, _ ->
+            waitForPositiveButton = false,
+            disabledIndices = getDisabledIndices()) { _, index, _ ->
             clickedDialogEntryIndex = index
             whichButtonClicked = WhichButton.POSITIVE
             dialog.dismiss()
@@ -62,12 +64,10 @@ class IntegerListPreferenceDialogFragment : PreferenceDialogFragment() {
     private fun getDisabledIndices(): IntArray? {
         val e = listPreference.disabledEntryValues
         if (e != null && e.size <= entryValues!!.size) {
-            val a = mutableListOf<Int>()
-            for (item in entryValues!!.withIndex()) {
-                if (e.contains(item.value))
-                    a.add(item.index)
-            }
-            return a.toIntArray()
+            return entryValues!!.withIndex()
+                .filter { e.contains(it.value) }
+                .map { it.index }
+                .toIntArray()
         }
         return null
     }

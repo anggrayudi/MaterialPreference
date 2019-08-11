@@ -58,9 +58,11 @@ class ListPreferenceDialogFragment : PreferenceDialogFragment() {
     }
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
-        return dialog.listItemsSingleChoice(items = entries!!.map { it.toString() },
+        return dialog.listItemsSingleChoice(
+            items = entries!!.map { it.toString() },
             initialSelection = clickedDialogEntryIndex,
-            waitForPositiveButton = false, disabledIndices = getDisabledIndices()) { _, index, _ ->
+            waitForPositiveButton = false,
+            disabledIndices = getDisabledIndices(listPreference.disabledEntryValues, entryValues!!)) { _, index, _ ->
             clickedDialogEntryIndex = index
             whichButtonClicked = WhichButton.POSITIVE
             dialog.dismiss()
@@ -71,19 +73,6 @@ class ListPreferenceDialogFragment : PreferenceDialogFragment() {
         if (positiveResult && clickedDialogEntryIndex >= 0) {
             listPreference.value = entryValues!![clickedDialogEntryIndex]
         }
-    }
-
-    private fun getDisabledIndices(): IntArray? {
-        val e = listPreference.disabledEntryValues
-        if (e != null && e.size <= entryValues!!.size) {
-            val a = mutableListOf<Int>()
-            for (item in entryValues!!.withIndex()) {
-                if (e.contains(item.value))
-                    a.add(item.index)
-            }
-            return a.toIntArray()
-        }
-        return null
     }
 
     companion object {
@@ -100,15 +89,23 @@ class ListPreferenceDialogFragment : PreferenceDialogFragment() {
             return fragment
         }
 
+        internal fun getDisabledIndices(e: Array<CharSequence>?, entryValues: Array<String>): IntArray? {
+            if (e != null && e.size <= entryValues.size) {
+                return entryValues.withIndex()
+                    .filter { e.contains(it.value) }
+                    .map { it.index }
+                    .toIntArray()
+            }
+            return null
+        }
+
         internal fun putCharSequenceArray(out: Bundle, key: String, entries: Array<CharSequence>) {
             val stored = ArrayList<String>(entries.size)
             entries.forEach { stored.add(it.toString()) }
             out.putStringArrayList(key, stored)
         }
 
-        internal fun getCharSequenceArray(`in`: Bundle, key: String): Array<CharSequence>? {
-            val stored = `in`.getStringArrayList(key)
-            return stored?.toTypedArray()
-        }
+        internal fun getCharSequenceArray(`in`: Bundle, key: String): Array<CharSequence>? =
+            `in`.getStringArrayList(key)?.toTypedArray()
     }
 }

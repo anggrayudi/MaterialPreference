@@ -216,8 +216,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
             clickedPos = unknownPos
         }
 
-        val titles = ArrayList<String>()
-        staticItems.forEach { titles.add(it.toString()) }
+        val titles = staticItems.map { it.toString() }.toMutableList()
         if (cursor!!.moveToFirst()) {
             val index = cursor!!.getColumnIndex(MediaStore.Audio.Media.TITLE)
             do {
