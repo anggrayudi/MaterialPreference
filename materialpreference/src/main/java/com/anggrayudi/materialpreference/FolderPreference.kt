@@ -36,7 +36,7 @@ open class FolderPreference @JvmOverloads constructor(
         defStyleAttr: Int = 0, defStyleRes: Int = 0)
     : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
-    @get:FolderType.DirectoryType
+    @get:FolderType
     var defaultFolderType: Int = 0
 
     /** This callback will be triggered when some permissions are missing. */

@@ -55,6 +55,5 @@ object SaveDir {
         } catch (e: IOException) {
             true
         }
-
     }
 }
