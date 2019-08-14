@@ -14,13 +14,7 @@ Available from API 17.
 
 ## Note
 
-This library is available in 2 versions:
-1. [Version `2.x.x`](https://github.com/anggrayudi/MaterialPreference/tree/java), built in Java
-2. [Version `3.x.x` and higher](https://github.com/anggrayudi/MaterialPreference), built in Kotlin
-
-The Java library will be the second priority. So I will be more active in Kotlin library. You can fork the Java branch and build your own version if you feel it is slow in maintenance.
-
-Writing code in Java is slow, and that's why I decided to migrate to Kotlin.
+Even though Material Preference is built in Kotlin, but you can use this library in Java with a little setup in your `build.gradle`. Read section [Java compatibility support](https://github.com/anggrayudi/MaterialPreference#java-compatibility-support--).
 
 ## Usage
 
@@ -127,7 +121,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.3.0'
+    implementation 'com.anggrayudi:materialpreference:3.x.x'
     kapt 'com.anggrayudi:materialpreference-compiler:1.1'
 }
 ````
@@ -149,6 +143,134 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 **Note:**
 * If `PrefKey` does not update constant fields, click ![Alt text](art/make-project.png?raw=true "Make Project") Make Project in Android Studio.
 * This generator wont work with Android Studio 3.3.0 Stable, 3.4 Beta 3, and 3.5 Canary 3 because of [this bug](https://issuetracker.google.com/issues/122883561). The fixes are available in the next version of Android Studio.
+
+### Java compatibility support
+
+Kotlin is interoperable with Java. Just configure the following setup for your project.
+
+#### Setup
+
+In your `build.gradle` of project level:
+
+````gradle
+buildscript {
+    // add this line
+    ext.kotlin_version = '1.3.41'
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.2'
+        // add this line
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+````
+
+And for your app's `build.gradle`:
+
+````gradle
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.anggrayudi:materialpreference:3.x.x'
+}
+````
+
+#### Example
+
+From your [`SettingsFragment.java`](https://github.com/anggrayudi/MaterialPreference/blob/master/sample/src/main/java/com/anggrayudi/materialpreference/sample/java/SettingsFragment.java):
+
+````java
+@PreferenceKeysConfig
+public class SettingsFragment extends PreferenceFragmentMaterial {
+
+    @Override
+    public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+        addPreferencesFromResource(R.xml.preferences);
+
+        Preference preferenceAbout = findPreference(PrefKey.ABOUT);
+        preferenceAbout.setSummary(BuildConfig.VERSION_NAME);
+
+        SeekBarDialogPreference vibration = (SeekBarDialogPreference) findPreference(PrefKey.VIBRATE_DURATION);
+
+        // summary formatter example
+        vibration.setSummaryFormatter(new Function1<Integer, String>() {
+            @Override
+            public String invoke(Integer duration) {
+                return duration + "ms";
+            }
+        });
+
+        IndicatorPreference indicatorPreference = (IndicatorPreference) findPreference(PrefKey.ACCOUNT_STATUS);
+
+        // click listener example
+        indicatorPreference.setOnPreferenceClickListener(new Function1<Preference, Boolean>() {
+            @Override
+            public Boolean invoke(Preference preference) {
+                new MaterialDialog(getContext())
+                    .message(null, "Your account has been verified.", false, 1f)
+                    .positiveButton(android.R.string.ok, null, null)
+                    .show();
+                return true;
+            }
+        });
+
+        // long click listener example
+        indicatorPreference.setOnPreferenceLongClickListener(new Function1<Preference, Boolean>() {
+            @Override
+            public Boolean invoke(Preference preference) {
+                Toast.makeText(getContext(), "onLogClick: " + preference.getTitle(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+    }
+}
+````
+
+From your [`SettingsActivity.java`](https://github.com/anggrayudi/MaterialPreference/blob/master/sample/src/main/java/com/anggrayudi/materialpreference/sample/java/SettingsActivity.java):
+
+````java
+public class SettingsActivity extends PreferenceActivityMaterial {
+
+    private static final String TAG = "Settings";
+
+    private SettingsFragment settingsFragment;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (savedInstanceState == null) {
+            settingsFragment = SettingsFragment.newInstance(null);
+            getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, settingsFragment, TAG)
+                .commit();
+        } else {
+            onBackStackChanged();
+        }
+    }
+
+    @NotNull
+    @Override
+    protected PreferenceFragmentMaterial onBuildPreferenceFragment(@Nullable String rootKey) {
+        return SettingsFragment.newInstance(rootKey);
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        settingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag(TAG);
+        setTitle(settingsFragment.getPreferenceFragmentTitle());
+    }
+}
+````
 
 ## Preferences
 

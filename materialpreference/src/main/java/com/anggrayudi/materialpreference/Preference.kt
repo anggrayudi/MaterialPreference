@@ -270,8 +270,7 @@ open class Preference @JvmOverloads constructor(
     private val clickListener = View.OnClickListener { v -> performClick(v) }
 
     private val longClickListener = View.OnLongClickListener {
-        onPreferenceLongClickListener != null
-            && onPreferenceLongClickListener!!.invoke(this@Preference)
+        onPreferenceLongClickListener != null && onPreferenceLongClickListener!!(this)
     }
 
     /**
