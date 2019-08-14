@@ -14,7 +14,7 @@ Available from API 17.
 
 ## Note
 
-Even though Material Preference is built in Kotlin, but you can use this library in Java with a little setup in your `build.gradle`. Read section [Java compatibility support](https://github.com/anggrayudi/MaterialPreference#java-compatibility-support--).
+Even though Material Preference is built in Kotlin, but you can use this library in Java with a little setup in your `build.gradle`. Read section [Java compatibility support](https://github.com/anggrayudi/MaterialPreference#java-compatibility-support).
 
 ## Usage
 
