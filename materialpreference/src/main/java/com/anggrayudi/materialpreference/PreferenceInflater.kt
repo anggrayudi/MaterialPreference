@@ -179,7 +179,7 @@ internal class PreferenceInflater(val context: Context,
                     }
                 }
                 constructor = clazz!!.getConstructor(*CONSTRUCTOR_SIGNATURE)
-                constructor!!.isAccessible = true
+                constructor.isAccessible = true
                 CONSTRUCTOR_MAP[name] = constructor
             }
 

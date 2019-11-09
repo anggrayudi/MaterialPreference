@@ -134,7 +134,7 @@ object FileUtils {
      */
     private fun getExternalFile(context: Context, directory: String, fileName: String?): DocumentFile? {
         return try {
-            getExternalFile(context, generateFileLocation(directory, fileName))
+            if (fileName != null) getExternalFile(context, generateFileLocation(directory, fileName)) else null
         } catch (e: StoragePermissionDenialException) {
             null
         }
@@ -261,7 +261,7 @@ object FileUtils {
     fun create(context: Context, folder: String, fileName: String): DocumentFile? {
         return if (folder.startsWith("/")) {
             val file = File(folder, fileName)
-            file.parentFile.mkdirs()
+            file.parentFile?.mkdirs()
             if (create(file)) DocumentFile.fromFile(file) else null
         } else {
             val directory = mkdirs(context, folder)
@@ -274,7 +274,7 @@ object FileUtils {
         return if (folder.startsWith("/")) {
             val file = File(folder, fileName)
             file.delete()
-            file.parentFile.mkdirs()
+            file.parentFile?.mkdirs()
             if (create(file)) DocumentFile.fromFile(file) else null
         } else {
             val directory = mkdirs(context, folder)
@@ -298,7 +298,7 @@ object FileUtils {
     @Throws(StoragePermissionDenialException::class)
     fun delete(context: Context, folder: String, fileName: String?): Boolean {
         return if (folder.startsWith("/"))
-            File(folder, fileName).delete()
+            if (fileName != null) File(folder, fileName).delete() else false
         else {
             val documentFile = getExternalFile(context, folder, fileName)
             documentFile != null && documentFile.delete()
@@ -345,10 +345,8 @@ object FileUtils {
     fun fileSize(context: Context, folder: String, fileName: String): Long {
         return if (folder.startsWith("/"))
             File(folder, fileName).length()
-        else {
-            val documentFile = getExternalFile(context, folder, fileName)
-            documentFile?.length() ?: 0
-        }
+        else
+            getExternalFile(context, folder, fileName)?.length() ?: 0
     }
 
     @Throws(StoragePermissionDenialException::class)
@@ -363,7 +361,7 @@ object FileUtils {
 
     fun asDocumentFile(context: Context, folder: String, filename: String?): DocumentFile? {
         return if (folder.startsWith("/"))
-            DocumentFile.fromFile(File(folder, filename))
+            if (filename != null) DocumentFile.fromFile(File(folder, filename)) else null
         else
             getExternalFile(context, folder, filename)
     }

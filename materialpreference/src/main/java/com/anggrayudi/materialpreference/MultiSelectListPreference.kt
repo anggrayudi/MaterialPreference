@@ -206,8 +206,8 @@ open class MultiSelectListPreference @JvmOverloads constructor(
 
         constructor(source: Parcel) : super(source) {
             values = HashSet()
-            val strings = source.createStringArray()
-            Collections.addAll(values as? HashSet<String>, *strings)
+            val strings = source.createStringArray() ?: return
+            Collections.addAll(values as HashSet<String>, *strings)
         }
 
         constructor(superState: Parcelable) : super(superState)

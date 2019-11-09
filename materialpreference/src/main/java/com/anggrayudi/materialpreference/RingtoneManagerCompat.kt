@@ -64,7 +64,7 @@ internal class RingtoneManagerCompat : RingtoneManager {
             var cursor: Field? = null
             try {
                 cursor = RingtoneManager::class.java.getDeclaredField("mCursor")
-                cursor!!.isAccessible = true
+                cursor.isAccessible = true
             } catch (e: Exception) {
                 Log.e(TAG, "mCursor not available.", e)
             }
@@ -74,7 +74,7 @@ internal class RingtoneManagerCompat : RingtoneManager {
             var getInternalRingtones: Method? = null
             try {
                 getInternalRingtones = RingtoneManager::class.java.getDeclaredMethod("getInternalRingtones")
-                getInternalRingtones!!.isAccessible = true
+                getInternalRingtones.isAccessible = true
             } catch (e: Exception) {
                 Log.e(TAG, "getInternalRingtones not available.", e)
             }
