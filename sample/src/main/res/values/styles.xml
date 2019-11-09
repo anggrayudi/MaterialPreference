@@ -1,6 +1,7 @@
 <resources>
 
     <style name="AppTheme" parent="BaseTheme">
+        <item name="android:windowBackground">@color/preferenceBackground</item>
     </style>
 
     <!-- Base application theme. -->
@@ -16,7 +17,6 @@
         <item name="dialogTheme">@style/AppTheme.Dialog</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="android:windowBackground">@color/preferenceBackground</item>
     </style>
 
     <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">

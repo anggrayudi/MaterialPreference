@@ -36,7 +36,7 @@ object SaveDir {
     val RINGTONES: String = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).absolutePath ?: "/mnt/sdcard/Ringtones"
     // 10
     val DOCUMENTS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath!!
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath
     else
         "$EXTERNAL/Documents"
 
