@@ -17,8 +17,6 @@
 package com.anggrayudi.materialpreference.dialog
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -29,6 +27,7 @@ import com.afollestad.materialdialogs.WhichButton
 import com.afollestad.materialdialogs.actions.getActionButton
 import com.anggrayudi.materialpreference.EditTextPreference
 import com.anggrayudi.materialpreference.R
+import com.anggrayudi.materialpreference.util.onTextChanged
 import com.google.android.material.textfield.TextInputLayout
 
 class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
@@ -86,30 +85,23 @@ class EditTextPreferenceDialogFragment : PreferenceDialogFragment() {
             it.inputType = preference.inputType
             it.setText(text)
 
-            val textWatcher = object : TextWatcher {
-                override fun beforeTextChanged(text: CharSequence, i: Int, i1: Int, i2: Int) {
-                }
+            val notifyTextChanged: (String) -> Unit = { text ->
+                val underMinChars = preference.minLength > 0 && text.length < preference.minLength
 
-                override fun onTextChanged(text: CharSequence?, i: Int, i1: Int, i2: Int) {
-                    val underMinChars = text == null || preference.minLength > 0 && text.length < preference.minLength
+                (dialog as MaterialDialog).getActionButton(WhichButton.POSITIVE).isEnabled =
+                        !underMinChars && text.length <= preference.maxLength
 
-                    (dialog as MaterialDialog).getActionButton(WhichButton.POSITIVE).isEnabled =
-                        !underMinChars && text!!.length <= preference.maxLength
-
-                    textInputLayout!!.error = if (underMinChars && preference.minLength > 0)
-                        getString(R.string.min_preference_input_chars_, preference.minLength)
-                    else
-                        null
-                }
-
-                override fun afterTextChanged(editable: Editable) {
-                }
+                textInputLayout!!.error = if (underMinChars && preference.minLength > 0)
+                    getString(R.string.min_preference_input_chars_, preference.minLength)
+                else
+                    null
             }
-            it.addTextChangedListener(textWatcher)
+
+            it.onTextChanged { text -> notifyTextChanged(text) }
 
             preference.onBindTextInputLayoutListener?.invoke(textInputLayout!!)
 
-            it.post { textWatcher.onTextChanged(text, 0, 0, 0) }
+            it.post { notifyTextChanged(text?.toString().orEmpty()) }
         }
     }
 

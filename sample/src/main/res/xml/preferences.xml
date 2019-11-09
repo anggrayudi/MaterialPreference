@@ -117,6 +117,10 @@
             android:title="Theme color"
             app:defaultColor="@color/colorPrimary"/>
 
+        <SwitchPreference
+            android:key="enableDarkTheme"
+            android:title="Enable dark theme"/>
+
         <Preference
             android:key="restore_default"
             android:title="Restore default settings"

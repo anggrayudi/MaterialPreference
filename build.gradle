@@ -34,7 +34,7 @@ task clean(type: Delete) {
 
 ext {
     appVersionCode = 13
-    libVersion = '3.3.1'
+    libVersion = '3.3.2'
     processorVersion = '1.1'
     minSdkVersion = 17
     targetSdkVersion = 29

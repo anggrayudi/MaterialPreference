@@ -5,6 +5,9 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 
@@ -36,3 +39,17 @@ fun Context.getAttrColor(@AttrRes attr: Int): Int {
 }
 
 fun CharSequence?.toUri() = if (this != null) Uri.parse(toString()) else null
+
+fun EditText.onTextChanged(onTextChanged: (String) -> Unit) {
+    addTextChangedListener(object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        }
+
+        override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            onTextChanged(text?.toString().orEmpty())
+        }
+
+        override fun afterTextChanged(editable: Editable?) {
+        }
+    })
+}
