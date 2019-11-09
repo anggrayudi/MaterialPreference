@@ -29,7 +29,7 @@ android {
     }
 }
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.3.0'
+    implementation 'com.anggrayudi:materialpreference:3.3.1'
 }
 ```
 
@@ -155,14 +155,14 @@ In your `build.gradle` of project level:
 ````gradle
 buildscript {
     // add this line
-    ext.kotlin_version = '1.3.41'
+    ext.kotlin_version = '1.3.50'
 
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:3.5.2'
         // add this line
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
