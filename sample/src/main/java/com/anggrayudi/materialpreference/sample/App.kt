@@ -22,7 +22,12 @@ class App : Application() {
          */
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         if (!preferences.getBoolean(KEY_HAS_SET_DEFAULT_VALUES, false)) {
-            preferences.edit().putBoolean(KEY_HAS_SET_DEFAULT_VALUES, true).apply()
+            preferences.edit()
+                    .putBoolean(KEY_HAS_SET_DEFAULT_VALUES, true)
+                    // Always set preference version to the latest for the first time
+                    .putInt(PreferenceMigration.DEFAULT_PREFERENCE_VERSION_KEY, PREFERENCE_VERSION)
+                    .apply()
+
             setDefaultPreferenceValues(this)
         } else {
             /*
@@ -72,8 +77,6 @@ class App : Application() {
         fun setDefaultPreferenceValues(context: Context) {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             preferences.edit()
-                    // Always set preference version to the latest in method setDefaultPreferenceValues()
-                    .putInt(PreferenceMigration.DEFAULT_PREFERENCE_VERSION_KEY, PREFERENCE_VERSION)
                     .putBoolean("auto_update", true)
                     .putBoolean("wifi_only", true)
                     .putString("update_interval", "Weekly")
