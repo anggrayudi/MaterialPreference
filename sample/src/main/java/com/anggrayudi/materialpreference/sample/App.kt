@@ -24,19 +24,19 @@ class App : Application() {
         if (!preferences.getBoolean(KEY_HAS_SET_DEFAULT_VALUES, false)) {
             preferences.edit().putBoolean(KEY_HAS_SET_DEFAULT_VALUES, true).apply()
             setDefaultPreferenceValues(this)
+        } else {
+            /*
+            You can use PreferenceMigration if you want to update your SharedPreferences.
+            This commented method migrates your SharedPreferences in background thread,
+            hence there'is no guarantee that it will be completed before activity creation.
+            Since my main activity is SettingsActivity, I wont call this method here because it may
+            causes crash while SettingsActivity is rendering preferences layout and the migration
+            is in progress. In real case, your main activity might not be a settings activity,
+            so you should not worry about this.
+
+            PreferenceMigration.setupMigration(MyPreferenceMigration(), preferences, PREFERENCE_VERSION)
+             */
         }
-
-        /*
-        You can use PreferenceMigration if you want to update your SharedPreferences.
-        This commented method migrates your SharedPreferences in background thread,
-        hence there'is no guarantee that it will be completed before activity creation.
-        Since my main activity is SettingsActivity, I wont call this method here because it may
-        causes crash while SettingsActivity is rendering preferences layout and the migration
-        is in progress. In real case, your main activity might not be a settings activity,
-        so you should not worry about this.
-
-        PreferenceMigration.setupMigration(MyPreferenceMigration(), preferences, PREFERENCE_VERSION)
-         */
     }
 
     private inner class MyPreferenceMigration : PreferenceMigration {
