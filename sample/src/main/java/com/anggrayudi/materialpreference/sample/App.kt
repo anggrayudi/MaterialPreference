@@ -72,6 +72,8 @@ class App : Application() {
         fun setDefaultPreferenceValues(context: Context) {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             preferences.edit()
+                    // Always set preference version to the latest in method setDefaultPreferenceValues()
+                    .putInt(PreferenceMigration.DEFAULT_PREFERENCE_VERSION_KEY, PREFERENCE_VERSION)
                     .putBoolean("auto_update", true)
                     .putBoolean("wifi_only", true)
                     .putString("update_interval", "Weekly")
