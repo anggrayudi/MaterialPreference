@@ -1,5 +1,8 @@
 package com.anggrayudi.materialpreference.sample.java;
 
+import android.os.Bundle;
+import android.widget.Toast;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anggrayudi.materialpreference.IndicatorPreference;
 import com.anggrayudi.materialpreference.Preference;
@@ -11,9 +14,6 @@ import com.anggrayudi.materialpreference.sample.PrefKey;
 import com.anggrayudi.materialpreference.sample.R;
 
 import org.jetbrains.annotations.Nullable;
-
-import android.os.Bundle;
-import android.widget.Toast;
 
 import kotlin.jvm.functions.Function1;
 

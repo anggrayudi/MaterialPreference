@@ -1,5 +1,9 @@
 package com.anggrayudi.materialpreference.sample.java;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+
 import com.anggrayudi.materialpreference.PreferenceActivityMaterial;
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;
 import com.anggrayudi.materialpreference.sample.DonationActivity;
@@ -7,10 +11,6 @@ import com.anggrayudi.materialpreference.sample.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
 
 /**
  * @author Anggrayudi H

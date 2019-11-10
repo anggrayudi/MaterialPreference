@@ -29,7 +29,7 @@ android {
     }
 }
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.3.2'
+    implementation 'com.anggrayudi:materialpreference:3.4.0'
 }
 ```
 
@@ -107,6 +107,35 @@ class SettingsActivity : PreferenceActivityMaterial() {
         title = settingsFragment!!.preferenceFragmentTitle
     }
 }
+```
+
+### Preference Migration
+
+During app development, you may encounter a condition where you need to modify your current `SharedPreferences`, such as renaming a preference's key.
+Material Preference v3.4.0 introduces a new feature called Preference Migration.
+Define your migration plan by implementing `PreferenceMigration` interface:
+
+```kotlin
+class MyPreferenceMigration : PreferenceMigration {
+
+    override fun migrate(plan: MigrationPlan, currentVersion: Int) {
+        // Implement your migration plan here.
+        // Read sample code in class App.kt for more information. 
+    }
+
+    override fun onMigrationCompleted(preferences: SharedPreferences) {
+    }
+    
+    companion object {
+        const val PREFERENCE_VERSION = 3
+    }
+}
+```
+
+Finally, start the migration:
+
+```kotlin
+PreferenceMigration.setupMigration(MyPreferenceMigration(), preferences, PREFERENCE_VERSION)
 ```
 
 ### Preference Key Constants Generator [ ![jcenter](https://api.bintray.com/packages/anggrayudi/maven/materialpreference-compiler/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference-compiler/_latestVersion)
