@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     api 'androidx.appcompat:appcompat:1.1.0'
     api 'com.google.android.material:material:1.2.0-alpha04'
     api 'androidx.documentfile:documentfile:1.0.1'

@@ -29,7 +29,7 @@ android {
     }
 }
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.4.0'
+    implementation 'com.anggrayudi:materialpreference:3.4.1'
 }
 ```
 
@@ -66,14 +66,11 @@ class SettingsFragment : PreferenceFragmentMaterial() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
     }
-    
+
     companion object {
-        fun newInstance(rootKey: String?): SettingsFragment {
-            val args = Bundle()
-            args.putString(PreferenceFragmentMaterial.ARG_PREFERENCE_ROOT, rootKey)
-            val fragment = SettingsFragment()
-            fragment.arguments = args
-            return fragment
+        fun newInstance(rootKey: String?) = SettingsFragment().apply {
+            arguments = Bundle()
+            arguments!!.putString(PreferenceFragmentMaterial.ARG_PREFERENCE_ROOT, rootKey)
         }
     }
 }
@@ -165,6 +162,9 @@ class SettingsFragment : PreferenceFragmentMaterial() {
         addPreferencesFromResource(R.xml.preferences)
         // You can access the constant values with auto-generated class named PrefKey
         findPreference(PrefKey.ABOUT)?.summary = BuildConfig.VERSION_NAME
+
+        val volume = findPreferenceAs<SeekBarPreference>(PrefKey.NOTIFICATION_VOLUME)
+        volume?.summaryFormatter = { "$it%" }
     }
 }
 ````
@@ -184,14 +184,14 @@ In your `build.gradle` of project level:
 ````gradle
 buildscript {
     // add this line
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.3.61'
 
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.2'
+        classpath 'com.android.tools.build:gradle:3.5.3'
         // add this line
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
