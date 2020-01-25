@@ -318,11 +318,9 @@ abstract class PreferenceFragmentMaterial : Fragment(),
      * @return The [Preference] with the key, or null.
      * @see PreferenceGroup.findPreference
      */
-    override fun findPreference(key: CharSequence): Preference? {
-        return if (preferenceManager == null) {
-            null
-        } else preferenceManager!!.findPreference(key)
-    }
+    override fun findPreference(key: CharSequence): Preference? = preferenceManager?.findPreference(key)
+
+    inline fun <reified T : Preference> findPreferenceAs(key: CharSequence): T? = findPreference(key) as? T
 
     private fun requirePreferenceManager() {
         if (preferenceManager == null) {

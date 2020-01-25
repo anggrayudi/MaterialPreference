@@ -52,24 +52,27 @@ class BillingManager(
     var billingClientResponseCode = BILLING_MANAGER_NOT_INITIALIZED
 
     /**
-     * Listener to the updates that happen when purchases list was updated or consumption of the
+     * Listener to the updates that happen when purchase list was updated or consumption of the
      * item was finished
      */
     interface BillingUpdatesListener {
         fun onBillingClientSetupFinished()
-        fun onConsumeFinished(token: String, @BillingResponse result: Int)
+        fun onConsumeFinished(token: String, @BillingResponseCode result: Int)
         fun onPurchasesUpdated(purchases: List<Purchase>)
     }
 
     init {
         Log.d(TAG, "Creating Billing client.")
-        billingClient = BillingClient.newBuilder(activity).setListener(this).build()
+        billingClient = newBuilder(activity)
+                .setListener(this)
+                .enablePendingPurchases()
+                .build()
 
         Log.d(TAG, "Starting setup.")
 
         // Start setup. This is asynchronous and the specified listener will be called
         // once setup completes.
-        // It also starts to report all the new purchases through onPurchasesUpdated() callback.
+        // It also starts to report all the new purchase items through onPurchasesUpdated() callback.
         startServiceConnection(Runnable {
             // Notifying the listener that billing client is ready
             billingUpdatesListener.onBillingClientSetupFinished()
@@ -82,36 +85,31 @@ class BillingManager(
     /**
      * Handle a callback that purchases were updated from the Billing library
      */
-    override fun onPurchasesUpdated(resultCode: Int, purchases: List<Purchase>?) {
-        when (resultCode) {
-            BillingResponse.OK -> {
+    override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
+        when (result.responseCode) {
+            BillingResponseCode.OK -> {
                 purchases?.forEach { handlePurchase(it) }
                 billingUpdatesListener.onPurchasesUpdated(this.purchases)
             }
-            BillingResponse.USER_CANCELED -> Log.i(TAG, "onPurchasesUpdated() - user cancelled the purchase flow - skipping")
-            else -> Log.w(TAG, "onPurchasesUpdated() got unknown resultCode: $resultCode")
+            BillingResponseCode.USER_CANCELED -> Log.i(TAG, "onPurchasesUpdated() - user cancelled the purchase flow - skipping")
+            else -> Log.w(TAG, "onPurchasesUpdated() got unknown resultCode: $result.responseCode")
         }
-    }
-
-    /**
-     * Start a purchase flow
-     */
-    fun initiatePurchaseFlow(skuId: String, @SkuType billingType: String) {
-        initiatePurchaseFlow(skuId, null, billingType)
     }
 
     /**
      * Start a purchase or subscription replace flow
      */
-    @Suppress("DEPRECATION")
-    fun initiatePurchaseFlow(skuId: String, oldSkus: ArrayList<String>?, @SkuType billingType: String) {
-        val purchaseFlowRequest = Runnable {
-            Log.d(TAG, "Launching in-app purchase flow. Replace old SKU? " + (oldSkus != null))
-            val purchaseParams = BillingFlowParams.newBuilder()
-                    .setSku(skuId).setType(billingType).setOldSkus(oldSkus).build()
-            billingClient!!.launchBillingFlow(activity, purchaseParams)
-        }
-        executeServiceRequest(purchaseFlowRequest)
+    fun initiatePurchaseFlow(skuId: String, @SkuType itemType: String) {
+        querySkuDetailsAsync(itemType, listOf(skuId), SkuDetailsResponseListener { responseCode, skuDetailsList ->
+            if (responseCode.responseCode == BillingResponseCode.OK) {
+                executeServiceRequest(Runnable {
+                    val purchaseParams = BillingFlowParams.newBuilder()
+                            .setSkuDetails(skuDetailsList.first())
+//                            .setDeveloperId()
+                    billingClient?.launchBillingFlow(activity, purchaseParams.build())
+                })
+            }
+        })
     }
 
     /**
@@ -120,7 +118,7 @@ class BillingManager(
     fun destroy() {
         Log.d(TAG, "Destroying the manager.")
 
-        if (billingClient != null && billingClient!!.isReady) {
+        if (billingClient?.isReady == true) {
             billingClient!!.endConnection()
             billingClient = null
         }
@@ -132,9 +130,9 @@ class BillingManager(
         val queryRequest = Runnable {
             // Query the purchase async
             val params = SkuDetailsParams.newBuilder()
-            params.setSkusList(skuList).setType(itemType)
-            billingClient!!.querySkuDetailsAsync(params.build()) {
-                responseCode, skuDetailsList -> listener.onSkuDetailsResponse(responseCode, skuDetailsList) }
+                    .setSkusList(skuList)
+                    .setType(itemType)
+            billingClient!!.querySkuDetailsAsync(params.build(), listener)
         }
 
         executeServiceRequest(queryRequest)
@@ -142,7 +140,7 @@ class BillingManager(
 
     fun consumeAsync(purchaseToken: String) {
         // If we've already scheduled to consume this token - no action is needed (this could happen
-        // if you received the token when querying purchases inside onReceive() and later from
+        // if you received the token when querying purchase items inside onReceive() and later from
         // onActivityResult()
         if (tokensToBeConsumed == null) {
             tokensToBeConsumed = HashSet()
@@ -153,18 +151,19 @@ class BillingManager(
         tokensToBeConsumed!!.add(purchaseToken)
 
         // Generating Consume Response listener
-        val onConsumeListener = ConsumeResponseListener { responseCode, purchaseToken1 ->
+        val onConsumeListener = ConsumeResponseListener { billingResult, purchaseToken1 ->
             // If billing service was disconnected, we try to reconnect 1 time
             // (feel free to introduce your retry policy here).
-            billingUpdatesListener.onConsumeFinished(purchaseToken1, responseCode)
+            billingUpdatesListener.onConsumeFinished(purchaseToken1, billingResult.responseCode)
         }
 
         // Creating a runnable from the request to use it inside our connection retry policy below
         val consumeRequest = Runnable {
             // Consume the purchase async
-            billingClient!!.consumeAsync(purchaseToken, onConsumeListener)
+            billingClient!!.consumeAsync(ConsumeParams.newBuilder()
+                    .setPurchaseToken(purchaseToken).build(),
+                    onConsumeListener)
         }
-
         executeServiceRequest(consumeRequest)
     }
 
@@ -189,21 +188,22 @@ class BillingManager(
     }
 
     /**
-     * Handle a result from querying of purchases and report an updated list to the listener
+     * Handle a result from querying of purchase items and report an updated list to the listener
      */
     private fun onQueryPurchasesFinished(result: PurchasesResult) {
         // Have we been disposed of in the meantime? If so, or bad result code, then quit
-        if (billingClient == null || result.responseCode != BillingResponse.OK) {
-            Log.w(TAG, "Billing client was null or result code (" + result.responseCode
-                    + ") was bad - quitting")
+        if (billingClient == null || result.responseCode != BillingResponseCode.OK) {
+            Log.w(TAG, "Billing client was null or result code (${result.responseCode}) was bad - quitting")
             return
         }
 
         Log.d(TAG, "Query inventory was successful.")
 
-        // Update the UI and purchases inventory with new list of purchases
+        // Update the UI and purchase items inventory with new list of purchases
         purchases.clear()
-        onPurchasesUpdated(BillingResponse.OK, result.purchasesList)
+        onPurchasesUpdated(BillingResult.newBuilder()
+                .setResponseCode(BillingResponseCode.OK).build(),
+                result.purchasesList)
     }
 
     /**
@@ -215,15 +215,15 @@ class BillingManager(
      *
      */
     fun areSubscriptionsSupported(): Boolean {
-        val responseCode = billingClient!!.isFeatureSupported(FeatureType.SUBSCRIPTIONS)
-        if (responseCode != BillingResponse.OK) {
+        val responseCode = billingClient!!.isFeatureSupported(FeatureType.SUBSCRIPTIONS).responseCode
+        if (responseCode != BillingResponseCode.OK) {
             Log.w(TAG, "areSubscriptionsSupported() got an error response: $responseCode")
         }
-        return responseCode == BillingResponse.OK
+        return responseCode == BillingResponseCode.OK
     }
 
     /**
-     * Query purchases across various use cases and deliver the result in a formalized way through
+     * Query purchase items across various use cases and deliver the result in a formalized way through
      * a listener
      */
     fun queryPurchases() {
@@ -241,13 +241,13 @@ class BillingManager(
                         + subscriptionResult.responseCode
                         + " res: " + subscriptionResult.purchasesList.size)
 
-                if (subscriptionResult.responseCode == BillingResponse.OK) {
+                if (subscriptionResult.responseCode == BillingResponseCode.OK) {
                     purchasesResult.purchasesList.addAll(
                             subscriptionResult.purchasesList)
                 } else {
                     Log.e(TAG, "Got an error response trying to query subscription purchases")
                 }
-            } else if (purchasesResult.responseCode == BillingResponse.OK) {
+            } else if (purchasesResult.responseCode == BillingResponseCode.OK) {
                 Log.i(TAG, "Skipped subscription purchases query since they are not supported")
             } else {
                 Log.w(TAG, "queryPurchases() got an error response code: " + purchasesResult.responseCode)
@@ -260,17 +260,17 @@ class BillingManager(
 
     fun startServiceConnection(executeOnSuccess: Runnable?) {
         billingClient!!.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(@BillingResponse billingResponseCode: Int) {
-                Log.d(TAG, "Setup finished. Response code: $billingResponseCode")
-                billingClientResponseCode = billingResponseCode
-                if (billingResponseCode == BillingResponse.OK) {
+            override fun onBillingSetupFinished(result: BillingResult) {
+                billingClientResponseCode = result.responseCode
+                Log.d(TAG, "Setup finished. Response code: $billingClientResponseCode")
+                if (billingClientResponseCode == BillingResponseCode.OK) {
                     isServiceConnected = true
                     executeOnSuccess?.run()
                 }
             }
 
             override fun onBillingServiceDisconnected() {
-                billingClientResponseCode = BillingResponse.SERVICE_DISCONNECTED
+                billingClientResponseCode = BillingResponseCode.SERVICE_DISCONNECTED
                 isServiceConnected = false
             }
         })

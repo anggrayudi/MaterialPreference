@@ -25,8 +25,8 @@ class PreferenceKeyConstansProcessor : AbstractProcessor() {
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
         roundEnv.getElementsAnnotatedWith(PreferenceKeysConfig::class.java).forEach {
-            val generatedSourcesRoot: String = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME].orEmpty()
-            if(generatedSourcesRoot.isEmpty()) {
+            val generatedSourcesRoot: String? = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
+            if(generatedSourcesRoot.isNullOrEmpty()) {
                 processingEnv.messager.errorMessage { "Can't find the target directory for generated Kotlin files." }
                 return false
             }
@@ -50,13 +50,13 @@ class PreferenceKeyConstansProcessor : AbstractProcessor() {
                         .initializer("%S", map.key)
                         .build())
             }
-            val targetPath = File(generatedSourcesRoot)
-            targetPath.mkdirs()
-            val packageName = processingEnv.elementUtils.getPackageOf(it).qualifiedName.toString()
+
+            // Remove suffix ".java" from package com.anggrayudi.materialpreference.sample.java
+            val packageName = processingEnv.elementUtils.getPackageOf(it).qualifiedName.toString().substringBeforeLast(".java")
             FileSpec.builder(packageName, a.className)
                     .addType(o.build())
                     .build()
-                    .writeTo(targetPath)
+                    .writeTo(File(generatedSourcesRoot).apply { mkdirs() })
             return false
         }
         return false

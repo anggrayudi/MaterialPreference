@@ -1,6 +1,8 @@
 # Generated files
 bin/
 gen/
+*.apk
+*.class
 
 # Gradle files
 .gradle/
@@ -47,5 +49,3 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
-/MaterialPreference.zip
-gradle.properties

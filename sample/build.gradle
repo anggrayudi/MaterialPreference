@@ -8,10 +8,10 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 android {
     signingConfigs {
         release {
-            storePassword properties.getProperty("storePassword")
-            keyAlias properties.getProperty("keyAlias")
-            keyPassword properties.getProperty("keyPassword")
-            storeFile file(properties.getProperty("storeFile"))
+            storePassword properties['storePassword']
+            keyAlias properties['keyAlias']
+            keyPassword properties['keyPassword']
+            storeFile file('android.jks')
         }
     }
 
@@ -51,9 +51,8 @@ android {
     }
 }
 
-repositories {
-//    maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
-//    maven { url "https://dl.bintray.com/drummer-aidan/maven/" }
+configurations {
+    kapt
 }
 
 dependencies {
@@ -62,11 +61,11 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'com.android.billingclient:billing:1.2'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.android.billingclient:billing:2.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     implementation project(':materialpreference')
-//    compileOnly project(':annotation')
+    compileOnly project(':annotation')
     kapt project(':processor')
 
 //    implementation 'androidx.preference:preference:1.1.0-rc01'
@@ -74,4 +73,9 @@ dependencies {
 //    implementation 'com.anggrayudi:materialpreference:3.1.7'
 //    implementation 'com.anggrayudi:materialpreference-api:1.1'
 //    kapt 'com.anggrayudi:materialpreference-compiler:1.1'
+}
+
+tasks.withType(JavaCompile) {
+    options.incremental = true
+    options.annotationProcessorPath = configurations.kapt
 }

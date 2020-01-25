@@ -32,37 +32,37 @@ class SettingsFragment : PreferenceFragmentMaterial() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
-        findPreference(PrefKey.ABOUT)!!.summary = BuildConfig.VERSION_NAME
+        findPreference(PrefKey.ABOUT)?.summary = BuildConfig.VERSION_NAME
 
-        val volume = findPreference(PrefKey.NOTIFICATION_VOLUME) as SeekBarPreference
-        volume.summaryFormatter = { "$it%" }
+        val volume = findPreferenceAs<SeekBarPreference>(PrefKey.NOTIFICATION_VOLUME)
+        volume?.summaryFormatter = { "$it%" }
 
-        val vibration = findPreference(PrefKey.VIBRATE_DURATION) as SeekBarDialogPreference
-        vibration.summaryFormatter = { "${it}ms" }
+        val vibration = findPreferenceAs<SeekBarDialogPreference>(PrefKey.VIBRATE_DURATION)
+        vibration?.summaryFormatter = { "${it}ms" }
 
-        val indicatorPreference = findPreference(PrefKey.ACCOUNT_STATUS) as IndicatorPreference
-        indicatorPreference.onPreferenceClickListener = {
+        val indicatorPreference = findPreferenceAs<IndicatorPreference>(PrefKey.ACCOUNT_STATUS)
+        indicatorPreference?.onPreferenceClickListener = {
             MaterialDialog(context!!)
                     .message(text = "Your account has been verified.")
                     .positiveButton(android.R.string.ok)
                     .show()
             true
         }
-        indicatorPreference.onPreferenceLongClickListener = {
+        indicatorPreference?.onPreferenceLongClickListener = {
             Toast.makeText(context, "onLogClick: " + it.title!!, Toast.LENGTH_SHORT).show()
             true
         }
 
-        val colorPreference = findPreference(PrefKey.THEME_COLOR) as ColorPreference
-        colorPreference.allowArgb = true
-        colorPreference.allowTransparency = true
+        val colorPreference = findPreferenceAs<ColorPreference>(PrefKey.THEME_COLOR)
+        colorPreference?.allowArgb = true
+        colorPreference?.allowTransparency = true
 
         // change the last color in this array to colorPrimary
         val colorList = ColorPreference.DEFAULT_COLOR_LIST.copyOf()
         colorList[colorList.size - 1] = ContextCompat.getColor(context!!, R.color.colorPrimary)
-        colorPreference.colorList = colorList
+        colorPreference?.colorList = colorList
 
-        colorPreference.summaryFormatter = {
+        colorPreference?.summaryFormatter = {
             Handler().post {
                 (activity as SettingsActivity).supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(it)))
             }
@@ -73,15 +73,15 @@ class SettingsFragment : PreferenceFragmentMaterial() {
             }
         }
 
-        val folderPreference = findPreference(PrefKey.BACKUP_LOCATION) as FolderPreference
-        folderPreference.permissionCallback = object : StoragePermissionCallback {
+        val folderPreference = findPreferenceAs<FolderPreference>(PrefKey.BACKUP_LOCATION)
+        folderPreference?.permissionCallback = object : StoragePermissionCallback {
             override fun onPermissionTrouble(read: Boolean, write: Boolean) {
                 ActivityCompat.requestPermissions(activity!!,
                         arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 1)
             }
         }
 
-        findPreference(PrefKey.RESTORE_DEFAULT)!!.onPreferenceClickListener = {
+        findPreference(PrefKey.RESTORE_DEFAULT)?.onPreferenceClickListener = {
             MaterialDialog(context!!)
                     .message(text = "Are you sure you want to restore default settings?")
                     .negativeButton(android.R.string.cancel)
@@ -92,7 +92,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
             true
         }
 
-        findPreference(PrefKey.ACCOUNT_NAME)!!.onPreferenceChangeListener = { _, newValue ->
+        findPreference(PrefKey.ACCOUNT_NAME)?.onPreferenceChangeListener = { _, newValue ->
             val name = newValue.toString()
             if (name.contains("shit")) {
                 Toast.makeText(context, "Use a polite name", Toast.LENGTH_SHORT).show()
@@ -107,12 +107,9 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 
         private const val TAG = "SettingsFragment"
 
-        fun newInstance(rootKey: String?): SettingsFragment {
-            val args = Bundle()
-            args.putString(ARG_PREFERENCE_ROOT, rootKey)
-            val fragment = SettingsFragment()
-            fragment.arguments = args
-            return fragment
+        fun newInstance(rootKey: String?) = SettingsFragment().apply {
+            arguments = Bundle()
+            arguments!!.putString(ARG_PREFERENCE_ROOT, rootKey)
         }
     }
 }

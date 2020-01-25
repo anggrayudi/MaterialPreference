@@ -55,7 +55,7 @@ class DonationActivity : AppCompatActivity(), BillingManager.BillingUpdatesListe
     }
 
     override fun onBillingClientSetupFinished() {
-        if (mBillingManager!!.billingClientResponseCode != BillingClient.BillingResponse.OK) {
+        if (mBillingManager!!.billingClientResponseCode != BillingClient.BillingResponseCode.OK) {
             requestedOrientation = resources.configuration.orientation
             MaterialDialog(this)
                     .cancelable(false)
@@ -66,7 +66,7 @@ class DonationActivity : AppCompatActivity(), BillingManager.BillingUpdatesListe
     }
 
     override fun onConsumeFinished(token: String, result: Int) {
-        if (result == BillingClient.BillingResponse.OK) {
+        if (result == BillingClient.BillingResponseCode.OK) {
             MaterialDialog(this)
                     .title(text = "Thank you")
                     .message(text = "We have received your donation. All donations you gave are really helpful for us to develop this library.")
@@ -91,7 +91,7 @@ class DonationActivity : AppCompatActivity(), BillingManager.BillingUpdatesListe
         }
 
         override fun onClick(v: View) {
-            if (mBillingManager!!.billingClientResponseCode == BillingClient.BillingResponse.OK) {
+            if (mBillingManager?.billingClientResponseCode == BillingClient.BillingResponseCode.OK) {
                 val sku = v.tag.toString()
                 mBillingManager!!.initiatePurchaseFlow(sku, BillingClient.SkuType.INAPP)
             }
