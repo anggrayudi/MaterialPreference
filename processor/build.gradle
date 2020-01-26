@@ -9,13 +9,24 @@ archivesBaseName = 'materialpreference-compiler'
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
+        incremental = true
     }
 }
 
 compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
+        incremental = true
     }
+}
+
+configurations {
+    kapt
+}
+
+tasks.withType(JavaCompile) {
+    options.incremental = true
+    options.annotationProcessorPath = configurations.kapt
 }
 
 sourceCompatibility = 1.8

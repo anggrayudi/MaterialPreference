@@ -40,7 +40,7 @@ fun Context.getAttrColor(@AttrRes attr: Int): Int {
 
 fun CharSequence?.toUri() = if (this != null) Uri.parse(toString()) else null
 
-fun EditText.onTextChanged(onTextChanged: (String) -> Unit) {
+inline fun EditText.onTextChanged(crossinline onTextChanged: (String) -> Unit) {
     addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }

@@ -32,9 +32,11 @@ import java.io.File
 @TargetApi(21)
 @SuppressLint("RestrictedApi")
 open class FolderPreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0, defStyleRes: Int = 0)
-    : Preference(context, attrs, defStyleAttr, defStyleRes) {
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
+        defStyleRes: Int = 0
+) : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
     @get:FolderType
     var defaultFolderType: Int = 0
@@ -105,7 +107,7 @@ open class FolderPreference @JvmOverloads constructor(
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             dialog = MaterialDialog(context!!)
                     .negativeButton(android.R.string.cancel)
-                    .folderChooser(File(arguments!!.getString("folder")), allowFolderCreation = true){ _, file ->
+                    .folderChooser(File(arguments!!.getString("folder")!!), allowFolderCreation = true){ _, file ->
                         val preference = (activity as PreferenceActivityMaterial)
                                 .visiblePreferenceFragment!!.findPreference(tag!!) as FolderPreference
                         preference.folder = file.absolutePath
