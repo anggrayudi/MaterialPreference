@@ -1,0 +1,35 @@
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = POM_DEVELOPER_ID
+    key = properties["bintray.apiKey"]
+    configurations = ['archives']
+    pkg {
+        repo = 'maven'
+        name = POM_ARTIFACT_ID
+        websiteUrl = POM_SCM_URL
+        vcsUrl = VCS_URL
+        githubRepo = "anggrayudi/MaterialPreference"
+        issueTrackerUrl = "https://github.com/anggrayudi/MaterialPreference/issues"
+        licenses = [POM_LICENCE_NAME]
+
+        publish = true
+        publicDownloadNumbers = true
+
+        version.gpg {
+            sign = true
+        }
+    }
+}
