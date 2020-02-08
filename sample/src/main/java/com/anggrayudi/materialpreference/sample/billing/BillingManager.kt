@@ -92,7 +92,7 @@ class BillingManager(
                 billingUpdatesListener.onPurchasesUpdated(this.purchases)
             }
             BillingResponseCode.USER_CANCELED -> Log.i(TAG, "onPurchasesUpdated() - user cancelled the purchase flow - skipping")
-            else -> Log.w(TAG, "onPurchasesUpdated() got unknown resultCode: $result.responseCode")
+            else -> Log.w(TAG, "onPurchasesUpdated() got unknown resultCode: ${result.responseCode}")
         }
     }
 
@@ -161,8 +161,8 @@ class BillingManager(
         val consumeRequest = Runnable {
             // Consume the purchase async
             billingClient!!.consumeAsync(ConsumeParams.newBuilder()
-                    .setPurchaseToken(purchaseToken).build(),
-                    onConsumeListener)
+                    .setPurchaseToken(purchaseToken)
+                    .build(), onConsumeListener)
         }
         executeServiceRequest(consumeRequest)
     }

@@ -148,7 +148,7 @@ apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
     implementation 'com.anggrayudi:materialpreference:3.x.x'
-    kapt 'com.anggrayudi:materialpreference-compiler:1.1'
+    kapt 'com.anggrayudi:materialpreference-compiler:1.2'
 }
 ````
 

@@ -2,6 +2,7 @@
 bin/
 gen/
 *.apk
+*.aab
 *.class
 
 # Gradle files

@@ -2,16 +2,19 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 android {
     signingConfigs {
         release {
-            storePassword properties['storePassword']
-            keyAlias properties['keyAlias']
-            keyPassword properties['keyPassword']
-            storeFile file('android.jks')
+            keyAlias findProperty("keyAlias")
+            keyPassword findProperty("keyPassword")
+            storePassword findProperty("storePassword")
+            storeFile file('keystore.jks')
+        }
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+            storeFile file("${System.properties['user.home']}${File.separator}.android${File.separator}debug.keystore")
         }
     }
 
@@ -38,7 +41,7 @@ android {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             buildConfigField 'String', "BASE_64_ENCODED_PUBLIC_KEY", Base64PublicKey_MaterialPreference
         }
     }
@@ -56,7 +59,7 @@ configurations {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

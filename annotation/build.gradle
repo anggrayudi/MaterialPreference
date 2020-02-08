@@ -1,3 +1,4 @@
+apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
 group = 'com.anggrayudi'
@@ -7,23 +8,29 @@ archivesBaseName = 'materialpreference-api'
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
+        incremental = true
     }
 }
 
 compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
+        incremental = true
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
 }
 
 ext {
-    packagingMode = 'jar'
-    PUBLISH_ARTIFACT_ID = archivesBaseName
-    libsDesc = 'Annotation processor API for library MaterialPreference.'
+    // POM
+    POM_ARTIFACT_ID = archivesBaseName
+    VERSION_NAME = version
+
+    POM_NAME = archivesBaseName
+    POM_PACKAGING = 'jar'
+    POM_DESCRIPTION = 'Annotation processor API for library MaterialPreference.'
 }
 
-apply from: '../android-release-aar.gradle'
+apply plugin: "com.vanniktech.maven.publish"

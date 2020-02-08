@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 
 group = 'com.anggrayudi'
 version = "$libVersion"
+archivesBaseName = 'materialpreference'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -29,12 +30,8 @@ android {
     }
 }
 
-repositories {
-    maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
-}
-
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     api 'androidx.appcompat:appcompat:1.1.0'
     api 'com.google.android.material:material:1.2.0-alpha04'
     api 'androidx.documentfile:documentfile:1.0.1'
@@ -52,9 +49,13 @@ dependencies {
 }
 
 ext {
-    packagingMode = 'aar'
-    PUBLISH_ARTIFACT_ID = 'materialpreference'
-    libsDesc = 'A library designed to replace default preferences on Android framework with something beauty.'
+    // POM
+    POM_ARTIFACT_ID = archivesBaseName
+    VERSION_NAME = version
+
+    POM_NAME = archivesBaseName
+    POM_PACKAGING = 'aar'
+    POM_DESCRIPTION = 'A library designed to replace default preferences on Android framework with something beauty.'
 }
 
-apply from: '../android-release-aar.gradle'
+apply plugin: "com.vanniktech.maven.publish"
