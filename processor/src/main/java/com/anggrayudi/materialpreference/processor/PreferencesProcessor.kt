@@ -174,7 +174,7 @@ class PreferencesProcessor : AbstractProcessor() {
 
                 "MultiSelectListPreference" -> PreferenceDataType.STRING_SET
 
-                "IndicatorPreference" -> PreferenceDataType.NOTHING
+                "IndicatorPreference", "PreferenceCategory", "PreferenceScreen" -> PreferenceDataType.NOTHING
 
                 else -> {
                     eventType = parser.next()

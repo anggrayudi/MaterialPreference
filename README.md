@@ -29,7 +29,7 @@ android {
     }
 }
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.5.0'
+    implementation 'com.anggrayudi:materialpreference:3.5.1'
 }
 ```
 
@@ -148,7 +148,7 @@ apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
     implementation 'com.anggrayudi:materialpreference:3.x.x'
-    kapt 'com.anggrayudi:materialpreference-compiler:1.3'
+    kapt 'com.anggrayudi:materialpreference-compiler:1.5'
 }
 ````
 
