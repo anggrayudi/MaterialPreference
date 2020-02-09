@@ -175,7 +175,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 
 ### SharedPreferencesHelper
 
-Since v3.5.0, the annotation processor will generate `SharedPreferencesHelper`, so you can don't need to retrieve `SharedPreferences` value like this: `SharedPreferences.get<DataType>(key, defaultValue)`.
+Since v3.5.0, the annotation processor will generate `SharedPreferencesHelper`, so you don't need to retrieve `SharedPreferences` value like this: `SharedPreferences.get<DataType>(key, defaultValue)`.
 Take advantage of using it with dependency injection such as [Dagger 2](https://github.com/google/dagger) and [Koin](https://github.com/InsertKoinIO/koin).
 Personally, I would recommend you to use Koin because of its simplicity.
 
