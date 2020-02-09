@@ -8,7 +8,7 @@ import com.anggrayudi.materialpreference.IndicatorPreference;
 import com.anggrayudi.materialpreference.Preference;
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;
 import com.anggrayudi.materialpreference.SeekBarDialogPreference;
-import com.anggrayudi.materialpreference.annotation.PreferenceKeysConfig;
+import com.anggrayudi.materialpreference.annotation.PreferencesConfig;
 import com.anggrayudi.materialpreference.sample.BuildConfig;
 import com.anggrayudi.materialpreference.sample.PrefKey;
 import com.anggrayudi.materialpreference.sample.R;
@@ -23,7 +23,7 @@ import kotlin.jvm.functions.Function1;
  *
  * @author Anggrayudi H
  */
-@PreferenceKeysConfig
+@PreferencesConfig
 public class SettingsFragment extends PreferenceFragmentMaterial {
 
     public static SettingsFragment newInstance(String rootKey) {

@@ -66,6 +66,7 @@ dependencies {
 
     implementation 'com.android.billingclient:billing:2.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation "org.koin:koin-android:2.0.1"
 
     implementation project(':materialpreference')
     compileOnly project(':annotation')

@@ -696,7 +696,7 @@ open class Preference @JvmOverloads constructor(
     @Deprecated("It causes complexity and unreliable for preference's default value." +
         " Since v3.0.0 this method always returns null." +
         " Use your own method to set the default values as described in the com.anggrayudi.materialpreference.sample.App.kt",
-        ReplaceWith(""))
+        ReplaceWith("Generated class SharedPreferencesHelper is all you need."))
     protected fun onGetDefaultValue(a: TypedArray, index: Int): Any? = null
 
     /**

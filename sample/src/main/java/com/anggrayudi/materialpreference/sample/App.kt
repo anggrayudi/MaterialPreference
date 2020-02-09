@@ -9,11 +9,19 @@ import com.anggrayudi.materialpreference.PreferenceManager.Companion.KEY_HAS_SET
 import com.anggrayudi.materialpreference.migration.MigrationPlan
 import com.anggrayudi.materialpreference.migration.PreferenceMigration
 import com.anggrayudi.materialpreference.util.SaveDir
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        initSharedPreferences()
+        initKoin()
+    }
+
+    private fun initSharedPreferences() {
         /*
         DO NOT USE THIS METHOD to set your preferences' default value. It is inefficient!!!
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -41,6 +49,19 @@ class App : Application() {
 
             PreferenceMigration.setupMigration(MyPreferenceMigration(), preferences, PREFERENCE_VERSION)
              */
+        }
+    }
+
+    private fun initKoin() {
+        // Koin Dependency Injection
+        startKoin {
+            androidContext(this@App)
+
+            val preferencesHelperModule = module {
+                factory { SharedPreferencesHelper(get()) }
+            }
+
+            modules(preferencesHelperModule)
         }
     }
 

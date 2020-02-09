@@ -137,6 +137,10 @@
         <attr name="android:visible" format="boolean"/>
         <attr name="titleTextColor"/>
         <attr name="android:fontFamily"/>
+        <!-- Method name for SharedPreferencesHelper -->
+        <attr name="helperMethodName" format="string"/>
+        <!-- By default, all Preference is excluded, except its derived classes, e.g. IndicatorPreference and CheckBoxPreference. -->
+        <attr name="includeToHelper" format="boolean"/>
 
         <!-- TODO: Icon size -->
         <attr name="preferenceIconSize" format="enum">

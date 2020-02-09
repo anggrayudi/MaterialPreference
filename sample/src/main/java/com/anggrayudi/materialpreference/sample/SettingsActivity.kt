@@ -8,8 +8,14 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.anggrayudi.materialpreference.PreferenceActivityMaterial
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial
 import com.anggrayudi.materialpreference.PreferenceManager
+import org.koin.android.ext.android.inject
 
 class SettingsActivity : PreferenceActivityMaterial(), SharedPreferences.OnSharedPreferenceChangeListener {
+
+    // Since we use Koin, we don't need to init SharedPreferencesHelper manually.
+    // Just use Android Application Context provided by Koin to inject the required parameter of SharedPreferencesHelper.
+    // The main advantage is we can use SharedPreferencesHelper everywhere without worrying to satisfy its constructor parameter.
+    private val preferencesHelper: SharedPreferencesHelper by inject()
 
     private var settingsFragment: SettingsFragment? = null
 
@@ -29,8 +35,7 @@ class SettingsActivity : PreferenceActivityMaterial(), SharedPreferences.OnShare
     }
 
     private fun applyDayNightTheme() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        AppCompatDelegate.setDefaultNightMode(if (preferences.getBoolean(PrefKey.ENABLE_DARK_THEME, false))
+        AppCompatDelegate.setDefaultNightMode(if (preferencesHelper.isEnableDarkTheme)
             AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
     }
 

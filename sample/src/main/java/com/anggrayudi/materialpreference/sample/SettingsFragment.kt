@@ -10,23 +10,23 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.anggrayudi.materialpreference.*
-import com.anggrayudi.materialpreference.annotation.PreferenceKeysConfig
+import com.anggrayudi.materialpreference.annotation.PreferencesConfig
 import com.anggrayudi.materialpreference.callback.StoragePermissionCallback
 
 /**
- * [PreferenceKeysConfig] annotation creates a constant class which contains all of your
+ * [PreferencesConfig] annotation creates a constant class which contains all of your
  * **Preference Keys** from file `/xml/preferences.xml`, .i.e [PrefKey] object class.
- * So you don't need to make your own constant class.
+ * So you don't need to make your own constant class. It also generates [SharedPreferencesHelper].
  *
- * To use auto-generated [PrefKey] class, add the following configuration to your `build.gradle` in
- * `dependencies` section:
+ * To use auto-generated [PrefKey] and [SharedPreferencesHelper] classes,
+ * add the following configuration to your `build.gradle` in `dependencies` section:
  *
  *      dependencies {
- *          implementation 'com.anggrayudi:materialpreference:3.4.1'
- *          kapt 'com.anggrayudi:materialpreference-compiler:1.1'
+ *          implementation 'com.anggrayudi:materialpreference:3.5.0'
+ *          kapt 'com.anggrayudi:materialpreference-compiler:1.3'
  *      }
  */
-@PreferenceKeysConfig
+@PreferencesConfig
 class SettingsFragment : PreferenceFragmentMaterial() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

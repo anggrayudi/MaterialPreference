@@ -6,12 +6,14 @@
 
         <SwitchPreference
             android:key="auto_update"
-            android:title="Automatic update" />
+            android:title="Automatic update"
+            android:defaultValue="true"/>
 
         <CheckBoxPreference
             android:key="wifi_only"
             android:title="Wi-Fi only"
-            android:dependency="auto_update"/>
+            android:dependency="auto_update"
+            android:defaultValue="true"/>
 
         <!-- You can also use:
         android:visible="boolean"
@@ -26,6 +28,7 @@
             android:dependency="auto_update"
             android:entries="@array/entries_update_interval"
             android:entryValues="@array/entries_update_interval"
+            android:defaultValue="Weekly"
             app:bindValueToSummary="true"/>
 
         <IntegerListPreference
@@ -57,6 +60,7 @@
                     android:title="Vibrate duration"
                     android:dialogMessage="Adjust your device\'s vibrate duration here."
                     android:dialogTitle="Vibrate duration"
+                    android:defaultValue="200"
                     android:max="800"
                     app:min="200"
                     app:legacySummary="false" />
@@ -87,13 +91,17 @@
             android:key="birthDate"
             android:title="Birth date"/>
 
+        <!-- For String Set data type, separate each default value items by comma.
+        For example android:defaultValue="Andy,Anggrayudi,Ilham" -->
         <MultiSelectListPreference
             android:key="friend_list"
             android:title="Friend list"
             android:entries="@array/entries_friend"
             android:entryValues="@array/entries_friend"
+            android:defaultValue="Andy,Anggrayudi,Ilham"
             app:summaryNothing="@string/nothing"
-            app:bindValueToSummary="true" />
+            app:bindValueToSummary="true"
+            app:helperMethodName="friends"/> <!-- Customize method name in SharedPreferencesHelper -->
 
         <IndicatorPreference
             android:key="account_status"
@@ -129,7 +137,9 @@
         <Preference
             android:key="open_internal_settings"
             android:title="Open internal settings"
-            android:persistent="false">
+            android:persistent="false"
+            app:includeToHelper="true"> <!-- By default, all Preference is excluded,
+            except its derived classes, e.g. IndicatorPreference and CheckBoxPreference. -->
             <intent android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
                 android:data="package:com.anggrayudi.materialpreference.sample"/>
         </Preference>
@@ -143,7 +153,7 @@
     <!-- To make Preferences floating, you must wrap them inside PreferenceCategory -->
     <PreferenceCategory>
         <Preference
-            android:key="@string/about"
+            android:key="about"
             android:title="About"
             android:persistent="false"
             android:icon="@drawable/baseline_info_black_24"

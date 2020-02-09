@@ -29,7 +29,7 @@ android {
     }
 }
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.4.1'
+    implementation 'com.anggrayudi:materialpreference:3.5.0'
 }
 ```
 
@@ -148,7 +148,7 @@ apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
     implementation 'com.anggrayudi:materialpreference:3.x.x'
-    kapt 'com.anggrayudi:materialpreference-compiler:1.2'
+    kapt 'com.anggrayudi:materialpreference-compiler:1.3'
 }
 ````
 
@@ -173,9 +173,31 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 * If `PrefKey` does not update constant fields, click ![Alt text](art/make-project.png?raw=true "Make Project") Make Project in Android Studio.
 * This generator wont work with Android Studio 3.3.0 Stable, 3.4 Beta 3, and 3.5 Canary 3 because of [this bug](https://issuetracker.google.com/issues/122883561). The fixes are available in the next version of Android Studio.
 
+### SharedPreferencesHelper
+
+Since v3.5.0, the annotation processor will generate `SharedPreferencesHelper`, so you can don't need to retrieve `SharedPreferences` value like this: `SharedPreferences.get<DataType>(key, defaultValue)`.
+Take advantage of using it with dependency injection such as [Dagger 2](https://github.com/google/dagger) and [Koin](https://github.com/InsertKoinIO/koin).
+Personally, I would recommend you to use Koin because of its simplicity.
+
+```kotlin
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // ...
+        val preferencesHelper = SharedPreferencesHelper(this)
+        setTitle(preferencesHelper.accountName)
+    }
+}
+```
+
+From above code, `accountName` is a generated method based on your configuration on `preferences.xml`.
+It takes `android:defaultValue` if method `accountName` can't find any value stored in the `SharedPreferences`.
+You can customize the method name via `app:helperMethodName="yourMethodName"`. Read our sample code for more information.
+
 ### Java compatibility support
 
-Kotlin is interoperable with Java. Just configure the following setup for your project.
+Kotlin is interoperable with Java. Just configure the following setup in your project.
 
 #### Setup
 
