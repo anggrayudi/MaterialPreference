@@ -34,7 +34,10 @@ class BillingManager(
     : PurchasesUpdatedListener {
 
     /** A reference to BillingClient  */
-    private var billingClient: BillingClient? = null
+    private val billingClient = newBuilder(activity)
+            .setListener(this)
+            .enablePendingPurchases()
+            .build()
 
     /**
      * True if billing service is connected now.
@@ -62,14 +65,6 @@ class BillingManager(
     }
 
     init {
-        Log.d(TAG, "Creating Billing client.")
-        billingClient = newBuilder(activity)
-                .setListener(this)
-                .enablePendingPurchases()
-                .build()
-
-        Log.d(TAG, "Starting setup.")
-
         // Start setup. This is asynchronous and the specified listener will be called
         // once setup completes.
         // It also starts to report all the new purchase items through onPurchasesUpdated() callback.
@@ -106,7 +101,7 @@ class BillingManager(
                     val purchaseParams = BillingFlowParams.newBuilder()
                             .setSkuDetails(skuDetailsList.first())
 //                            .setDeveloperId()
-                    billingClient?.launchBillingFlow(activity, purchaseParams.build())
+                    billingClient.launchBillingFlow(activity, purchaseParams.build())
                 })
             }
         })
@@ -117,10 +112,8 @@ class BillingManager(
      */
     fun destroy() {
         Log.d(TAG, "Destroying the manager.")
-
-        if (billingClient?.isReady == true) {
-            billingClient!!.endConnection()
-            billingClient = null
+        if (billingClient.isReady) {
+            billingClient.endConnection()
         }
     }
 
@@ -132,7 +125,7 @@ class BillingManager(
             val params = SkuDetailsParams.newBuilder()
                     .setSkusList(skuList)
                     .setType(itemType)
-            billingClient!!.querySkuDetailsAsync(params.build(), listener)
+            billingClient.querySkuDetailsAsync(params.build(), listener)
         }
 
         executeServiceRequest(queryRequest)
@@ -160,7 +153,7 @@ class BillingManager(
         // Creating a runnable from the request to use it inside our connection retry policy below
         val consumeRequest = Runnable {
             // Consume the purchase async
-            billingClient!!.consumeAsync(ConsumeParams.newBuilder()
+            billingClient.consumeAsync(ConsumeParams.newBuilder()
                     .setPurchaseToken(purchaseToken)
                     .build(), onConsumeListener)
         }
@@ -192,7 +185,7 @@ class BillingManager(
      */
     private fun onQueryPurchasesFinished(result: PurchasesResult) {
         // Have we been disposed of in the meantime? If so, or bad result code, then quit
-        if (billingClient == null || result.responseCode != BillingResponseCode.OK) {
+        if (result.responseCode != BillingResponseCode.OK) {
             Log.w(TAG, "Billing client was null or result code (${result.responseCode}) was bad - quitting")
             return
         }
@@ -215,7 +208,7 @@ class BillingManager(
      *
      */
     fun areSubscriptionsSupported(): Boolean {
-        val responseCode = billingClient!!.isFeatureSupported(FeatureType.SUBSCRIPTIONS).responseCode
+        val responseCode = billingClient.isFeatureSupported(FeatureType.SUBSCRIPTIONS).responseCode
         if (responseCode != BillingResponseCode.OK) {
             Log.w(TAG, "areSubscriptionsSupported() got an error response: $responseCode")
         }
@@ -229,12 +222,12 @@ class BillingManager(
     fun queryPurchases() {
         val queryToExecute = Runnable {
             val time = System.currentTimeMillis()
-            val purchasesResult = billingClient!!.queryPurchases(SkuType.INAPP)
+            val purchasesResult = billingClient.queryPurchases(SkuType.INAPP)
             Log.i(TAG, "Querying purchases elapsed time: " + (System.currentTimeMillis() - time)
                     + "ms")
             // If there are subscriptions supported, we add subscription rows as well
             if (areSubscriptionsSupported()) {
-                val subscriptionResult = billingClient!!.queryPurchases(SkuType.SUBS)
+                val subscriptionResult = billingClient.queryPurchases(SkuType.SUBS)
                 Log.i(TAG, "Querying purchases and subscriptions elapsed time: "
                         + (System.currentTimeMillis() - time) + "ms")
                 Log.i(TAG, "Querying subscriptions result code: "
@@ -259,7 +252,7 @@ class BillingManager(
     }
 
     fun startServiceConnection(executeOnSuccess: Runnable?) {
-        billingClient!!.startConnection(object : BillingClientStateListener {
+        billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(result: BillingResult) {
                 billingClientResponseCode = result.responseCode
                 Log.d(TAG, "Setup finished. Response code: $billingClientResponseCode")

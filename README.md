@@ -1,4 +1,4 @@
-# Material Preference [ ![jcenter](https://api.bintray.com/packages/anggrayudi/maven/materialpreference/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference/_latestVersion)
+# Material Preference
 A library designed for people who love simplicity. Hate the old preference style? Try this library.
 
 It combines libraries from `androidx.preference` and `net.xpece.android.support.preference`.
@@ -29,17 +29,12 @@ android {
     }
 }
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.5.1'
+    implementation 'com.anggrayudi:materialpreference:3.5.2'
 }
 ```
 
-**Note:** If you encounter error `Failed to resolve com.anggrayudi:materialpreference:x.x.x`, then add the following config:
-
-````gradle
-repositories {
-    maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
-}
-````
+**Note:** Since v3.5.0, we only distribute this library through [OSS Sonatype Maven](https://oss.sonatype.org/#nexus-search;quick~com.anggrayudi).  
+Distributing it on Bintray became more difficult because Bintray seem lazy to maintain their [Gradle Plugin](https://github.com/bintray/gradle-bintray-plugin/).
 
 From your [`preferences.xml`](https://github.com/anggrayudi/MaterialPreference/blob/master/sample/src/main/res/xml/preferences.xml):
 
@@ -148,7 +143,7 @@ apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
     implementation 'com.anggrayudi:materialpreference:3.x.x'
-    kapt 'com.anggrayudi:materialpreference-compiler:1.5'
+    kapt 'com.anggrayudi:materialpreference-compiler:1.6'
 }
 ````
 
@@ -355,7 +350,7 @@ Any donation you give is really helpful for us to develop this library. It feels
 
 ## License
 
-    Copyright 2018-2019 Anggrayudi Hardiannicko A.
+    Copyright 2018-2020 Anggrayudi Hardiannicko A.
  
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

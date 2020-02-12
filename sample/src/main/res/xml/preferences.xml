@@ -97,8 +97,8 @@
             android:key="friend_list"
             android:title="Friend list"
             android:entries="@array/entries_friend"
-            android:entryValues="@array/entries_friend"
-            android:defaultValue="Andy,Anggrayudi,Ilham"
+            android:entryValues="@array/entry_values_friend"
+            android:defaultValue="andy,anggrayudi,ilham"
             app:summaryNothing="@string/nothing"
             app:bindValueToSummary="true"
             app:helperMethodName="friends"/> <!-- Customize method name in SharedPreferencesHelper -->

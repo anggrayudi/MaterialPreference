@@ -25,8 +25,8 @@ import com.anggrayudi.materialpreference.ListPreference
 class ListPreferenceDialogFragment : PreferenceDialogFragment() {
 
     private var clickedDialogEntryIndex: Int = 0
-    private var entries: Array<CharSequence>? = null
-    private var entryValues: Array<String>? = null
+    private lateinit var entries: Array<CharSequence>
+    private lateinit var entryValues: Array<String>
 
     private val listPreference: ListPreference
         get() = preference as ListPreference
@@ -41,28 +41,28 @@ class ListPreferenceDialogFragment : PreferenceDialogFragment() {
             }
 
             clickedDialogEntryIndex = preference.findIndexOfValue(preference.value)
-            entryValues = preference.entryValues
-            entries = preference.entries
+            entryValues = preference.entryValues!!
+            entries = preference.entries!!
         } else {
             clickedDialogEntryIndex = savedInstanceState.getInt(SAVE_STATE_INDEX, 0)
-            entryValues = savedInstanceState.getStringArrayList(SAVE_STATE_ENTRY_VALUES)?.toTypedArray()
-            entries = getCharSequenceArray(savedInstanceState, SAVE_STATE_ENTRIES)
+            entryValues = savedInstanceState.getStringArrayList(SAVE_STATE_ENTRY_VALUES)!!.toTypedArray()
+            entries = getCharSequenceArray(savedInstanceState, SAVE_STATE_ENTRIES)!!
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(SAVE_STATE_INDEX, clickedDialogEntryIndex)
-        outState.putStringArrayList(SAVE_STATE_ENTRY_VALUES, ArrayList(entryValues!!.toList()))
-        putCharSequenceArray(outState, SAVE_STATE_ENTRIES, entries!!)
+        outState.putStringArrayList(SAVE_STATE_ENTRY_VALUES, ArrayList(entryValues.toList()))
+        putCharSequenceArray(outState, SAVE_STATE_ENTRIES, entries)
     }
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
         return dialog.listItemsSingleChoice(
-            items = entries!!.map { it.toString() },
+            items = entries.map { it.toString() },
             initialSelection = clickedDialogEntryIndex,
             waitForPositiveButton = false,
-            disabledIndices = getDisabledIndices(listPreference.disabledEntryValues, entryValues!!)) { _, index, _ ->
+            disabledIndices = getDisabledIndices(listPreference.disabledEntryValues, entryValues)) { _, index, _ ->
             clickedDialogEntryIndex = index
             whichButtonClicked = WhichButton.POSITIVE
             dialog.dismiss()
@@ -71,7 +71,7 @@ class ListPreferenceDialogFragment : PreferenceDialogFragment() {
 
     override fun onDialogClosed(positiveResult: Boolean) {
         if (positiveResult && clickedDialogEntryIndex >= 0) {
-            listPreference.value = entryValues!![clickedDialogEntryIndex]
+            listPreference.value = entryValues[clickedDialogEntryIndex]
         }
     }
 

@@ -22,8 +22,8 @@ import com.anggrayudi.materialpreference.callback.StoragePermissionCallback
  * add the following configuration to your `build.gradle` in `dependencies` section:
  *
  *      dependencies {
- *          implementation 'com.anggrayudi:materialpreference:3.5.0'
- *          kapt 'com.anggrayudi:materialpreference-compiler:1.3'
+ *          implementation 'com.anggrayudi:materialpreference:3.5.2'
+ *          kapt 'com.anggrayudi:materialpreference-compiler:1.6'
  *      }
  */
 @PreferencesConfig

@@ -29,6 +29,18 @@
         <item>Tara</item>
     </string-array>
 
+    <string-array name="entry_values_friend">
+        <item>andy</item>
+        <item>anggrayudi</item>
+        <item>emily</item>
+        <item>fajar</item>
+        <item>gusra</item>
+        <item>ilham</item>
+        <item>lingga</item>
+        <item>nicko</item>
+        <item>tara</item>
+    </string-array>
+
     <string-array name="entries_update_interval">
         <item>Daily</item>
         <item>Weekly</item>

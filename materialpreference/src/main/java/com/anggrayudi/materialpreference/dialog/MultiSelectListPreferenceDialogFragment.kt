@@ -28,8 +28,8 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
 
     private val newValues = HashSet<String>()
     private var preferenceChanged: Boolean = false
-    private var entries: Array<CharSequence>? = null
-    private var entryValues: Array<String>? = null
+    private lateinit var entries: Array<CharSequence>
+    private lateinit var entryValues: Array<String>
 
     private val listPreference: MultiSelectListPreference
         get() = preference as MultiSelectListPreference
@@ -47,14 +47,14 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
             newValues.clear()
             newValues.addAll(preference.value!!)
             preferenceChanged = false
-            entries = preference.entries
-            entryValues = preference.entryValues
+            entries = preference.entries!!
+            entryValues = preference.entryValues!!
         } else {
             newValues.clear()
             newValues.addAll(savedInstanceState.getStringArrayList(SAVE_STATE_VALUES)!!)
             preferenceChanged = savedInstanceState.getBoolean(SAVE_STATE_CHANGED, false)
-            entries = savedInstanceState.getCharSequenceArray(SAVE_STATE_ENTRIES)
-            entryValues = savedInstanceState.getStringArray(SAVE_STATE_ENTRY_VALUES)
+            entries = savedInstanceState.getCharSequenceArray(SAVE_STATE_ENTRIES)!!
+            entryValues = savedInstanceState.getStringArray(SAVE_STATE_ENTRY_VALUES)!!
         }
     }
 
@@ -67,7 +67,7 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
     }
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
-        val integers = entryValues!!.indices.filter { newValues.contains(entryValues!![it]) }
+        val integers = entryValues.indices.filter { newValues.contains(entryValues[it]) }
         preferenceChanged = false
 
         return dialog
@@ -77,15 +77,18 @@ class MultiSelectListPreferenceDialogFragment : PreferenceDialogFragment() {
                 .negativeButton(text = negativeButtonText ?: getString(android.R.string.cancel)) {
                     whichButtonClicked = WhichButton.NEGATIVE
                 }
-                .listItemsMultiChoice(items = entries!!.map { it.toString() },
+                .listItemsMultiChoice(items = entries.map { it.toString() },
                         initialSelection = IntArray(integers.size) { integers[it] },
-                        disabledIndices = getDisabledIndices(listPreference.disabledEntryValues, entryValues!!),
+                        disabledIndices = getDisabledIndices(listPreference.disabledEntryValues, entryValues),
                         waitForPositiveButton = false,
-                        allowEmptySelection = true) { d, _, items ->
+                        allowEmptySelection = true) { d, indices, _ ->
                     if (d.isShowing) {
                         preferenceChanged = true
                         newValues.clear()
-                        newValues.addAll(items)
+
+                        val selectedValues = mutableListOf<String>()
+                        indices.forEach { selectedValues.add(entryValues[it]) }
+                        newValues.addAll(selectedValues)
                     }
                 }
     }

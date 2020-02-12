@@ -11,8 +11,8 @@ import com.anggrayudi.materialpreference.dialog.ListPreferenceDialogFragment.Com
 class IntegerListPreferenceDialogFragment : PreferenceDialogFragment() {
 
     private var clickedDialogEntryIndex: Int = 0
-    private var entries: Array<CharSequence>? = null
-    private var entryValues: Array<Int>? = null
+    private lateinit var entries: Array<CharSequence>
+    private lateinit var entryValues: Array<Int>
 
     private val listPreference: IntegerListPreference
         get() = preference as IntegerListPreference
@@ -27,25 +27,25 @@ class IntegerListPreferenceDialogFragment : PreferenceDialogFragment() {
             }
 
             clickedDialogEntryIndex = preference.findIndexOfValue(preference.value)
-            entryValues = preference.entryValues
-            entries = preference.entries
+            entryValues = preference.entryValues!!
+            entries = preference.entries!!
         } else {
             clickedDialogEntryIndex = savedInstanceState.getInt(SAVE_STATE_INDEX, 0)
-            entryValues = savedInstanceState.getIntArray(SAVE_STATE_ENTRY_VALUES)?.toTypedArray()
-            entries = getCharSequenceArray(savedInstanceState, SAVE_STATE_ENTRIES)
+            entryValues = savedInstanceState.getIntArray(SAVE_STATE_ENTRY_VALUES)!!.toTypedArray()
+            entries = getCharSequenceArray(savedInstanceState, SAVE_STATE_ENTRIES)!!
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(SAVE_STATE_INDEX, clickedDialogEntryIndex)
-        outState.putIntArray(SAVE_STATE_ENTRY_VALUES, entryValues!!.toIntArray())
-        putCharSequenceArray(outState, SAVE_STATE_ENTRIES, entries!!)
+        outState.putIntArray(SAVE_STATE_ENTRY_VALUES, entryValues.toIntArray())
+        putCharSequenceArray(outState, SAVE_STATE_ENTRIES, entries)
     }
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
         return dialog.listItemsSingleChoice(
-            items = entries!!.map { it.toString() },
+            items = entries.map { it.toString() },
             initialSelection = clickedDialogEntryIndex,
             waitForPositiveButton = false,
             disabledIndices = getDisabledIndices()) { _, index, _ ->
@@ -57,14 +57,14 @@ class IntegerListPreferenceDialogFragment : PreferenceDialogFragment() {
 
     override fun onDialogClosed(positiveResult: Boolean) {
         if (positiveResult && clickedDialogEntryIndex >= 0) {
-            listPreference.value = entryValues!![clickedDialogEntryIndex]
+            listPreference.value = entryValues[clickedDialogEntryIndex]
         }
     }
 
     private fun getDisabledIndices(): IntArray? {
         val e = listPreference.disabledEntryValues
-        if (e != null && e.size <= entryValues!!.size) {
-            return entryValues!!.withIndex()
+        if (e != null && e.size <= entryValues.size) {
+            return entryValues.withIndex()
                 .filter { e.contains(it.value) }
                 .map { it.index }
                 .toIntArray()

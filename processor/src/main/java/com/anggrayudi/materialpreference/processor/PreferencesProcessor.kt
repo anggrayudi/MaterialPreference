@@ -62,14 +62,14 @@ class PreferencesProcessor : AbstractProcessor() {
                                     .joinToString(",") { s -> "\"$s\"" }
 
                             if (defaultValue.isNotEmpty()) {
-                                getterBuilder.addStatement("return preferences.getStringSet(%S, mutableSetOf(%L)) ?: mutableSetOf<String?>(%L)", spec.key, defaultValue, defaultValue)
+                                getterBuilder.addStatement("return preferences.getStringSet(%S, mutableSetOf(%L)) ?: mutableSetOf(%L)", spec.key, defaultValue, defaultValue)
                             } else {
                                 getterBuilder.addStatement("return preferences.getStringSet(%S, mutableSetOf()) ?: mutableSetOf()", spec.key)
                             }
 
                             val set = ClassName("kotlin.collections", "MutableSet")
 
-                            PropertySpec.builder(spec.methodName!!, set.parameterizedBy(String::class.asTypeName().copy(nullable = true)))
+                            PropertySpec.builder(spec.methodName!!, set.parameterizedBy(String::class.asTypeName()))
                         }
 
                         PreferenceDataType.BOOLEAN -> {
@@ -130,6 +130,9 @@ class PreferencesProcessor : AbstractProcessor() {
                     .addType(prefKeyClassBuilder.build())
                     .build()
                     .writeTo(File(generatedSourcesRoot).apply { mkdirs() })
+
+            // TODO(Anggrayudi H): 2/10/2020 Create static method setDefaultValues() in helper class
+            // TODO(Anggrayudi H): 2/10/2020 Create setter in helper class
 
             FileSpec.builder(packageName, a.prefHelperClassName)
                     .addType(prefHelperClassBuilder.build())
