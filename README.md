@@ -18,7 +18,7 @@ Even though Material Preference is built in Kotlin, but you can use this library
 
 ## Usage
 
-### Basic [ ![jcenter](https://api.bintray.com/packages/anggrayudi/maven/materialpreference/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference/_latestVersion)
+### Basic
 
 ```gradle
 android {
@@ -33,7 +33,7 @@ dependencies {
 }
 ```
 
-**Note:** Since v3.5.0, we only distribute this library through [OSS Sonatype Maven](https://oss.sonatype.org/#nexus-search;quick~com.anggrayudi).  
+**Note:** Since v3.5.0, we only distribute this library through [OSS Sonatype Maven](https://oss.sonatype.org/#nexus-search;quick~com.anggrayudi).
 Distributing it on Bintray became more difficult because Bintray seem lazy to maintain their [Gradle Plugin](https://github.com/bintray/gradle-bintray-plugin/).
 
 From your [`preferences.xml`](https://github.com/anggrayudi/MaterialPreference/blob/master/sample/src/main/res/xml/preferences.xml):
@@ -130,7 +130,7 @@ Finally, start the migration:
 PreferenceMigration.setupMigration(MyPreferenceMigration(), preferences, PREFERENCE_VERSION)
 ```
 
-### Preference Key Constants Generator [ ![jcenter](https://api.bintray.com/packages/anggrayudi/maven/materialpreference-compiler/images/download.svg)](https://bintray.com/anggrayudi/maven/materialpreference-compiler/_latestVersion)
+### Preference Key Constants Generator
 
 Material Preference has a capability to auto-generate your preference keys in a constant class. By default, this class is named `PrefKey`. With this generator, you don't need to rewrite constant field each time you modify preference key from file `res/xml/preferences.xml`. It improves accuracy in writing constant values.
 
