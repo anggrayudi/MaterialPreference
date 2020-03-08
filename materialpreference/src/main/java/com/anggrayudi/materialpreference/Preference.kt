@@ -198,14 +198,6 @@ open class Preference @JvmOverloads constructor(
     var isPersistent: Boolean = true
         internal set
 
-    /**
-     * Sets the default value for this Preference, which will be set either if
-     * persistence is off or persistence is on and the preference is not found
-     * in the persistent storage.
-     */
-    @Deprecated("Use your own static method to set the preference's default value")
-    var defaultValue: Any? = null
-
     var tag: Any? = null
 
     /**
@@ -270,7 +262,7 @@ open class Preference @JvmOverloads constructor(
     private val clickListener = View.OnClickListener { v -> performClick(v) }
 
     private val longClickListener = View.OnLongClickListener {
-        onPreferenceLongClickListener != null && onPreferenceLongClickListener!!(this)
+        onPreferenceLongClickListener?.invoke(this) == true
     }
 
     /**
@@ -730,7 +722,7 @@ open class Preference @JvmOverloads constructor(
                 text = title
                 visibility = View.VISIBLE
                 if (hasSingleLineTitleAttr) {
-                    setSingleLine(isSingleLineTitle)
+                    isSingleLine = isSingleLineTitle
                 }
                 if (titleTextColor != 0)
                     setTextColor(titleTextColor)
@@ -1190,7 +1182,9 @@ open class Preference @JvmOverloads constructor(
         val dataStore = preferenceDataStore
         return if (dataStore != null) {
             dataStore.getString(key!!, defaultReturnValue)
-        } else preferenceManager!!.sharedPreferences!!.getString(key, defaultReturnValue)
+        } else {
+            preferenceManager!!.sharedPreferences!!.getString(key, defaultReturnValue)
+        }
     }
 
     /**
@@ -1218,9 +1212,10 @@ open class Preference @JvmOverloads constructor(
         if (dataStore != null) {
             dataStore.putStringSet(key!!, values)
         } else {
-            val editor = preferenceManager!!.editor
-            editor!!.putStringSet(key, values)
-            tryCommit(editor)
+            preferenceManager?.editor?.let {
+                it.putStringSet(key, values)
+                tryCommit(it)
+            }
         }
         return true
     }

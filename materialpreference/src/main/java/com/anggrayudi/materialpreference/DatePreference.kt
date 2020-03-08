@@ -19,9 +19,9 @@ open class DatePreference @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : Preference(context, attrs, defStyleAttr, defStyleRes), DatePickerDialog.OnDateSetListener {
 
-    var minDate: Long = 0
+    var minDate = 0L
 
-    var maxDate: Long = 0
+    var maxDate = 0L
 
     var disabledDays: Array<Calendar>? = null
 
@@ -39,7 +39,7 @@ open class DatePreference @JvmOverloads constructor(
     /** Null if no value saved yet */
     var value: Date?
         get() {
-            val millis = getPersistedLong(0)
+            val millis = getPersistedLong(defaultValue)
             return if (millis > 0) Date(millis) else null
         }
         set(date) {
@@ -52,15 +52,32 @@ open class DatePreference @JvmOverloads constructor(
             }
         }
 
+    /**
+     * Unix timestamp in millisecond. For example:
+     * ```xml
+     * <DatePreference
+     *     android:defaultValue="1583621381235L" />
+     * ```
+     *
+     * You have to use letter `L` as the suffix, or it will throw error like =>
+     * `NumberFormatException: For input string: "1.58362134E12"`
+     */
+    var defaultValue = 0L
+        private set
+
     init {
+        val a = context.obtainStyledAttributes(attrs, R.styleable.Preference, defStyleAttr, defStyleRes)
+        defaultValue = a.getString(R.styleable.Preference_android_defaultValue)?.replace("L", "")?.toLong() ?: 0
+        a.recycle()
+
         onPreferenceClickListener = {
             val millis = getPersistedLong(System.currentTimeMillis())
             val now = Calendar.getInstance()
             now.timeInMillis = millis
             val dialog = DatePickerDialog.newInstance(this,
-                now.get(Calendar.YEAR),
-                now.get(Calendar.MONTH),
-                now.get(Calendar.DAY_OF_MONTH))
+                now[Calendar.YEAR],
+                now[Calendar.MONTH],
+                now[Calendar.DAY_OF_MONTH])
             dialog.version = DatePickerDialog.Version.VERSION_2
             dialog.dismissOnPause(false)
 
@@ -90,7 +107,7 @@ open class DatePreference @JvmOverloads constructor(
     }
 
     override fun onSetupFinished(fragment: PreferenceFragmentMaterial) {
-        val dialog = fragment.fragmentManager!!.findFragmentByTag(key) as? DatePickerDialog
+        val dialog = fragment.fragmentManager?.findFragmentByTag(key) as? DatePickerDialog
         dialog?.onDateSetListener = this
     }
 

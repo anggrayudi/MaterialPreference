@@ -91,9 +91,14 @@ open class IntegerListPreference @JvmOverloads constructor(
             return if (index >= 0 && entries != null) entries!![index] else null
         }
 
+    var defaultValue = 0
+        private set
+
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.ListPreference,
             defStyleAttr, defStyleRes)
+
+        defaultValue = a.getInt(R.styleable.Preference_android_defaultValue, 0)
 
         val entries = a.getTextArray(R.styleable.ListPreference_android_entries)
         _entries = if (entries != null && entries[0] != null)
@@ -131,7 +136,7 @@ open class IntegerListPreference @JvmOverloads constructor(
     }
 
     override fun onSetInitialValue() {
-        _value = getPersistedInt(value)
+        _value = getPersistedInt(defaultValue)
         if (isBindValueToSummary)
             summary = summaryFormatter?.invoke(entry, _value.toString()) ?: entry
     }

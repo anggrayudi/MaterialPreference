@@ -71,6 +71,9 @@ open class SeekBarDialogPreference @JvmOverloads constructor(
             }
         }
 
+    var defaultValue = 0
+        private set
+
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference,
             defStyleAttr, defStyleRes)
@@ -79,6 +82,7 @@ open class SeekBarDialogPreference @JvmOverloads constructor(
         if (hasAspMin) {
             preferredMin = a.getInt(R.styleable.SeekBarPreference_min, preferredMin)
         }
+        defaultValue = a.getInt(R.styleable.Preference_android_defaultValue, preferredMin)
         a.recycle()
     }
 
@@ -113,7 +117,7 @@ open class SeekBarDialogPreference @JvmOverloads constructor(
     }
 
     override fun onSetInitialValue() {
-        value = getPersistedInt(value)
+        value = getPersistedInt(defaultValue)
     }
 
     override fun onSaveInstanceState(): Parcelable? {

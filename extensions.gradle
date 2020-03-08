@@ -1,7 +1,7 @@
 ext {
     appVersionCode = 15
-    libVersion = '3.5.2'
-    processorVersion = '1.6'
+    libVersion = '3.6.0'
+    processorVersion = '1.7'
     minSdkVersion = 17
     targetSdkVersion = 29
     compileSdkVersion = 29

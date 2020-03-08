@@ -95,13 +95,15 @@ class App : Application() {
 
         private const val PREFERENCE_VERSION = 3
 
+        /**
+         * Create custom `setDefaultPreferenceValues()` where setting some default values require
+         * logic and does not covered by [SharedPreferencesHelper.setDefaultPreferenceValues].
+         */
         fun setDefaultPreferenceValues(context: Context) {
+            SharedPreferencesHelper.setDefaultPreferenceValues(context)
+
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             preferences.edit()
-                    .putBoolean("auto_update", true)
-                    .putBoolean("wifi_only", true)
-                    .putString("update_interval", "Weekly")
-                    .putInt("vibrate_duration", 200)
                     .putString("backupLocation", SaveDir.DOWNLOADS)
                     .putInt("themeColor", Color.parseColor("#37474F"))
                     .apply()

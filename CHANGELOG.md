@@ -1,5 +1,11 @@
 
-## 3.5.0 (2019-09-02)
+## 3.6.0 (2020-08-03)
+
+### Enhancements
+* All properties in the `SharedPreferencesHelper` are now mutable.
+* Added static method `SharedPreferencesHelper.setDefaultPreferenceValues(Context)`.
+
+## 3.5.0 (2020-09-02)
 
 ### Enhancements
 * Annotation processor will generate `SharedPreferencesHelper`, so you don't need to get `SharedPreferences` value like this: `SharedPreferences.get<DataType>(key, defaultValue)`.

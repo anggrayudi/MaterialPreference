@@ -34,5 +34,10 @@ enum class PreferenceDataType {
      * For `MultiSelectIntegerListPreference`.
      */
     INTEGER_SET,
-    FLOAT
+    FLOAT,
+
+    /**
+     * For `TimePreference`.
+     */
+    TIME
 }

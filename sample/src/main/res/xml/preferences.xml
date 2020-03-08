@@ -37,11 +37,13 @@
             android:dependency="auto_update"
             android:entries="@array/entries_max_threads"
             android:entryValues="@array/entries_max_threads"
+            android:defaultValue="4"
             app:bindValueToSummary="true"/>
 
         <TimePreference
             android:key="syncTime"
-            android:title="Sync active hours"/>
+            android:title="Sync active hours"
+            android:defaultValue="14:08"/>
 
         <PreferenceScreen
             android:key="screen_notification"
@@ -83,13 +85,15 @@
             android:dialogMessage="Please fill it with your name"
             android:inputType="textCapWords"
             android:maxLength="15"
+            android:defaultValue="@null"
             app:minLength="2"
             app:counterEnabled="true"
             app:legacySummary="false" />
 
         <DatePreference
             android:key="birthDate"
-            android:title="Birth date"/>
+            android:title="Birth date"
+            android:defaultValue="1583621381235L"/>
 
         <!-- For String Set data type, separate each default value items by comma.
         For example android:defaultValue="Andy,Anggrayudi,Ilham" -->

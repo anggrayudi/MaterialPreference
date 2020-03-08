@@ -109,18 +109,22 @@ open class RingtonePreference @JvmOverloads constructor(
             return title
         }
 
+    var defaultValue: String? = null
+        private set
+
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.RingtonePreference,
             defStyleAttr, defStyleRes)
         ringtoneType = a.getInt(R.styleable.RingtonePreference_android_ringtoneType, RingtoneManager.TYPE_RINGTONE)
         showDefault = a.getBoolean(R.styleable.RingtonePreference_android_showDefault, true)
         showSilent = a.getBoolean(R.styleable.RingtonePreference_android_showSilent, true)
+        defaultValue = a.getString(R.styleable.Preference_android_defaultValue)
         a.recycle()
     }
 
     override fun onSetInitialValue() {
         if (isBindValueToSummary) {
-            val uri = getPersistedString(null)
+            val uri = getPersistedString(defaultValue)
             summary = if (uri == null)
                 context.getString(R.string.ringtone_silent)
             else
@@ -157,7 +161,7 @@ open class RingtonePreference @JvmOverloads constructor(
      * @return The ringtone to be marked as the current ringtone.
      */
     fun onRestoreRingtone(): Uri? {
-        val uriString = getPersistedString(null)
+        val uriString = getPersistedString(defaultValue)
         return if (!uriString.isNullOrEmpty()) Uri.parse(uriString) else null
     }
 

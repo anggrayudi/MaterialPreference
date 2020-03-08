@@ -112,16 +112,18 @@ open class EditTextPreference @JvmOverloads constructor(
 
     var inputFilters: Array<InputFilter>? = null
 
+    var defaultValue: String? = null
+        private set
+
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.EditTextPreference,
-            defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.EditTextPreference, defStyleAttr, defStyleRes)
         isCounterEnabled = a.getBoolean(R.styleable.EditTextPreference_counterEnabled, true)
         hint = a.getString(R.styleable.EditTextPreference_android_hint)
         message = a.getString(R.styleable.EditTextPreference_android_dialogMessage)
         maxLength = a.getInt(R.styleable.EditTextPreference_android_maxLength, 100)
         minLength = a.getInt(R.styleable.EditTextPreference_minLength, 0)
-        inputType = a.getInt(R.styleable.EditTextPreference_android_inputType,
-            InputType.TYPE_CLASS_TEXT)
+        inputType = a.getInt(R.styleable.EditTextPreference_android_inputType, InputType.TYPE_CLASS_TEXT)
+        defaultValue = a.getString(R.styleable.Preference_android_defaultValue)
         a.recycle()
     }
 
@@ -132,7 +134,7 @@ open class EditTextPreference @JvmOverloads constructor(
     }
 
     override fun onSetInitialValue() {
-        _text = getPersistedString(value)
+        _text = getPersistedString(defaultValue)
         updateSummary()
     }
 

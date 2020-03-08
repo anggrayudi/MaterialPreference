@@ -3,6 +3,7 @@ package com.anggrayudi.materialpreference
 import android.content.Context
 import android.text.format.DateFormat
 import android.util.AttributeSet
+import com.anggrayudi.materialpreference.util.toSafeInt
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import com.wdullaer.materialdatetimepicker.time.Timepoint
 import java.util.*
@@ -44,7 +45,7 @@ open class TimePreference @JvmOverloads constructor(
     var value: Time?
         get() {
             val value = getPersistedString(null)
-            return if (value != null) toTime(value) else null
+            return if (value != null) toTime(value) else defaultValue
         }
         set(time) {
             if (callChangeListener(time!!)) {
@@ -55,15 +56,29 @@ open class TimePreference @JvmOverloads constructor(
             }
         }
 
+    /**
+     * For example:
+     * ```xml
+     * <TimePreference
+     *     android:defaultValue="14:08" />
+     * ```
+     */
+    var defaultValue: Time? = null
+        private set
+
     init {
+        val a = context.obtainStyledAttributes(attrs, R.styleable.Preference, defStyleAttr, defStyleRes)
+        defaultValue = a.getString(R.styleable.Preference_android_defaultValue)?.let { toTime(it) }
+        a.recycle()
+
         onPreferenceClickListener = {
             var time = value
             if (time == null) {
                 val now = Calendar.getInstance()
-                time = Time(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND))
+                time = Time(now[Calendar.HOUR_OF_DAY], now[Calendar.MINUTE])
             }
             val dialog = TimePickerDialog.newInstance(this,
-                time.hourOfDay, time.minute, time.second, is24HourMode)
+                time.hourOfDay, time.minute, is24HourMode)
             dialog.version = TimePickerDialog.Version.VERSION_2
             dialog.dismissOnPause(false)
             dialog.enableMinutes(enableMinute)
@@ -85,7 +100,7 @@ open class TimePreference @JvmOverloads constructor(
     }
 
     override fun onSetupFinished(fragment: PreferenceFragmentMaterial) {
-        val dialog = fragment.fragmentManager!!.findFragmentByTag(key) as? TimePickerDialog
+        val dialog = fragment.fragmentManager?.findFragmentByTag(key) as? TimePickerDialog
         dialog?.onTimeSetListener = this
     }
 
@@ -97,25 +112,24 @@ open class TimePreference @JvmOverloads constructor(
     }
 
     override fun onTimeSet(view: TimePickerDialog, hourOfDay: Int, minute: Int, second: Int) {
-        value = Time(hourOfDay, minute, second)
+        value = Time(hourOfDay, minute)
     }
 
     class Time constructor(
         /** 24 hours format  */
         var hourOfDay: Int,
-        var minute: Int,
-        var second: Int) {
+        var minute: Int
+    ) {
 
-        override fun toString(): String = "$hourOfDay:$minute:$second"
+        override fun toString(): String = "$hourOfDay:$minute"
 
-        fun toDate(initDateMillis: Long = 0): Date {
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = initDateMillis
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-            calendar.set(Calendar.MINUTE, minute)
-            calendar.set(Calendar.SECOND, second)
-            calendar.set(Calendar.MILLISECOND, 0)
-            return calendar.time
+        fun toDate(initialDateMillis: Long = 0): Date = Calendar.getInstance().run {
+            timeInMillis = initialDateMillis
+            set(Calendar.HOUR_OF_DAY, hourOfDay)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            time
         }
     }
 
@@ -127,13 +141,13 @@ open class TimePreference @JvmOverloads constructor(
          */
         fun toTime(value: String): Time {
             val s = value.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            return Time(Integer.valueOf(s[0]), Integer.valueOf(s[1]), Integer.valueOf(s[2]))
+            return Time(s[0].toSafeInt(), s[1].toSafeInt())
         }
 
         fun toTime(date: Date): Time {
             val c = Calendar.getInstance()
             c.time = date
-            return toTime("${c.get(Calendar.HOUR_OF_DAY)}:${c.get(Calendar.MINUTE)}:${c.get(Calendar.SECOND)}")
+            return toTime("${c[Calendar.HOUR_OF_DAY]}:${c[Calendar.MINUTE]}:${c[Calendar.SECOND]}")
         }
     }
 }

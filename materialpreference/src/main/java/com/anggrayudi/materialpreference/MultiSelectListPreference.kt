@@ -73,7 +73,7 @@ open class MultiSelectListPreference @JvmOverloads constructor(
             if (v != null) {
                 values.addAll(v)
             }
-            if (persistStringSet(v ?: HashSet()) && isBindValueToSummary) {
+            if (persistStringSet(v.orEmpty()) && isBindValueToSummary) {
                 summary = when {
                     value!!.isEmpty() -> if (summaryFormatter == null) nothingText
                     else summaryFormatter!!.invoke(value!!.toTypedArray())
@@ -123,6 +123,9 @@ open class MultiSelectListPreference @JvmOverloads constructor(
             }
         }
 
+    var defaultValue: Set<String> = emptySet()
+        private set
+
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.MultiSelectListPreference,
             defStyleAttr, defStyleRes)
@@ -131,6 +134,13 @@ open class MultiSelectListPreference @JvmOverloads constructor(
         _entryValues = a.getTextArray(R.styleable.MultiSelectListPreference_android_entryValues)
             .map { it.toString() }
             .toTypedArray()
+
+        defaultValue = a.getString(R.styleable.Preference_android_defaultValue).orEmpty()
+                .split(",")
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .toSet()
+
         a.recycle()
     }
 
@@ -164,7 +174,7 @@ open class MultiSelectListPreference @JvmOverloads constructor(
     }
 
     override fun onSetInitialValue() {
-        values.addAll(getPersistedStringSet(value)!!)
+        values.addAll(getPersistedStringSet(defaultValue).orEmpty())
         if (isBindValueToSummary) {
             summary = when {
                 value!!.isEmpty() -> if (summaryFormatter == null) nothingText

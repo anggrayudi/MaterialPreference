@@ -107,6 +107,9 @@ open class ListPreference @JvmOverloads constructor(
             return if (index >= 0 && entries != null) entries!![index] else null
         }
 
+    var defaultValue: String? = null
+        private set
+
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.ListPreference,
             defStyleAttr, defStyleRes)
@@ -114,6 +117,7 @@ open class ListPreference @JvmOverloads constructor(
         _entryValues = a.getTextArray(R.styleable.ListPreference_android_entryValues)
             .map { it.toString() }
             .toTypedArray()
+        defaultValue = a.getString(R.styleable.Preference_android_defaultValue)
         a.recycle()
 
         negativeButtonText = null
@@ -129,7 +133,7 @@ open class ListPreference @JvmOverloads constructor(
     }
 
     override fun onSetInitialValue() {
-        _value = getPersistedString(value)
+        _value = getPersistedString(defaultValue)
         if (isBindValueToSummary)
             summary = summaryFormatter?.invoke(entry, _value) ?: entry
     }

@@ -163,6 +163,9 @@ open class SeekBarPreference @JvmOverloads constructor(
         get() = seekBarValue
         set(seekBarValue) = setValueInternal(seekBarValue, true)
 
+    var defaultValue = 0
+        private set
+
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference,
             defStyleAttr, defStyleRes)
@@ -175,6 +178,7 @@ open class SeekBarPreference @JvmOverloads constructor(
         _max = a.getInt(R.styleable.SeekBarPreference_android_max, 100)
         _seekBarIncrement = a.getInt(R.styleable.SeekBarPreference_seekBarIncrement, 0)
         isAdjustable = a.getBoolean(R.styleable.SeekBarPreference_adjustable, true)
+        defaultValue = a.getInt(R.styleable.Preference_android_defaultValue, _min)
         a.recycle()
     }
 
@@ -239,7 +243,7 @@ open class SeekBarPreference @JvmOverloads constructor(
     }
 
     override fun onSetInitialValue() {
-        seekBarValue = getPersistedInt(value)
+        seekBarValue = getPersistedInt(defaultValue)
     }
 
     override fun onSaveInstanceState(): Parcelable? {

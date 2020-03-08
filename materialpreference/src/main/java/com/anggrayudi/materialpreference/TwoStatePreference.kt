@@ -68,7 +68,7 @@ abstract class TwoStatePreference @JvmOverloads constructor(
         }
     private var _summaryOff: CharSequence? = null
 
-    private var checkedSet: Boolean = false
+    private var checkedSet = false
 
     /**
      * Sets whether dependents are disabled when this preference is on (`true`)
@@ -77,7 +77,7 @@ abstract class TwoStatePreference @JvmOverloads constructor(
      * @return Whether dependents are disabled when this preference is on (`true`)
      * or when this preference is off (`false`).
      */
-    var disableDependentsState: Boolean = false
+    var disableDependentsState = false
 
     /**
      * Sets the checked state and saves it to the [android.content.SharedPreferences].
@@ -99,7 +99,7 @@ abstract class TwoStatePreference @JvmOverloads constructor(
                 }
             }
         }
-    private var _checked: Boolean = false
+    private var _checked = false
 
     override var isLegacySummary: Boolean
         get() = true
@@ -107,12 +107,16 @@ abstract class TwoStatePreference @JvmOverloads constructor(
             super.isLegacySummary = value
         }
 
+    var defaultValue = false
+        private set
+
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.TwoStatePreference,
             defStyleAttr, defStyleRes)
         disableDependentsState = a.getBoolean(R.styleable.TwoStatePreference_android_disableDependentsState, false)
         _summaryOn = a.getString(R.styleable.TwoStatePreference_android_summaryOn)
         _summaryOff = a.getString(R.styleable.TwoStatePreference_android_summaryOff)
+        defaultValue = a.getBoolean(R.styleable.Preference_android_defaultValue, false)
         a.recycle()
     }
 
@@ -131,7 +135,7 @@ abstract class TwoStatePreference @JvmOverloads constructor(
     }
 
     override fun onSetInitialValue() {
-        isChecked = getPersistedBoolean(_checked)
+        isChecked = getPersistedBoolean(defaultValue)
     }
 
     /**
