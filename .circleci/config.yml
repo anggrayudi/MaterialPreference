@@ -13,6 +13,7 @@ jobs:
 
     steps:
       - checkout
+
 #      - run:
 #          name: Chmod permissions #if permission for Gradlew Dependencies fail, uncomment this.
 #          command: chmod +x ./gradlew
@@ -22,7 +23,7 @@ jobs:
 
       - run:
           name: Copying keystore
-          command: echo $DEBUG_KEYSTORE_BASE_64 | base64 --decode > $HOME/.android/debug.keystore
+          command: source ~/project/.circleci/functions.sh && copyKeystore
 
       - run:
           name: Download Dependencies
