@@ -1,0 +1,47 @@
+version: 2.1
+
+orbs:
+ android: circleci/android@0.2.0
+
+defaults:
+  docker:
+    - image: circleci/android:api-29
+
+jobs:
+  build:
+    executor: android/android
+
+    steps:
+      - checkout
+#      - run:
+#          name: Chmod permissions #if permission for Gradlew Dependencies fail, uncomment this.
+#          command: chmod +x ./gradlew
+
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "build.gradle" }}
+
+      - run:
+          name: Copying keystore
+          command: echo $DEBUG_KEYSTORE_BASE_64 | base64 --decode > $HOME/.android/debug.keystore
+
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+
+      - save_cache:
+          paths:
+            - .gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "build.gradle" }}
+
+      - run:
+          name: Run Tests
+          command: |
+            ./gradlew :sample:assembleDebug
+            ./gradlew :sample:assembleDebugAndroidTest
+
+      - store_artifacts:
+          path: ./build/reports
+          destination: reports
+
+      - store_test_results:
+          path: ./build/test-results
