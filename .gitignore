@@ -4,6 +4,7 @@ gen/
 *.apk
 *.aab
 *.class
+.DS_Store
 
 # Gradle files
 .gradle/
