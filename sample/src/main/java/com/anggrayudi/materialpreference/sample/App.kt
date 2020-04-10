@@ -88,6 +88,7 @@ class App : Application() {
         }
 
         override fun onMigrationCompleted(preferences: SharedPreferences) {
+            //no-op
         }
     }
 

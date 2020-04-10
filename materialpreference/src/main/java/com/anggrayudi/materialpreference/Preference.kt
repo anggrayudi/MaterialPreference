@@ -903,7 +903,7 @@ open class Preference @JvmOverloads constructor(
             return
         }
 
-        if (intent != null) {
+        if (intent?.resolveActivity(context.packageManager) != null) {
             context.startActivity(intent)
         }
     }

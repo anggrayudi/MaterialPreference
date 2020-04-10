@@ -29,7 +29,7 @@ android {
     }
 }
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.6.0'
+    implementation 'com.anggrayudi:materialpreference:3.6.1'
 }
 ```
 

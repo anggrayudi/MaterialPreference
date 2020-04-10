@@ -1,4 +1,9 @@
 
+## 3.6.1 (2020-10-04)
+
+### Fixed
+* `<intent/>` tag crash if no activity handler exists
+
 ## 3.6.0 (2020-08-03)
 
 ### Enhancements
