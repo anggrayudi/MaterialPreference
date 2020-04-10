@@ -7,7 +7,6 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatDelegate
 import com.anggrayudi.materialpreference.PreferenceActivityMaterial
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial
-import com.anggrayudi.materialpreference.PreferenceManager
 import org.koin.android.ext.android.inject
 
 class SettingsActivity : PreferenceActivityMaterial(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -55,13 +54,13 @@ class SettingsActivity : PreferenceActivityMaterial(), SharedPreferences.OnShare
     }
 
     override fun onStop() {
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
+        preferencesHelper.preferences.unregisterOnSharedPreferenceChangeListener(this)
         super.onStop()
     }
 
     override fun onStart() {
         super.onStart()
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
+        preferencesHelper.preferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {

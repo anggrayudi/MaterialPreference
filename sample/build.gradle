@@ -36,13 +36,13 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            buildConfigField 'String', "BASE_64_ENCODED_PUBLIC_KEY", Base64PublicKey_MaterialPreference
+            buildConfigField 'String', "BASE_64_ENCODED_PUBLIC_KEY", MATERIAL_PREFERENCE_PLAY_STORE_BASE_64_PUBLIC_KEY
         }
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
-            buildConfigField 'String', "BASE_64_ENCODED_PUBLIC_KEY", Base64PublicKey_MaterialPreference
+            buildConfigField 'String', "BASE_64_ENCODED_PUBLIC_KEY", MATERIAL_PREFERENCE_PLAY_STORE_BASE_64_PUBLIC_KEY
         }
     }
     compileOptions {
@@ -64,9 +64,9 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'com.android.billingclient:billing:2.1.0'
+    implementation 'com.android.billingclient:billing:2.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation "org.koin:koin-android:2.0.1"
+    implementation "org.koin:koin-android:2.1.5"
 
     implementation project(':materialpreference')
     compileOnly project(':annotation')

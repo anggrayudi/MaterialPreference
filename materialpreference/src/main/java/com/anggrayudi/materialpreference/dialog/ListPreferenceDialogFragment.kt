@@ -40,7 +40,7 @@ class ListPreferenceDialogFragment : PreferenceDialogFragment() {
                     "ListPreference requires an entries array and an entryValues array.")
             }
 
-            clickedDialogEntryIndex = preference.findIndexOfValue(preference.value)
+            clickedDialogEntryIndex = preference.findIndexOfValue(preference.value, preference.defaultValue)
             entryValues = preference.entryValues!!
             entries = preference.entries!!
         } else {

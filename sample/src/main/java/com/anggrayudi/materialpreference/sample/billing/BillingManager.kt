@@ -30,8 +30,8 @@ import java.util.*
  */
 class BillingManager(
         private val activity: Activity,
-        private val billingUpdatesListener: BillingUpdatesListener)
-    : PurchasesUpdatedListener {
+        private val billingUpdatesListener: BillingUpdatesListener
+) : PurchasesUpdatedListener {
 
     /** A reference to BillingClient  */
     private val billingClient = newBuilder(activity)

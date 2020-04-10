@@ -46,11 +46,18 @@ internal interface ArrayPreference<EntryValuesType> {
      * @param value The value whose index should be returned.
      * @return The index of the value, or -1 if not found.
      */
-    fun <T> findIndexOfValue(value: T?): Int {
+    fun <T> findIndexOfValue(value: T?, defaultValue: T? = null): Int {
         if (value != null && entryValues != null) {
             for (i in entryValues!!.indices.reversed()) {
                 if (entryValues!![i] == value) {
                     return i
+                }
+            }
+            if (defaultValue != null) {
+                for (i in entryValues!!.indices.reversed()) {
+                    if (entryValues!![i] == defaultValue) {
+                        return i
+                    }
                 }
             }
         }

@@ -9,6 +9,7 @@ import com.anggrayudi.materialpreference.PreferenceManager.Companion.KEY_HAS_SET
 import com.anggrayudi.materialpreference.migration.MigrationPlan
 import com.anggrayudi.materialpreference.migration.PreferenceMigration
 import com.anggrayudi.materialpreference.util.SaveDir
+import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -17,8 +18,8 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        initSharedPreferences()
         initKoin()
+        initSharedPreferences()
     }
 
     private fun initSharedPreferences() {
@@ -28,16 +29,8 @@ class App : Application() {
 
         USE THE FOLLOWING TECHNIQUE INSTEAD
          */
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        if (!preferences.getBoolean(KEY_HAS_SET_DEFAULT_VALUES, false)) {
-            preferences.edit()
-                    .putBoolean(KEY_HAS_SET_DEFAULT_VALUES, true)
-                    // Always set preference version to the latest for the first time
-                    .putInt(PreferenceMigration.DEFAULT_PREFERENCE_VERSION_KEY, PREFERENCE_VERSION)
-                    .apply()
-
-            setDefaultPreferenceValues(this)
-        } else {
+        val preferences = get<SharedPreferences>()
+        if (preferences.getBoolean(KEY_HAS_SET_DEFAULT_VALUES, false)) {
             /*
             You can use PreferenceMigration if you want to update your SharedPreferences.
             This commented method migrates your SharedPreferences in background thread,
@@ -49,6 +42,14 @@ class App : Application() {
 
             PreferenceMigration.setupMigration(MyPreferenceMigration(), preferences, PREFERENCE_VERSION)
              */
+        } else {
+            preferences.edit()
+                .putBoolean(KEY_HAS_SET_DEFAULT_VALUES, true)
+                // Always set preference version to the latest for the first time
+                .putInt(PreferenceMigration.DEFAULT_PREFERENCE_VERSION_KEY, PREFERENCE_VERSION)
+                .apply()
+
+            setDefaultPreferenceValues(this)
         }
     }
 
@@ -58,6 +59,7 @@ class App : Application() {
             androidContext(this@App)
 
             val preferencesHelperModule = module {
+                factory { PreferenceManager.getDefaultSharedPreferences(get()) }
                 factory { SharedPreferencesHelper(get()) }
             }
 
