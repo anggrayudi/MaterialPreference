@@ -736,31 +736,30 @@ object FileUtils {
             }
         }
         try {
-            when {
-                path.startsWith("/") -> {
-                    val stat = StatFs(path)
-                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-                        stat.availableBytes
-                    else
-                        (stat.blockSize * stat.availableBlocks).toLong()
-                }
-                Build.VERSION.SDK_INT >= 21 -> {
-                    try {
-                        context.contentResolver.openFileDescriptor(getExternalFolder(context, path)?.uri
-                                ?: return 0, "r")?.use {
-                            val stats = Os.fstatvfs(it.fileDescriptor)
-                            return stats.f_bavail * stats.f_frsize
-                        }
-                    } catch (e: ErrnoException) {
-                        if (e.message?.contains("No such file or directory") == true)
-                            return createFolderAndGetSpace()
+            if (path.startsWith("/")) {
+                val stat = StatFs(path)
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                    stat.availableBytes
+                else
+                    (stat.blockSize * stat.availableBlocks).toLong()
+            } else if (Build.VERSION.SDK_INT >= 21) {
+                try {
+                    context.contentResolver.openFileDescriptor(getExternalFolder(context, path)?.uri
+                        ?: return 0, "r")?.use {
+                        val stats = Os.fstatvfs(it.fileDescriptor)
+                        return stats.f_bavail * stats.f_frsize
                     }
+                } catch (e: ErrnoException) {
+                    if (e.message?.contains("No such file or directory") == true)
+                        return createFolderAndGetSpace()
                 }
             }
         } catch (e: StoragePermissionDenialException) {
+            // ignore
         } catch (e: FileNotFoundException) {
             return createFolderAndGetSpace()
         } catch (e: SecurityException) {
+            // ignore
         } catch (e: IllegalArgumentException) {
             if (e.message?.contains("Invalid path: ") == true)
                 return createFolderAndGetSpace()
@@ -782,31 +781,30 @@ object FileUtils {
             }
         }
         try {
-            when {
-                path.startsWith("/") -> {
-                    val stat = StatFs(path)
-                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-                        stat.totalBytes - stat.availableBytes
-                    else
-                        (stat.blockSize * stat.blockCount - stat.blockSize * stat.availableBlocks).toLong()
-                }
-                Build.VERSION.SDK_INT >= 21 -> {
-                    try {
-                        context.contentResolver.openFileDescriptor(getExternalFolder(context, path)?.uri
-                                ?: return 0, "r")?.use {
-                            val stats = Os.fstatvfs(it.fileDescriptor)
-                            return stats.f_blocks * stats.f_frsize - stats.f_bavail * stats.f_frsize
-                        }
-                    } catch (e: ErrnoException) {
-                        if (e.message?.contains("No such file or directory") == true)
-                            return createFolderAndGetSpace()
+            if (path.startsWith("/")) {
+                val stat = StatFs(path)
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                    stat.totalBytes - stat.availableBytes
+                else
+                    (stat.blockSize * stat.blockCount - stat.blockSize * stat.availableBlocks).toLong()
+            } else if (Build.VERSION.SDK_INT >= 21) {
+                try {
+                    context.contentResolver.openFileDescriptor(getExternalFolder(context, path)?.uri
+                        ?: return 0, "r")?.use {
+                        val stats = Os.fstatvfs(it.fileDescriptor)
+                        return stats.f_blocks * stats.f_frsize - stats.f_bavail * stats.f_frsize
                     }
+                } catch (e: ErrnoException) {
+                    if (e.message?.contains("No such file or directory") == true)
+                        return createFolderAndGetSpace()
                 }
             }
         } catch (e: StoragePermissionDenialException) {
+            // ignore
         } catch (e: FileNotFoundException) {
             return createFolderAndGetSpace()
         } catch (e: SecurityException) {
+            // ignore
         } catch (e: IllegalArgumentException) {
             if (e.message?.contains("Invalid path: ") == true)
                 return createFolderAndGetSpace()
@@ -827,31 +825,30 @@ object FileUtils {
             }
         }
         try {
-            when {
-                path.startsWith("/") -> {
-                    val stat = StatFs(path)
-                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-                        stat.totalBytes
-                    else
-                        (stat.blockSize * stat.blockCount).toLong()
-                }
-                Build.VERSION.SDK_INT >= 21 -> {
-                    try {
-                        context.contentResolver.openFileDescriptor(getExternalFolder(context, path)?.uri
-                                ?: return 0, "r")?.use {
-                            val stats = Os.fstatvfs(it.fileDescriptor)
-                            return stats.f_blocks * stats.f_frsize
-                        }
-                    } catch (e: ErrnoException) {
-                        if (e.message?.contains("No such file or directory") == true)
-                            return createFolderAndGetSpace()
+            if (path.startsWith("/")) {
+                val stat = StatFs(path)
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                    stat.totalBytes
+                else
+                    (stat.blockSize * stat.blockCount).toLong()
+            } else if (Build.VERSION.SDK_INT >= 21) {
+                try {
+                    context.contentResolver.openFileDescriptor(getExternalFolder(context, path)?.uri
+                        ?: return 0, "r")?.use {
+                        val stats = Os.fstatvfs(it.fileDescriptor)
+                        return stats.f_blocks * stats.f_frsize
                     }
+                } catch (e: ErrnoException) {
+                    if (e.message?.contains("No such file or directory") == true)
+                        return createFolderAndGetSpace()
                 }
             }
         } catch (e: StoragePermissionDenialException) {
+            // ignore
         } catch (e: FileNotFoundException) {
             return createFolderAndGetSpace()
         } catch (e: SecurityException) {
+            // ignore
         } catch (e: IllegalArgumentException) {
             if (e.message?.contains("Invalid path: ") == true)
                 return createFolderAndGetSpace()

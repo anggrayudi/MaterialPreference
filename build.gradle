@@ -14,8 +14,7 @@ buildscript {
         classpath('com.android.tools.build:gradle:3.6.2')
         classpath("com.google.gms:google-services:4.3.3")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4")
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.9.0-SNAPSHOT'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.11.1'
     }
 }
 
@@ -24,7 +23,6 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven { url 'https://dl.bintray.com/anggrayudi/maven/' }
     }
 }
 

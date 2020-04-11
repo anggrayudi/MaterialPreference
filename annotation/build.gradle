@@ -34,4 +34,3 @@ ext {
 }
 
 apply plugin: "com.vanniktech.maven.publish"
-//apply from: '../bintray-publish.gradle'

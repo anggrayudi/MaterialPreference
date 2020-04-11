@@ -2,12 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
+def properties = new Properties()
+properties.load(rootProject.file('local.properties').newDataInputStream())
+
 android {
     signingConfigs {
         release {
-            keyAlias findProperty("keyAlias")
-            keyPassword findProperty("keyPassword")
-            storePassword findProperty("storePassword")
+            keyAlias properties['keyAlias']
+            keyPassword properties['keyPassword']
+            storePassword properties['storePassword']
             storeFile file('keystore.jks')
         }
         debug {
@@ -51,6 +54,9 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
