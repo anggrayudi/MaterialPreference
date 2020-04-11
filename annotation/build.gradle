@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
 group = 'com.anggrayudi'
-version = "$processorVersion"
+version = "$PROCESSOR_VERSION"
 archivesBaseName = 'materialpreference-api'
 
 compileKotlin {

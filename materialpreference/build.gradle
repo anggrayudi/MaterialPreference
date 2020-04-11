@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 group = 'com.anggrayudi'
-version = "$libVersion"
+version = "$MATERIAL_PREFERENCE_VERSION"
 archivesBaseName = 'materialpreference'
 
 android {
@@ -45,7 +45,7 @@ dependencies {
     api "com.afollestad.material-dialogs:files:$dialogVersion"
     api "com.afollestad.material-dialogs:color:$dialogVersion"
     api 'commons-io:commons-io:2.6'
-    api "com.anggrayudi:materialpreference-api:$processorVersion"
+    api "com.anggrayudi:materialpreference-api:$PROCESSOR_VERSION"
 
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"

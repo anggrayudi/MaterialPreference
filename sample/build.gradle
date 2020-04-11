@@ -29,7 +29,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.appVersionCode
-        versionName "$libVersion"
+        versionName "$MATERIAL_PREFERENCE_VERSION"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -80,7 +80,7 @@ dependencies {
 
 //    implementation 'androidx.preference:preference:1.1.0-rc01'
 
-//    implementation 'com.anggrayudi:materialpreference:3.1.7'
+//    implementation 'com.anggrayudi:materialpreference:3.6.2-SNAPSHOT'
 //    implementation 'com.anggrayudi:materialpreference-api:1.1'
 //    kapt 'com.anggrayudi:materialpreference-compiler:1.1'
 }
