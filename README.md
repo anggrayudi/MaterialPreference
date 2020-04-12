@@ -33,6 +33,21 @@ dependencies {
 }
 ```
 
+Snapshots can be found [here](https://oss.sonatype.org/#nexus-search;quick~com.anggrayudi).
+To use SNAPSHOT, you need to add this URL to the root Gradle:
+
+```gradle
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        // add this line
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+}
+```
+
 **Note:** Since v3.5.0, we only distribute this library through [OSS Sonatype Maven](https://oss.sonatype.org/#nexus-search;quick~com.anggrayudi).
 Distributing it on Bintray became more difficult because Bintray seem lazy to maintain their [Gradle Plugin](https://github.com/bintray/gradle-bintray-plugin/).
 

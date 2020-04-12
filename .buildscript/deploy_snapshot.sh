@@ -22,8 +22,8 @@ elif [ "$TRAVIS_BRANCH" != "$BRANCH" ]; then
   echo "Skipping deployment: wrong branch. Expected '$BRANCH' but was '$TRAVIS_BRANCH'."
 else
   echo "Deploying snapshot..."
-  ./gradlew :materialpreference:uploadArchives --no-daemon --no-parallel
+  ./gradlew :materialpreference:uploadArchives --no-daemon --no-parallel --stacktrace
   echo "Snapshot deployed!"
-  ./gradlew :materialpreference:closeAndReleaseRepository
+  ./gradlew :materialpreference:closeAndReleaseRepository --stacktrace
   echo "Snapshot released!"
 fi
