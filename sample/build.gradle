@@ -2,12 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
+def properties = new Properties()
+properties.load(rootProject.file('local.properties').newDataInputStream())
+
 android {
     signingConfigs {
         release {
-            keyAlias findProperty("keyAlias")
-            keyPassword findProperty("keyPassword")
-            storePassword findProperty("storePassword")
+            keyAlias properties['keyAlias']
+            keyPassword properties['keyPassword']
+            storePassword properties['storePassword']
             storeFile file('keystore.jks')
         }
         debug {
@@ -26,7 +29,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.appVersionCode
-        versionName "$libVersion"
+        versionName "$MATERIAL_PREFERENCE_VERSION"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -52,6 +55,9 @@ android {
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 configurations {
@@ -74,7 +80,7 @@ dependencies {
 
 //    implementation 'androidx.preference:preference:1.1.0-rc01'
 
-//    implementation 'com.anggrayudi:materialpreference:3.1.7'
+//    implementation 'com.anggrayudi:materialpreference:3.6.2-SNAPSHOT'
 //    implementation 'com.anggrayudi:materialpreference-api:1.1'
 //    kapt 'com.anggrayudi:materialpreference-compiler:1.1'
 }

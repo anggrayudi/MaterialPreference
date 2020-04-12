@@ -3,7 +3,7 @@ apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
 
 group = 'com.anggrayudi'
-version = "$processorVersion"
+version = "$PROCESSOR_VERSION"
 archivesBaseName = 'materialpreference-compiler'
 
 compileKotlin {
@@ -58,4 +58,3 @@ ext {
 }
 
 apply plugin: "com.vanniktech.maven.publish"
-//apply from: '../bintray-publish.gradle'
