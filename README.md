@@ -1,4 +1,4 @@
-# Material Preference
+# Material Preference [![Build Status](https://travis-ci.com/anggrayudi/MaterialPreference.svg?branch=master)](https://travis-ci.com/anggrayudi/MaterialPreference)
 A library designed for people who love simplicity. Hate the old preference style? Try this library.
 
 It combines libraries from `androidx.preference` and `net.xpece.android.support.preference`.
@@ -34,7 +34,7 @@ dependencies {
 ```
 
 Snapshots can be found [here](https://oss.sonatype.org/#nexus-search;quick~com.anggrayudi).
-To use SNAPSHOT, you need to add this URL to the root Gradle:
+To use SNAPSHOT version, you need to add this URL to the root Gradle:
 
 ```gradle
 allprojects {

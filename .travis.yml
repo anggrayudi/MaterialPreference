@@ -39,10 +39,6 @@ env:
   global:
     - ANDROID_SDK_ROOT=/usr/local/android-sdk/
 
-branches:
-  except:
-    - gh-pages
-
 notifications:
   email: false
 
