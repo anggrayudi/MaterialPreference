@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 
 group = 'com.anggrayudi'
 version = "$MATERIAL_PREFERENCE_VERSION"
-archivesBaseName = 'materialpreference'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
