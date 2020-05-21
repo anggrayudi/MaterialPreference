@@ -35,15 +35,14 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     api 'androidx.appcompat:appcompat:1.1.0'
-    api 'com.google.android.material:material:1.2.0-alpha05'
+    api 'com.google.android.material:material:1.2.0-alpha06'
     api 'androidx.documentfile:documentfile:1.0.1'
     api 'androidx.cardview:cardview:1.0.0'
 
-    api 'com.wdullaer:materialdatetimepicker:4.2.1'
+    api 'com.wdullaer:materialdatetimepicker:4.2.3'
     api "com.afollestad.material-dialogs:core:$dialogVersion"
     api "com.afollestad.material-dialogs:files:$dialogVersion"
     api "com.afollestad.material-dialogs:color:$dialogVersion"
-    api 'commons-io:commons-io:2.6'
     api "com.anggrayudi:materialpreference-api:$PROCESSOR_VERSION"
 
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"

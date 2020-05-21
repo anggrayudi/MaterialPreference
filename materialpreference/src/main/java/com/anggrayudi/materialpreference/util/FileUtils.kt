@@ -109,7 +109,8 @@ object FileUtils {
                 val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 context.contentResolver.takePersistableUriPermission(root, takeFlags)
                 return true
-            } catch (ignore: SecurityException) {
+            } catch (e: SecurityException) {
+                // ignore
             }
         }
         return false
@@ -247,6 +248,7 @@ object FileUtils {
                             else if (documentFile.isDirectory)
                                 currentDirectory = documentFile
                         } catch (e: RuntimeException) {
+                            // ignore
                         }
                     }
                 }
@@ -383,11 +385,11 @@ object FileUtils {
     }
 
     fun getBaseName(filename: String): String {
-        return org.apache.commons.io.FilenameUtils.getBaseName(if (filename.contains("/")) filename else filename.replaceFirst(":".toRegex(), "/"))
+        return File(if (filename.contains("/")) filename else filename.replaceFirst(":".toRegex(), "/")).nameWithoutExtension
     }
 
     fun getExtension(filename: String): String {
-        return org.apache.commons.io.FilenameUtils.getExtension(if (filename.contains("/")) filename else filename.replaceFirst(":".toRegex(), "/"))
+        return File(if (filename.contains("/")) filename else filename.replaceFirst(":".toRegex(), "/")).extension
     }
 
     fun samePartition(path1: String, path2: String): Boolean {

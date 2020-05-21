@@ -1,4 +1,7 @@
-# Material Preference [![Build Status](https://travis-ci.com/anggrayudi/MaterialPreference.svg?branch=master)](https://travis-ci.com/anggrayudi/MaterialPreference)
+# Material Preference
+
+![Maven Central](https://img.shields.io/maven-central/v/com.anggrayudi/materialpreference.svg) [![Build Status](https://travis-ci.com/anggrayudi/MaterialPreference.svg?branch=master)](https://travis-ci.com/anggrayudi/MaterialPreference)
+
 A library designed for people who love simplicity. Hate the old preference style? Try this library.
 
 It combines libraries from `androidx.preference` and `net.xpece.android.support.preference`.
@@ -29,7 +32,7 @@ android {
     }
 }
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.6.1'
+    implementation 'com.anggrayudi:materialpreference:3.6.2'
 }
 ```
 
@@ -110,7 +113,7 @@ class SettingsActivity : PreferenceActivityMaterial() {
     }
 
     override fun onBackStackChanged() {
-        settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment?
+        settingsFragment = supportFragmentManager.findFragmentByTag(TAG) as SettingsFragment
         title = settingsFragment!!.preferenceFragmentTitle
     }
 }
