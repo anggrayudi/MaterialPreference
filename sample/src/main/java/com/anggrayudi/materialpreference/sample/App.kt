@@ -56,7 +56,7 @@ class App : Application() {
     private fun initKoin() {
         // Koin Dependency Injection
         startKoin {
-            androidContext(this@App)
+            androidContext(applicationContext)
 
             val preferencesHelperModule = module {
                 factory { PreferenceManager.getDefaultSharedPreferences(get()) }
@@ -69,8 +69,8 @@ class App : Application() {
 
     private inner class MyPreferenceMigration : PreferenceMigration {
 
-        override fun migrate(plan: MigrationPlan, currentVersion: Int) {
-            var currentVersionTemp = currentVersion
+        override fun migrate(plan: MigrationPlan, currentPreferenceVersion: Int) {
+            var currentVersionTemp = currentPreferenceVersion
 
             if (currentVersionTemp == 0) {
                 plan.updateValue(PrefKey.ENABLE_DARK_THEME, false)
@@ -87,6 +87,16 @@ class App : Application() {
                 plan.renameKey(PrefKey.ENABLE_DARK_THEME, "useDarkTheme")
                 currentVersionTemp++
             }
+        }
+
+        override fun onNewOS(plan: MigrationPlan, previousOSVersion: Int) {
+            /*
+            For example:
+
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+                // do your action, such as removing preferences
+            }
+             */
         }
 
         override fun onMigrationCompleted(preferences: SharedPreferences) {
@@ -107,9 +117,9 @@ class App : Application() {
 
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             preferences.edit()
-                    .putString("backupLocation", SaveDir.DOWNLOADS)
-                    .putInt("themeColor", Color.parseColor("#37474F"))
-                    .apply()
+                .putString("backupLocation", SaveDir.DOWNLOADS)
+                .putInt("themeColor", Color.parseColor("#37474F"))
+                .apply()
         }
     }
 }
