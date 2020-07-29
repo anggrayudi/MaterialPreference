@@ -17,7 +17,7 @@
 package com.anggrayudi.materialpreference.sample.billing
 
 import android.util.Base64
-import com.android.billingclient.util.BillingHelper
+import android.util.Log
 import java.io.IOException
 import java.security.*
 import java.security.spec.InvalidKeySpecException
@@ -43,7 +43,7 @@ object Security {
     @Throws(IOException::class)
     fun verifyPurchase(base64PublicKey: String, signedData: String, signature: String): Boolean {
         if (signedData.isEmpty() || base64PublicKey.isEmpty() || signature.isEmpty()) {
-            BillingHelper.logWarn(TAG, "Purchase verification failed: missing data.")
+            Log.w(TAG, "Purchase verification failed: missing data.")
             return false
         }
 
@@ -68,7 +68,7 @@ object Security {
             throw RuntimeException(e)
         } catch (e: InvalidKeySpecException) {
             val msg = "Invalid key specification: $e"
-            BillingHelper.logWarn(TAG, msg)
+            Log.w(TAG, msg)
             throw IOException(msg)
         }
     }
@@ -87,7 +87,7 @@ object Security {
         try {
             signatureBytes = Base64.decode(signature, Base64.DEFAULT)
         } catch (e: IllegalArgumentException) {
-            BillingHelper.logWarn(TAG, "Base64 decoding failed.")
+            Log.w(TAG, "Base64 decoding failed.")
             return false
         }
 
@@ -96,7 +96,7 @@ object Security {
             signatureAlgorithm.initVerify(publicKey)
             signatureAlgorithm.update(signedData.toByteArray())
             if (!signatureAlgorithm.verify(signatureBytes)) {
-                BillingHelper.logWarn(TAG, "Signature verification failed.")
+                Log.w(TAG, "Signature verification failed.")
                 return false
             }
             return true
@@ -104,9 +104,9 @@ object Security {
             // "RSA" is guaranteed to be available.
             throw RuntimeException(e)
         } catch (e: InvalidKeyException) {
-            BillingHelper.logWarn(TAG, "Invalid key specification.")
+            Log.w(TAG, "Invalid key specification.")
         } catch (e: SignatureException) {
-            BillingHelper.logWarn(TAG, "Signature exception.")
+            Log.w(TAG, "Signature exception.")
         }
         return false
     }

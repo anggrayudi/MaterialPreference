@@ -97,9 +97,10 @@ class BillingManager(
     fun initiatePurchaseFlow(skuId: String, @SkuType itemType: String) {
         querySkuDetailsAsync(itemType, listOf(skuId), SkuDetailsResponseListener { responseCode, skuDetailsList ->
             if (responseCode.responseCode == BillingResponseCode.OK) {
+                val skuDetails = skuDetailsList?.first() ?: return@SkuDetailsResponseListener
                 executeServiceRequest(Runnable {
                     val purchaseParams = BillingFlowParams.newBuilder()
-                            .setSkuDetails(skuDetailsList.first())
+                            .setSkuDetails(skuDetails)
 //                            .setDeveloperId()
                     billingClient.launchBillingFlow(activity, purchaseParams.build())
                 })
@@ -232,11 +233,11 @@ class BillingManager(
                         + (System.currentTimeMillis() - time) + "ms")
                 Log.i(TAG, "Querying subscriptions result code: "
                         + subscriptionResult.responseCode
-                        + " res: " + subscriptionResult.purchasesList.size)
+                        + " res: " + subscriptionResult.purchasesList?.size)
 
                 if (subscriptionResult.responseCode == BillingResponseCode.OK) {
-                    purchasesResult.purchasesList.addAll(
-                            subscriptionResult.purchasesList)
+                    purchasesResult.purchasesList?.addAll(
+                            subscriptionResult.purchasesList.orEmpty())
                 } else {
                     Log.e(TAG, "Got an error response trying to query subscription purchases")
                 }
