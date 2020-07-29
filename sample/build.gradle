@@ -70,7 +70,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'com.android.billingclient:billing:2.2.1'
+    implementation 'com.android.billingclient:billing:3.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation "org.koin:koin-android:2.1.5"
 
