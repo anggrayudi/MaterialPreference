@@ -6,8 +6,8 @@ before_install:
   # Download SDK
   - yes | sdkmanager "tools" &>/dev/null
   - yes | sdkmanager "platform-tools" &>/dev/null
-  - yes | sdkmanager "build-tools;29.0.3" &>/dev/null
-  - yes | sdkmanager "platforms;android-29" &>/dev/null
+  - yes | sdkmanager "build-tools;30.0.2" &>/dev/null
+  - yes | sdkmanager "platforms;android-30" &>/dev/null
   # Update remaining dependencies and accept licenses
   - yes | sdkmanager --update &>/dev/null
   - yes | sdkmanager --licenses &>/dev/null

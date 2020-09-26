@@ -185,7 +185,7 @@ internal class PreferenceInflater(val context: Context,
 
             val args = constructorArgs
             args[1] = attrs
-            return constructor.newInstance(*args) as Preference
+            return constructor!!.newInstance(*args) as Preference
 
         } catch (e: ClassNotFoundException) {
             // If loadClass fails, we should propagate the exception.

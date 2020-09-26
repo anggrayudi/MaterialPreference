@@ -16,7 +16,7 @@
     <string name="clear">Clear</string>
     <string name="please_grant_storage_permission">Please grant read and write permissions for external storage.</string>
     <string name="please_select_sdcard_root">For the first time, you need to grant SD card permissions by selecting its root path.</string>
-    <string name="not_root_path">It is not the root path.</string>
+    <string name="not_root_path">It is not the root path. Please select this path:\n%s</string>
     <string name="you_can_select_sdcard">You can now select anything from SD card</string>
     <string name="no_app_to_open_file">No apps installed to open this file type.</string>
     <string name="no_app_share_file">No apps found to handle file sharing</string>

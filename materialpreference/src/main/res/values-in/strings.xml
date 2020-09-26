@@ -15,7 +15,7 @@
     <string name="clear">Bersihkan</string>
     <string name="please_grant_storage_permission">Berikan izin baca dan tulis pada media penyimpanan.</string>
     <string name="please_select_sdcard_root">Untuk pertama kali, kamu harus memberikan izin kartu SD dengan memilih direktori root-nya.</string>
-    <string name="not_root_path">Ini bukan jalur root.</string>
+    <string name="not_root_path">Ini bukan jalur root. Silakan pilih jalur ini:\n%s</string>
     <string name="you_can_select_sdcard">Kamu sekarang bisa memilih apapun dari kartu SD.</string>
     <string name="no_app_to_open_file">Tidak ada aplikasi terpasang untuk membuka jenis file ini.</string>
     <string name="no_app_share_file">Tidak ditemukan aplikasi untuk berbagi file.</string>

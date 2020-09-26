@@ -372,8 +372,8 @@ abstract class PreferenceFragmentMaterial : Fragment(),
             val path = FileUtils.resolvePathFromUri(data!!)
             if (path!!.startsWith("/") || FileUtils.isSdCardUriPermissionsGranted(context!!, data)) {
                 if (preferenceKeyOnActivityResult != null) {
-                    val preference = findPreference(preferenceKeyOnActivityResult!!) as FolderPreference?
-                    if (preference!!.callChangeListener(path)) {
+                    val preference = findPreference(preferenceKeyOnActivityResult!!) as FolderPreference
+                    if (preference.callChangeListener(path)) {
                         preference.persistString(path)
                         preference.summary = path
                     }

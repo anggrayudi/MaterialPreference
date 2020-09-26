@@ -90,7 +90,10 @@ object FileUtils {
                     Toast.makeText(context, R.string.please_grant_storage_permission, Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(context, R.string.not_root_path, Toast.LENGTH_SHORT).show()
+                MaterialDialog(context)
+                    .message(text = context.getString(R.string.not_root_path, root.toString()))
+                    .positiveButton(android.R.string.ok)
+                    .show()
             }
         }
         return false

@@ -11,7 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.folderChooser
@@ -32,10 +32,10 @@ import java.io.File
 @TargetApi(21)
 @SuppressLint("RestrictedApi")
 open class FolderPreference @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0,
-        defStyleRes: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
     @get:FolderType
@@ -75,8 +75,8 @@ open class FolderPreference @JvmOverloads constructor(
         a.recycle()
 
         onPreferenceClickListener = {
-            val writeNotGranted = ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-            val readNotGranted = ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            val writeNotGranted = checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            val readNotGranted = checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
             if (writeNotGranted || readNotGranted) {
                 if (permissionCallback != null)
                     permissionCallback!!.onPermissionTrouble(!readNotGranted, !writeNotGranted)
@@ -106,12 +106,12 @@ open class FolderPreference @JvmOverloads constructor(
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             dialog = MaterialDialog(context!!)
-                    .negativeButton(android.R.string.cancel)
-                    .folderChooser(File(arguments!!.getString("folder")!!), allowFolderCreation = true){ _, file ->
-                        val preference = (activity as PreferenceActivityMaterial)
-                                .visiblePreferenceFragment!!.findPreference(tag!!) as FolderPreference
-                        preference.folder = file.absolutePath
-                    }
+                .negativeButton(android.R.string.cancel)
+                .folderChooser(File(arguments!!.getString("folder")!!), allowFolderCreation = true) { _, file ->
+                    val preference = (activity as PreferenceActivityMaterial)
+                        .visiblePreferenceFragment!!.findPreference(tag!!) as FolderPreference
+                    preference.folder = file.absolutePath
+                }
             return dialog as MaterialDialog
         }
 
