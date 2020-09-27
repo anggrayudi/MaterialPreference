@@ -22,12 +22,15 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.provider.Settings.System
 import android.util.AttributeSet
-import com.anggrayudi.materialpreference.callback.StoragePermissionCallback
 import com.anggrayudi.materialpreference.dialog.DialogPreference
 
 /**
  * A [Preference] that allows the user to choose a ringtone from those on the device.
  * The chosen ringtone's URI will be persisted as a string.
+ *
+ * When attempting to play a ringtone from external storage without the
+ * [android.Manifest.permission.READ_EXTERNAL_STORAGE] permission
+ * the picker would crash. Now you get a chance at custom handling.
  *
  * If the user chooses the "Default" item, the saved string will be one of:
  * * [System.DEFAULT_RINGTONE_URI]
@@ -75,24 +78,6 @@ open class RingtonePreference @JvmOverloads constructor(
      */
     var showSilent: Boolean = false
 
-    /**
-     * When attempting to play a ringtone from external storage without the
-     * [android.Manifest.permission.READ_EXTERNAL_STORAGE] permission
-     * the picker would crash. Now you get a chance at custom handling.
-     *
-     * You can use the [buildRingtonePickerIntent] and [onActivityResult]
-     * methods to open the system ringtone picker and process its result.
-     * System ringtone picker has access to external storage but does not use your app's theme.
-     *
-     * Default behavior would still open the in-app picker dialog but
-     * * you won't hear any inaccessible ringtones,
-     * * inaccessible ringtones will have placeholder titles in the list.
-     *
-     * You can also open the in-app picker dialog manually by calling
-     * [showDialogFragment] if you want to ignore the error.
-     */
-    var permissionCallback: StoragePermissionCallback? = null
-
     // FIXME Adjust logic once strings are bundled.
     internal val nonEmptyDialogTitle: CharSequence
         get() {
@@ -113,8 +98,10 @@ open class RingtonePreference @JvmOverloads constructor(
         private set
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.RingtonePreference,
-            defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(
+            attrs, R.styleable.RingtonePreference,
+            defStyleAttr, defStyleRes
+        )
         ringtoneType = a.getInt(R.styleable.RingtonePreference_android_ringtoneType, RingtoneManager.TYPE_RINGTONE)
         showDefault = a.getBoolean(R.styleable.RingtonePreference_android_showDefault, true)
         showSilent = a.getBoolean(R.styleable.RingtonePreference_android_showSilent, true)
@@ -182,8 +169,7 @@ open class RingtonePreference @JvmOverloads constructor(
      * by [RingtoneManager.ACTION_RINGTONE_PICKER].
      */
     fun onActivityResult(data: Intent?) {
-        val uri = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI) ?: return
-        saveRingtone(uri)
+        saveRingtone(data?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI) ?: return)
     }
 
     internal fun saveRingtone(uri: Uri?) {

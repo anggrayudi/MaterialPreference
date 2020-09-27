@@ -7,7 +7,8 @@ import androidx.annotation.IntDef
 /**
  * @author Anggrayudi H
  */
-@IntDef(FolderType.EXTERNAL,
+@IntDef(
+    FolderType.EXTERNAL,
     FolderType.ALARM,
     FolderType.DCIM,
     FolderType.DOWNLOADS,
@@ -17,12 +18,13 @@ import androidx.annotation.IntDef
     FolderType.PICTURES,
     FolderType.PODCASTS,
     FolderType.RINGTONES,
-    FolderType.DOCUMENTS)
+    FolderType.DOCUMENTS
+)
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class FolderType {
 
     companion object {
-        /** Equals to [Environment.getExternalStorageDirectory().getAbsolutePath()]  */
+        /** Equals to [Environment.getExternalStorageDirectory]  */
         const val EXTERNAL = 0
         const val ALARM = 1
         const val DCIM = 2
@@ -35,6 +37,7 @@ annotation class FolderType {
         const val RINGTONES = 9
         const val DOCUMENTS = 10
 
+        @Suppress("DEPRECATION")
         operator fun get(@FolderType folderType: Int): String {
             var dir: String? = null
             when (folderType) {
@@ -50,7 +53,7 @@ annotation class FolderType {
                 DOCUMENTS -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                     dir = Environment.DIRECTORY_DOCUMENTS
                 else
-                    return SaveDir.EXTERNAL + "/Documents"
+                    return Environment.getExternalStorageDirectory().absolutePath + "/Documents"
             }
             return if (dir == null)
                 Environment.getExternalStorageDirectory().absolutePath

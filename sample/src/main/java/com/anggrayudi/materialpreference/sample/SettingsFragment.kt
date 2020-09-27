@@ -1,17 +1,14 @@
 package com.anggrayudi.materialpreference.sample
 
-import android.Manifest
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.anggrayudi.materialpreference.*
 import com.anggrayudi.materialpreference.annotation.PreferencesConfig
-import com.anggrayudi.materialpreference.callback.StoragePermissionCallback
 
 /**
  * [PreferencesConfig] annotation creates a constant class which contains all of your
@@ -22,8 +19,8 @@ import com.anggrayudi.materialpreference.callback.StoragePermissionCallback
  * add the following configuration to your `build.gradle` in `dependencies` section:
  *
  *      dependencies {
- *          implementation 'com.anggrayudi:materialpreference:3.5.2'
- *          kapt 'com.anggrayudi:materialpreference-compiler:1.6'
+ *          implementation 'com.anggrayudi:materialpreference:3.7.0'
+ *          kapt 'com.anggrayudi:materialpreference-compiler:1.7'
  *      }
  */
 @PreferencesConfig
@@ -43,9 +40,9 @@ class SettingsFragment : PreferenceFragmentMaterial() {
         val indicatorPreference = findPreferenceAs<IndicatorPreference>(PrefKey.ACCOUNT_STATUS)
         indicatorPreference?.onPreferenceClickListener = {
             MaterialDialog(context!!)
-                    .message(text = "Your account has been verified.")
-                    .positiveButton(android.R.string.ok)
-                    .show()
+                .message(text = "Your account has been verified.")
+                .positiveButton(android.R.string.ok)
+                .show()
             true
         }
         indicatorPreference?.onPreferenceLongClickListener = {
@@ -73,22 +70,14 @@ class SettingsFragment : PreferenceFragmentMaterial() {
             }
         }
 
-        val folderPreference = findPreferenceAs<FolderPreference>(PrefKey.BACKUP_LOCATION)
-        folderPreference?.permissionCallback = object : StoragePermissionCallback {
-            override fun onPermissionTrouble(read: Boolean, write: Boolean) {
-                ActivityCompat.requestPermissions(activity!!,
-                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-            }
-        }
-
         findPreference(PrefKey.RESTORE_DEFAULT)?.onPreferenceClickListener = {
             MaterialDialog(context!!)
-                    .message(text = "Are you sure you want to restore default settings?")
-                    .negativeButton(android.R.string.cancel)
-                    .positiveButton(android.R.string.ok) {
-                        App.setDefaultPreferenceValues(context!!)
-                        activity!!.recreate()
-                    }.show()
+                .message(text = "Are you sure you want to restore default settings?")
+                .negativeButton(android.R.string.cancel)
+                .positiveButton(android.R.string.ok) {
+                    App.setDefaultPreferenceValues(context!!)
+                    activity!!.recreate()
+                }.show()
             true
         }
 

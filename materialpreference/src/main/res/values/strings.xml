@@ -13,17 +13,9 @@
     <string name="alarm_sound_default">Default alarm sound</string>
     <string name="min_preference_input_chars_">Minimum length is %d</string>
     <string name="nothing">Nothing</string>
-    <string name="clear">Clear</string>
     <string name="please_grant_storage_permission">Please grant read and write permissions for external storage.</string>
-    <string name="please_select_sdcard_root">For the first time, you need to grant SD card permissions by selecting its root path.</string>
-    <string name="not_root_path">It is not the root path. Please select this path:\n%s</string>
-    <string name="you_can_select_sdcard">You can now select anything from SD card</string>
-    <string name="no_app_to_open_file">No apps installed to open this file type.</string>
-    <string name="no_app_share_file">No apps found to handle file sharing</string>
-    <string name="share">Share</string>
-    <string name="share_file">Share file</string>
-    <string name="file_not_found">File not found</string>
-    <string name="open_as">Open as</string>
-    <string name="choose">Choose</string>
-    <string name="permission_denial_runtime">Storage permissions are missing. Please grant read and write permissions.</string>
+    <string name="please_select_root_storage">To grant storage access, please firstly select %s</string>
+    <string name="selecting_root_path_success">Now you can select any folders under %s</string>
+    <string name="storage_access_denied_confirm">You have no write access to this storage, thus selecting this folder is useless.
+        \nWould you like to grant access to this folder?</string>
 </resources>

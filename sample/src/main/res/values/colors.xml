@@ -4,9 +4,6 @@
     <color name="colorPrimaryDark">#263238</color>
     <color name="colorAccent">#9575CD</color>
 
-    <color name="amber_a200">#FFD740</color>
-    <color name="text_highlight">@color/amber_a200</color>
     <color name="preferenceBackground">#ebebec</color>
 
-    <color name="warning">#FDD835</color>
 </resources>

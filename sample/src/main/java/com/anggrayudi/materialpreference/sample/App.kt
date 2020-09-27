@@ -4,11 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.os.Environment
 import com.anggrayudi.materialpreference.PreferenceManager
 import com.anggrayudi.materialpreference.PreferenceManager.Companion.KEY_HAS_SET_DEFAULT_VALUES
 import com.anggrayudi.materialpreference.migration.MigrationPlan
 import com.anggrayudi.materialpreference.migration.PreferenceMigration
-import com.anggrayudi.materialpreference.util.SaveDir
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -112,12 +112,13 @@ class App : Application() {
          * Create custom `setDefaultPreferenceValues()` where setting some default values require
          * logic and does not covered by [SharedPreferencesHelper.setDefaultPreferenceValues].
          */
+        @Suppress("DEPRECATION")
         fun setDefaultPreferenceValues(context: Context) {
             SharedPreferencesHelper.setDefaultPreferenceValues(context)
 
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             preferences.edit()
-                .putString("backupLocation", SaveDir.DOWNLOADS)
+                .putString("backupLocation", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath)
                 .putInt("themeColor", Color.parseColor("#37474F"))
                 .apply()
         }

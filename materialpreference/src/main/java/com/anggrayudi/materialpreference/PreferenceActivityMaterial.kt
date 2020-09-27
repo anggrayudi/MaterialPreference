@@ -15,8 +15,8 @@ import androidx.fragment.app.FragmentManager
  * @author Anggrayudi H
  */
 abstract class PreferenceActivityMaterial : AppCompatActivity(),
-        PreferenceFragmentMaterial.OnPreferenceStartScreenCallback,
-        FragmentManager.OnBackStackChangedListener {
+    PreferenceFragmentMaterial.OnPreferenceStartScreenCallback,
+    FragmentManager.OnBackStackChangedListener {
 
     // TODO 24-Jan-19: Create preference header for tablet in two columns mode
 
@@ -77,14 +77,13 @@ abstract class PreferenceActivityMaterial : AppCompatActivity(),
         val f = onBuildPreferenceFragment(key)
         f.arguments!!.putCharSequence(PreferenceFragmentMaterial.PREFERENCE_TITLE, screen.title)
         val ft = supportFragmentManager.beginTransaction()
-        if (replaceFragmentStrategy != null) {
-            ft.setCustomAnimations(replaceFragmentStrategy!!.animEnter, replaceFragmentStrategy!!.animExit,
-                    replaceFragmentStrategy!!.animPopEnter, replaceFragmentStrategy!!.animPopExit)
+        replaceFragmentStrategy?.run {
+            ft.setCustomAnimations(animEnter, animExit, animPopEnter, animPopExit)
         }
         ft.hide(caller)
-                .add(caller.id, f, caller.tag)
-                .addToBackStack(key)
-                .commit()
+            .add(caller.id, f, caller.tag)
+            .addToBackStack(key)
+            .commit()
         return true
     }
 
@@ -106,7 +105,12 @@ abstract class PreferenceActivityMaterial : AppCompatActivity(),
      * @param animPopEnter Enter animation resource ID when popped from backstack.
      * @param animPopExit  Enter animation resource ID when popped from backstack.
      */
-    (internal val animEnter: Int, internal val animExit: Int, internal val animPopEnter: Int, internal val animPopExit: Int) {
+        (
+        internal val animEnter: Int,
+        internal val animExit: Int,
+        internal val animPopEnter: Int,
+        internal val animPopExit: Int
+    ) {
         companion object {
 
             internal const val DEFAULT_ROOT_KEY = "ReplaceFragment.ROOT"

@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="entries_country">
-        <item>China</item>
-        <item>Indonesia</item>
-        <item>Spanish</item>
-        <item>Thailand</item>
-        <item>United States</item>
-    </string-array>
-
-    <string-array name="entry_values_country">
-        <item>CN</item>
-        <item>ID</item>
-        <item>ES</item>
-        <item>TH</item>
-        <item>US</item>
-    </string-array>
-
     <string-array name="entries_friend">
         <item>Andy</item>
         <item>Anggrayudi</item>

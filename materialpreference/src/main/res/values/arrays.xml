@@ -1,10 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="open_file_options">
-        <item>Image</item>
-        <item>Audio</item>
-        <item>Video</item>
-        <item>Archive</item>
-        <item>Text</item>
-    </string-array>
-</resources>
+<resources></resources>

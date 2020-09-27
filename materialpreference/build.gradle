@@ -39,6 +39,7 @@ dependencies {
     api 'androidx.documentfile:documentfile:1.0.1'
     api 'androidx.cardview:cardview:1.0.0'
 
+    api 'com.karumi:dexter:6.2.1'
     api 'com.wdullaer:materialdatetimepicker:4.2.3'
     api "com.afollestad.material-dialogs:core:$dialogVersion"
     api "com.afollestad.material-dialogs:files:$dialogVersion"
@@ -47,6 +48,8 @@ dependencies {
 
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+
+    implementation "com.anggrayudi:storage:0.2.0-SNAPSHOT"
 }
 
 ext {

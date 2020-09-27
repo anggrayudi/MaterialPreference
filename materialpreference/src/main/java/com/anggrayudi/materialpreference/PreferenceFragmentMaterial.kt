@@ -2,10 +2,8 @@ package com.anggrayudi.materialpreference
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -15,16 +13,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
 import androidx.annotation.XmlRes
-import androidx.core.app.ActivityCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.anggrayudi.materialpreference.dialog.*
-import com.anggrayudi.materialpreference.util.FileUtils
+import com.anggrayudi.storage.SimpleStorage
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 
 /**
  * A fragment class to manage and display all preferences.
@@ -36,10 +38,10 @@ import com.anggrayudi.materialpreference.util.FileUtils
  */
 @SuppressLint("RestrictedApi", "PrivateResource")
 abstract class PreferenceFragmentMaterial : Fragment(),
-        PreferenceManager.OnPreferenceTreeClickListener,
-        PreferenceManager.OnDisplayPreferenceDialogListener,
-        PreferenceManager.OnNavigateToScreenListener,
-        DialogPreference.TargetFragment {
+    PreferenceManager.OnPreferenceTreeClickListener,
+    PreferenceManager.OnDisplayPreferenceDialogListener,
+    PreferenceManager.OnNavigateToScreenListener,
+    DialogPreference.TargetFragment {
 
     /** @return The [PreferenceManager] used by this fragment. */
     var preferenceManager: PreferenceManager? = null
@@ -50,7 +52,6 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     private var listContainer: LinearLayout? = null
     private var havePrefs: Boolean = false
     private var initDone: Boolean = false
-    internal var preferenceKeyOnActivityResult: String? = null
 
     private val handler = object : Handler() {
         override fun handleMessage(msg: Message) {
@@ -60,12 +61,14 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         }
     }
 
-    private val requestFocus = Runnable { scrollView!!.focusableViewAvailable(scrollView) }
+    private val requestFocus = Runnable { scrollView?.focusableViewAvailable(scrollView) }
 
     private var selectPreferenceRunnable: Runnable? = null
 
     val preferenceFragmentTitle: String?
         get() = arguments!!.getString(PREFERENCE_TITLE)
+
+    internal lateinit var storage: SimpleStorage
 
     /**
      * Sets the root of the preference hierarchy that this fragment is showing.
@@ -142,8 +145,10 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         activity!!.theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
         val theme = tv.resourceId
         if (theme == 0) {
-            throw IllegalStateException("Must specify preferenceTheme in theme. " +
-                    "Read this sample project: https://github.com/anggrayudi/MaterialPreference/tree/master/sample")
+            throw IllegalStateException(
+                "Must specify preferenceTheme in theme. " +
+                        "Read this sample project: https://github.com/anggrayudi/MaterialPreference/tree/master/sample"
+            )
         }
         if (arguments == null) {
             throw IllegalStateException("Must specify non-null PreferenceFragmentMaterial arguments")
@@ -157,6 +162,9 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 
         onCreatePreferences(savedInstanceState, rootKey)
         (activity as PreferenceActivityMaterial).onCreatePreferences(this, rootKey)
+
+        storage = SimpleStorage(this)
+        savedInstanceState?.let { storage.onRestoreInstanceState(it) }
     }
 
     /**
@@ -199,7 +207,6 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {
-            preferenceKeyOnActivityResult = savedInstanceState.getString("preferenceKeyOnActivityResult")
             val container = savedInstanceState.getBundle(PREFERENCES_TAG)
             if (container != null) {
                 preferenceScreen?.restoreHierarchyState(container)
@@ -209,14 +216,18 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 
     override fun onStart() {
         super.onStart()
-        preferenceManager!!.onPreferenceTreeClickListener = this
-        preferenceManager!!.onDisplayPreferenceDialogListener = this
+        preferenceManager?.let {
+            it.onPreferenceTreeClickListener = this
+            it.onDisplayPreferenceDialogListener = this
+        }
     }
 
     override fun onStop() {
         super.onStop()
-        preferenceManager!!.onPreferenceTreeClickListener = null
-        preferenceManager!!.onDisplayPreferenceDialogListener = null
+        preferenceManager?.let {
+            it.onPreferenceTreeClickListener = null
+            it.onDisplayPreferenceDialogListener = null
+        }
     }
 
     override fun onDestroyView() {
@@ -230,11 +241,10 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("preferenceKeyOnActivityResult", preferenceKeyOnActivityResult)
-        val preferenceScreen = preferenceScreen
-        if (preferenceScreen != null) {
+        storage.onSaveInstanceState(outState)
+        preferenceScreen?.let {
             val container = Bundle()
-            preferenceScreen.saveHierarchyState(container)
+            it.saveHierarchyState(container)
             outState.putBundle(PREFERENCES_TAG, container)
         }
     }
@@ -246,8 +256,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
      */
     fun addPreferencesFromResource(@XmlRes preferencesResId: Int) {
         requirePreferenceManager()
-        preferenceScreen = preferenceManager!!.inflateFromResource(styledContext!!,
-                preferencesResId, preferenceScreen)
+        preferenceScreen = preferenceManager!!.inflateFromResource(styledContext!!, preferencesResId, preferenceScreen)
     }
 
     /**
@@ -260,8 +269,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
      */
     fun setPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?) {
         requirePreferenceManager()
-        val xmlRoot = preferenceManager!!.inflateFromResource(styledContext!!,
-                preferencesResId, null)
+        val xmlRoot = preferenceManager!!.inflateFromResource(styledContext!!, preferencesResId, null)
 
         val root: Preference?
         if (key != null) {
@@ -280,11 +288,11 @@ abstract class PreferenceFragmentMaterial : Fragment(),
             var handled = false
             if (callbackFragment is OnPreferenceStartFragmentCallback) {
                 handled = (callbackFragment as OnPreferenceStartFragmentCallback)
-                        .onPreferenceStartFragment(this, preference)
+                    .onPreferenceStartFragment(this, preference)
             }
             if (!handled && activity is OnPreferenceStartFragmentCallback) {
                 handled = (activity as OnPreferenceStartFragmentCallback)
-                        .onPreferenceStartFragment(this, preference)
+                    .onPreferenceStartFragment(this, preference)
             }
             return handled
         }
@@ -303,11 +311,11 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         var handled = false
         if (callbackFragment is OnPreferenceStartScreenCallback) {
             handled = (callbackFragment as OnPreferenceStartScreenCallback)
-                    .onPreferenceStartScreen(this, preferenceScreen)
+                .onPreferenceStartScreen(this, preferenceScreen)
         }
         if (!handled && activity is OnPreferenceStartScreenCallback) {
             (activity as OnPreferenceStartScreenCallback)
-                    .onPreferenceStartScreen(this, preferenceScreen)
+                .onPreferenceStartScreen(this, preferenceScreen)
         }
     }
 
@@ -363,34 +371,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_OK) {
-            preferenceKeyOnActivityResult = null
-            return
-        }
-
-        if (requestCode == FileUtils.REQUEST_CODE_STORAGE_GET_FOLDER) {
-            val path = FileUtils.resolvePathFromUri(data!!)
-            if (path!!.startsWith("/") || FileUtils.isSdCardUriPermissionsGranted(context!!, data)) {
-                if (preferenceKeyOnActivityResult != null) {
-                    val preference = findPreference(preferenceKeyOnActivityResult!!) as FolderPreference
-                    if (preference.callChangeListener(path)) {
-                        preference.persistString(path)
-                        preference.summary = path
-                    }
-                }
-                preferenceKeyOnActivityResult = null
-            } else {
-                Toast.makeText(context, R.string.please_select_sdcard_root, Toast.LENGTH_LONG).show()
-                startActivityForResult(Intent("android.intent.action.OPEN_DOCUMENT_TREE"),
-                        FileUtils.REQUEST_CODE_REQUIRE_SDCARD_ROOT_PATH_PERMISSIONS)
-            }
-        } else if (requestCode == FileUtils.REQUEST_CODE_REQUIRE_SDCARD_ROOT_PATH_PERMISSIONS && FileUtils.saveUriPermission(context!!, data!!)) {
-            Toast.makeText(context, R.string.you_can_select_sdcard, Toast.LENGTH_SHORT).show()
-            startActivityForResult(Intent("android.intent.action.OPEN_DOCUMENT_TREE"),
-                    FileUtils.REQUEST_CODE_STORAGE_GET_FOLDER)
-        } else {
-            preferenceKeyOnActivityResult = null
-        }
+        storage.onActivityResult(requestCode, resultCode, data)
     }
 
     /**
@@ -405,11 +386,11 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         var handled = false
         if (callbackFragment is OnPreferenceDisplayDialogCallback) {
             handled = (callbackFragment as OnPreferenceDisplayDialogCallback)
-                    .onPreferenceDisplayDialog(this, preference)
+                .onPreferenceDisplayDialog(this, preference)
         }
         if (!handled && activity is OnPreferenceDisplayDialogCallback) {
             handled = (activity as OnPreferenceDisplayDialogCallback)
-                    .onPreferenceDisplayDialog(this, preference)
+                .onPreferenceDisplayDialog(this, preference)
         }
 
         if (handled) {
@@ -417,17 +398,13 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         }
 
         // check if dialog is already showing
-        if (fragmentManager!!.findFragmentByTag(DIALOG_FRAGMENT_TAG) != null) {
+        if (fragmentManager?.findFragmentByTag(DIALOG_FRAGMENT_TAG) != null) {
             return
         }
 
-        if (preference is RingtonePreference && preference.permissionCallback != null) {
-            val readNotGranted = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-            if (readNotGranted) {
-                val writeGranted = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                preference.permissionCallback!!.onPermissionTrouble(!readNotGranted, writeGranted)
-                return
-            }
+        if (preference is RingtonePreference) {
+            openRingtonePreference(preference.key!!)
+            return
         }
 
         val f: DialogFragment = when (preference) {
@@ -437,12 +414,33 @@ abstract class PreferenceFragmentMaterial : Fragment(),
             is MultiSelectListPreference -> MultiSelectListPreferenceDialogFragment.newInstance(preference.key!!)
             is SeekBarDialogPreference -> SeekBarPreferenceDialogFragment.newInstance(preference.key!!)
             is ColorPreference -> ColorPreferenceDialogFragment.newInstance(preference.key!!)
-            is RingtonePreference -> RingtonePreferenceDialogFragment.newInstance(preference.key!!)
-            else -> throw IllegalArgumentException("Tried to display dialog for unknown "
-                    + "preference type. Did you forget to override onDisplayPreferenceDialog()?")
+            else -> throw IllegalArgumentException(
+                "Tried to display dialog for unknown preference type. Did you forget to override onDisplayPreferenceDialog()?"
+            )
         }
         f.setTargetFragment(this, 0)
         f.show(fragmentManager!!, DIALOG_FRAGMENT_TAG)
+    }
+
+    private fun openRingtonePreference(preferenceKey: String) {
+        Dexter.withContext(context)
+            .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse) {
+                    RingtonePreferenceDialogFragment.newInstance(preferenceKey).run {
+                        setTargetFragment(this@PreferenceFragmentMaterial, 0)
+                        show(fragmentManager!!, DIALOG_FRAGMENT_TAG)
+                    }
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse) {
+                    // no-op
+                }
+
+                override fun onPermissionRationaleShouldBeShown(request: PermissionRequest, token: PermissionToken) {
+                    // no-op
+                }
+            }).check()
     }
 
     fun scrollToPreference(key: String) {
