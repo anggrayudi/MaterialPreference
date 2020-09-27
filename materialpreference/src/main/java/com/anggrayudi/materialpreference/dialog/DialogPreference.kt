@@ -23,10 +23,10 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.TypedArrayUtils
 import com.anggrayudi.materialpreference.Preference
 import com.anggrayudi.materialpreference.R
+import com.anggrayudi.materialpreference.util.getSupportDrawable
 
 /**
  * A base class for [Preference] objects that are dialog-based.
@@ -43,10 +43,11 @@ import com.anggrayudi.materialpreference.R
  */
 @SuppressLint("RestrictedApi")
 abstract class DialogPreference @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null,
-        defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.dialogPreferenceStyle,
-                android.R.attr.dialogPreferenceStyle), defStyleRes: Int = 0)
-    : Preference(context, attrs, defStyleAttr, defStyleRes) {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.dialogPreferenceStyle,android.R.attr.dialogPreferenceStyle),
+    defStyleRes: Int = 0
+) : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
     /** Sets and gets the title of the dialog. */
     var dialogTitle: CharSequence? = null
@@ -116,7 +117,7 @@ abstract class DialogPreference @JvmOverloads constructor(
      * @param dialogIconRes The icon, as a resource ID.
      */
     fun setDialogIcon(@DrawableRes dialogIconRes: Int) {
-        dialogIcon = ContextCompat.getDrawable(context, dialogIconRes)
+        dialogIcon = context.getSupportDrawable(dialogIconRes)
     }
 
     /**
@@ -143,7 +144,7 @@ abstract class DialogPreference @JvmOverloads constructor(
         val a = context.obtainStyledAttributes(attrs, R.styleable.DialogPreference, defStyleAttr, defStyleRes)
         dialogTitle = a.getString(R.styleable.DialogPreference_android_dialogTitle) ?: title
         dialogMessage = a.getString(R.styleable.DialogPreference_android_dialogMessage)
-        dialogIcon = a.getDrawable(R.styleable.DialogPreference_android_dialogIcon)
+        dialogIcon = a.getSupportDrawable(context, R.styleable.DialogPreference_android_dialogIcon)
         positiveButtonText = a.getString(R.styleable.DialogPreference_android_positiveButtonText)
         negativeButtonText = a.getString(R.styleable.DialogPreference_android_negativeButtonText)
         dialogLayoutResource = a.getResourceId(R.styleable.DialogPreference_android_dialogLayout, 0)

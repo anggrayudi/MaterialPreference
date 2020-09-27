@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.core.content.res.TypedArrayUtils
 import com.anggrayudi.materialpreference.util.applyTint
+import com.anggrayudi.materialpreference.util.getSupportDrawable
 
 /**
  * Used to indicate status of something, e.g. verified account is shown as check icon.
@@ -49,10 +50,9 @@ open class IndicatorPreference @JvmOverloads constructor(
     private var _tint: Int = 0
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.IndicatorPreference,
-            defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.IndicatorPreference, defStyleAttr, defStyleRes)
         _tint = a.getColor(R.styleable.IndicatorPreference_tint, 0)
-        _drawable = a.getDrawable(R.styleable.IndicatorPreference_android_src)
+        _drawable = a.getSupportDrawable(context, R.styleable.IndicatorPreference_android_src)
         a.recycle()
     }
 
@@ -64,7 +64,6 @@ open class IndicatorPreference @JvmOverloads constructor(
 
     override fun onSetupFinished(fragment: PreferenceFragmentMaterial) {
         tint = _tint
-        preferenceViewHolder?.itemView?.findViewById<View>(
-            R.id.material_summary)!!.visibility = View.GONE
+        preferenceViewHolder?.itemView?.findViewById<View>(R.id.material_summary)?.visibility = View.GONE
     }
 }

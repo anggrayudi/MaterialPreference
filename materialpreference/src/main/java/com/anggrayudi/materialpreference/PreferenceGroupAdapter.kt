@@ -25,11 +25,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.ListUpdateCallback
 import com.anggrayudi.materialpreference.util.applyTint
 import com.anggrayudi.materialpreference.util.getAttrColor
+import com.anggrayudi.materialpreference.util.getSupportDrawable
 import java.util.*
 
 /**
@@ -205,8 +205,8 @@ internal class PreferenceGroupAdapter internal constructor(
         val pl = preferenceLayouts[viewType]
         val context = preferenceGroup.context
         val a = context.obtainStyledAttributes(null, R.styleable.BackgroundStyle)
-        val background = a.getDrawable(R.styleable.BackgroundStyle_android_selectableItemBackground)
-                ?: ContextCompat.getDrawable(context, android.R.drawable.list_selector_background)
+        val background = a.getSupportDrawable(context, R.styleable.BackgroundStyle_android_selectableItemBackground)
+                ?: context.getSupportDrawable(android.R.drawable.list_selector_background)
         a.recycle()
 
         val inflater = LayoutInflater.from(context)

@@ -36,7 +36,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.*
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.res.TypedArrayUtils
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
@@ -45,6 +44,7 @@ import com.anggrayudi.materialpreference.callback.OnPreferenceChangeListener
 import com.anggrayudi.materialpreference.callback.OnPreferenceClickListener
 import com.anggrayudi.materialpreference.callback.OnPreferenceLongClickListener
 import com.anggrayudi.materialpreference.util.applyTint
+import com.anggrayudi.materialpreference.util.getSupportDrawable
 import java.util.*
 
 /**
@@ -383,7 +383,7 @@ open class Preference @JvmOverloads constructor(
     var icon: Drawable?
         get() {
             if (_icon == null && iconResId != 0) {
-                _icon = ContextCompat.getDrawable(context, iconResId)
+                _icon = context.getSupportDrawable(iconResId)
             }
             return _icon
         }
@@ -409,7 +409,7 @@ open class Preference @JvmOverloads constructor(
      * @param iconResId The icon as a resource ID.
      */
     fun setIcon(@DrawableRes iconResId: Int) {
-        icon = ContextCompat.getDrawable(context, iconResId)
+        icon = context.getSupportDrawable(iconResId)
         this.iconResId = iconResId
     }
 
@@ -767,7 +767,7 @@ open class Preference @JvmOverloads constructor(
             var c = icon
             if (iconResId != 0 || c != null) {
                 if (c == null) {
-                    c = ContextCompat.getDrawable(context, iconResId)
+                    c = context.getSupportDrawable(iconResId)
                 }
                 if (c != null) {
                     if (tintIcon != Color.TRANSPARENT) {

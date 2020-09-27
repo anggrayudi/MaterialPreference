@@ -8,9 +8,9 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.utils.MDUtil.dimenPx
 import com.anggrayudi.materialpreference.R
+import com.anggrayudi.materialpreference.util.getSupportDrawable
 
 class ColorCircleView(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
@@ -55,8 +55,7 @@ class ColorCircleView(context: Context, attrs: AttributeSet? = null) : View(cont
         super.onDraw(canvas)
         if (color == Color.TRANSPARENT) {
             if (transparentGrid == null) {
-                // TODO: 27/09/20 Add vector drawable support
-                transparentGrid = ContextCompat.getDrawable(context, R.drawable.transparentgrid)
+                transparentGrid = context.getSupportDrawable(R.drawable.transparentgrid)
             }
             transparentGrid?.setBounds(0, 0, measuredWidth, measuredHeight)
             transparentGrid?.draw(canvas)
