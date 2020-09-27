@@ -365,7 +365,6 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     }
 
     private fun attachPreferences(screen: PreferenceScreen) {
-        // TODO: 01/07/18 Attach to cardviews
         adapter = PreferenceGroupAdapter(this, screen, listContainer!!)
     }
 

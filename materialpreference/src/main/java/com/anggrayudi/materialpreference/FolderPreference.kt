@@ -132,7 +132,7 @@ open class FolderPreference @JvmOverloads constructor(
 
             override fun onRootPathPermissionGranted(root: DocumentFile) {
                 storage.openFolderPicker(REQUEST_CODE_STORAGE_GET_FOLDER)
-                Toast.makeText(context, context.getString(R.string.selecting_root_path_success, root.fullPath), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.selecting_root_path_success, root.fullPath), Toast.LENGTH_LONG).show()
             }
 
             override fun onStoragePermissionDenied() {
