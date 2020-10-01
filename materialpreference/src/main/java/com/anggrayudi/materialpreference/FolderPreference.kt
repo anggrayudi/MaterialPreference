@@ -116,11 +116,7 @@ open class FolderPreference @JvmOverloads constructor(
 
     private fun setupSimpleStorage() {
         storage.storageAccessCallback = object : StorageAccessCallback {
-            override fun onCancelledByUser() {
-                // no-op
-            }
-
-            override fun onRootPathNotSelected(rootPath: String, rootStorageType: StorageType) {
+            override fun onRootPathNotSelected(requestCode: Int, rootPath: String, rootStorageType: StorageType) {
                 MaterialDialog(context)
                     .message(if (rootStorageType == StorageType.SD_CARD) R.string.please_select_root_storage_sdcard else R.string.please_select_root_storage_primary)
                     .negativeButton(android.R.string.cancel)
@@ -130,21 +126,17 @@ open class FolderPreference @JvmOverloads constructor(
                     .show()
             }
 
-            override fun onRootPathPermissionGranted(root: DocumentFile) {
+            override fun onRootPathPermissionGranted(requestCode: Int, root: DocumentFile) {
                 storage.openFolderPicker(REQUEST_CODE_STORAGE_GET_FOLDER)
                 Toast.makeText(context, context.getString(R.string.selecting_root_path_success, root.fullPath), Toast.LENGTH_LONG).show()
             }
 
-            override fun onStoragePermissionDenied() {
+            override fun onStoragePermissionDenied(requestCode: Int) {
                 requestStoragePermission()
             }
         }
 
         storage.folderPickerCallback = object : FolderPickerCallback {
-            override fun onCancelledByUser(requestCode: Int) {
-                // no-op
-            }
-
             override fun onFolderSelected(requestCode: Int, folder: DocumentFile) {
                 this@FolderPreference.folder = folder.fullPath
             }

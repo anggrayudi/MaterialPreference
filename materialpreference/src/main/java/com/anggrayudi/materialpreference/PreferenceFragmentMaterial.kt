@@ -163,8 +163,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         onCreatePreferences(savedInstanceState, rootKey)
         (activity as PreferenceActivityMaterial).onCreatePreferences(this, rootKey)
 
-        storage = SimpleStorage(this)
-        savedInstanceState?.let { storage.onRestoreInstanceState(it) }
+        storage = SimpleStorage(this, savedInstanceState)
     }
 
     /**
