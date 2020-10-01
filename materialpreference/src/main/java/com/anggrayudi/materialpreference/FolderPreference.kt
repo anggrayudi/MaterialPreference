@@ -122,7 +122,7 @@ open class FolderPreference @JvmOverloads constructor(
 
             override fun onRootPathNotSelected(rootPath: String, rootStorageType: StorageType) {
                 MaterialDialog(context)
-                    .message(text = context.getString(R.string.please_select_root_storage, rootPath))
+                    .message(if (rootStorageType == StorageType.SD_CARD) R.string.please_select_root_storage_sdcard else R.string.please_select_root_storage_primary)
                     .negativeButton(android.R.string.cancel)
                     .positiveButton {
                         storage.requestStorageAccess(REQUEST_CODE_STORAGE_ACCESS, rootStorageType)
