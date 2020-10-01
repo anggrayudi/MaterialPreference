@@ -122,8 +122,7 @@ open class FolderPreference @JvmOverloads constructor(
                     .negativeButton(android.R.string.cancel)
                     .positiveButton {
                         storage.requestStorageAccess(REQUEST_CODE_STORAGE_ACCESS, rootStorageType)
-                    }
-                    .show()
+                    }.show()
             }
 
             override fun onRootPathPermissionGranted(requestCode: Int, root: DocumentFile) {
@@ -151,8 +150,7 @@ open class FolderPreference @JvmOverloads constructor(
                     .negativeButton(android.R.string.cancel)
                     .positiveButton {
                         storage.requestStorageAccess(REQUEST_CODE_STORAGE_ACCESS, storageType)
-                    }
-                    .show()
+                    }.show()
             }
 
             override fun onStoragePermissionDenied(requestCode: Int) {
