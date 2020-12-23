@@ -20,6 +20,7 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
+import androidx.annotation.Keep
 import com.anggrayudi.materialpreference.dialog.DialogPreference
 import com.anggrayudi.materialpreference.util.IntSummaryFormatter
 
@@ -27,7 +28,7 @@ import com.anggrayudi.materialpreference.util.IntSummaryFormatter
  *
  * @see SeekBarPreference
  */
-open class SeekBarDialogPreference @JvmOverloads constructor(
+open class SeekBarDialogPreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.seekBarDialogPreferenceStyle,
@@ -75,8 +76,7 @@ open class SeekBarDialogPreference @JvmOverloads constructor(
         private set
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference,
-            defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference, defStyleAttr, defStyleRes)
         preferredMax = a.getInt(R.styleable.SeekBarPreference_android_max, preferredMax)
         val hasAspMin = a.hasValue(R.styleable.SeekBarPreference_min)
         if (hasAspMin) {

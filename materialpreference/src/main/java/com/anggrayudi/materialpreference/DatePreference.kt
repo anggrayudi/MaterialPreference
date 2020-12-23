@@ -3,6 +3,7 @@ package com.anggrayudi.materialpreference
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import androidx.annotation.Keep
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -12,7 +13,7 @@ import java.util.*
  * @see TimePreference
  */
 @SuppressLint("RestrictedApi")
-open class DatePreference @JvmOverloads constructor(
+open class DatePreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.preferenceStyle,
@@ -74,10 +75,12 @@ open class DatePreference @JvmOverloads constructor(
             val millis = getPersistedLong(System.currentTimeMillis())
             val now = Calendar.getInstance()
             now.timeInMillis = millis
-            val dialog = DatePickerDialog.newInstance(this,
+            val dialog = DatePickerDialog.newInstance(
+                this,
                 now[Calendar.YEAR],
                 now[Calendar.MONTH],
-                now[Calendar.DAY_OF_MONTH])
+                now[Calendar.DAY_OF_MONTH]
+            )
             dialog.version = DatePickerDialog.Version.VERSION_2
             dialog.dismissOnPause(false)
 

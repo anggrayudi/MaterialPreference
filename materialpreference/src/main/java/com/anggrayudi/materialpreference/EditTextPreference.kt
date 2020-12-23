@@ -24,6 +24,7 @@ import android.text.InputFilter
 import android.text.InputType
 import android.util.AttributeSet
 import android.widget.EditText
+import androidx.annotation.Keep
 import androidx.core.content.res.TypedArrayUtils
 import com.anggrayudi.materialpreference.callback.OnBindTextInputLayoutListener
 import com.anggrayudi.materialpreference.dialog.DialogPreference
@@ -51,11 +52,10 @@ import com.anggrayudi.materialpreference.util.StringSummaryFormatter
  *      | app:counterEnabled    | Boolean                    |
  */
 @SuppressLint("RestrictedApi")
-open class EditTextPreference @JvmOverloads constructor(
+open class EditTextPreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.editTextPreferenceStyle,
-        android.R.attr.editTextPreferenceStyle),
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.editTextPreferenceStyle, android.R.attr.editTextPreferenceStyle),
     defStyleRes: Int = 0
 ) : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
 

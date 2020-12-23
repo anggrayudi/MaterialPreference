@@ -25,6 +25,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.annotation.Keep
 import com.anggrayudi.materialpreference.util.IntSummaryFormatter
 
 /**
@@ -41,7 +42,7 @@ import com.anggrayudi.materialpreference.util.IntSummaryFormatter
  *
  * @see SeekBarDialogPreference
  */
-open class SeekBarPreference @JvmOverloads constructor(
+open class SeekBarPreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.seekBarPreferenceStyle,
@@ -167,8 +168,7 @@ open class SeekBarPreference @JvmOverloads constructor(
         private set
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference,
-            defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference, defStyleAttr, defStyleRes)
         /*
          * The ordering of these two statements are important. If we want to set max first, we need
          * to perform the same steps by changing min/max to max/min as following:
@@ -306,7 +306,7 @@ open class SeekBarPreference @JvmOverloads constructor(
 
         internal constructor(superState: Parcelable) : super(superState)
 
-        companion object CREATOR: Parcelable.Creator<SavedState> {
+        companion object CREATOR : Parcelable.Creator<SavedState> {
             override fun createFromParcel(`in`: Parcel): SavedState {
                 return SavedState(`in`)
             }

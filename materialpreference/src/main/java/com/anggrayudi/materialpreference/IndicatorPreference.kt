@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.Keep
 import androidx.core.content.res.TypedArrayUtils
 import com.anggrayudi.materialpreference.util.applyTint
 import com.anggrayudi.materialpreference.util.getSupportDrawable
@@ -19,7 +20,7 @@ import com.anggrayudi.materialpreference.util.getSupportDrawable
  *      | app:tint    | Color      |
  */
 @SuppressLint("RestrictedApi")
-open class IndicatorPreference @JvmOverloads constructor(
+open class IndicatorPreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.indicatorPreferenceStyle, 0),

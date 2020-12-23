@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
+import androidx.annotation.Keep
 import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.folderChooser
@@ -26,7 +27,7 @@ import java.io.File
  */
 @TargetApi(21)
 @SuppressLint("RestrictedApi")
-open class FolderPreference @JvmOverloads constructor(
+open class FolderPreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,

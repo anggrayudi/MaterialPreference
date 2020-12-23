@@ -6,6 +6,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.annotation.ArrayRes
+import androidx.annotation.Keep
 import androidx.core.content.res.TypedArrayUtils
 import com.anggrayudi.materialpreference.dialog.DialogPreference
 import com.anggrayudi.materialpreference.util.EntrySummaryFormatter
@@ -23,11 +24,10 @@ import com.anggrayudi.materialpreference.util.EntrySummaryFormatter
  *       | app:entryIcons      | Drawable array            |
  */
 @SuppressLint("RestrictedApi")
-open class IntegerListPreference @JvmOverloads constructor(
+open class IntegerListPreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.dialogPreferenceStyle,
-        android.R.attr.dialogPreferenceStyle),
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.dialogPreferenceStyle, android.R.attr.dialogPreferenceStyle),
     defStyleRes: Int = 0
 ) : DialogPreference(context, attrs, defStyleAttr, defStyleRes), ArrayPreference<Int> {
 
@@ -95,8 +95,7 @@ open class IntegerListPreference @JvmOverloads constructor(
         private set
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.ListPreference,
-            defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.ListPreference, defStyleAttr, defStyleRes)
 
         defaultValue = a.getInt(R.styleable.Preference_android_defaultValue, 0)
 

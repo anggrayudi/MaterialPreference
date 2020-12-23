@@ -22,6 +22,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.provider.Settings.System
 import android.util.AttributeSet
+import androidx.annotation.Keep
 import com.anggrayudi.materialpreference.dialog.DialogPreference
 
 /**
@@ -46,7 +47,7 @@ import com.anggrayudi.materialpreference.dialog.DialogPreference
  *      | android:showDefault  | Boolean                            |
  *      | android:showSilent   | Boolean                            |
  */
-open class RingtonePreference @JvmOverloads constructor(
+open class RingtonePreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.ringtonePreferenceStyle,

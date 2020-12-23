@@ -87,11 +87,10 @@ import java.util.*
  *      | app:iconSize               | normal, large                  |
  */
 @SuppressLint("RestrictedApi")
-open class Preference @JvmOverloads constructor(
+open class Preference @Keep @JvmOverloads constructor(
     val context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.preferenceStyle,
-        android.R.attr.preferenceStyle),
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.preferenceStyle, android.R.attr.preferenceStyle),
     defStyleRes: Int = 0
 ) : Comparable<Preference> {
 
@@ -282,8 +281,7 @@ open class Preference @JvmOverloads constructor(
         get() = _legacySummary
         set(enable) {
             if (javaClass != Preference::class.java) {
-                _legacySummary = (this is TwoStatePreference || this is PreferenceGroup
-                    || enable && this !is SeekBarPreference)
+                _legacySummary = (this is TwoStatePreference || this is PreferenceGroup || enable && this !is SeekBarPreference)
                 notifyChanged()
             }
         }
@@ -633,8 +631,7 @@ open class Preference @JvmOverloads constructor(
     }
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.Preference,
-            defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.Preference, defStyleAttr, defStyleRes)
         _key = a.getString(R.styleable.Preference_android_key)
         _title = a.getText(R.styleable.Preference_android_title)
         _summary = a.getText(R.styleable.Preference_android_summary)
@@ -685,10 +682,12 @@ open class Preference @JvmOverloads constructor(
      * @param index The index of the default value attribute.
      * @return The default value of this preference type.
      */
-    @Deprecated("It causes complexity and unreliable for preference's default value." +
-        " Since v3.0.0 this method always returns null." +
-        " Use your own method to set the default values as described in the com.anggrayudi.materialpreference.sample.App.kt",
-        ReplaceWith("Generated class SharedPreferencesHelper is all you need."))
+    @Deprecated(
+        "It causes complexity and unreliable for preference's default value." +
+                " Since v3.0.0 this method always returns null." +
+                " Use your own method to set the default values as described in the com.anggrayudi.materialpreference.sample.App.kt",
+        ReplaceWith("Generated class SharedPreferencesHelper is all you need.")
+    )
     protected fun onGetDefaultValue(a: TypedArray, index: Int): Any? = null
 
     /**
@@ -882,8 +881,7 @@ open class Preference @JvmOverloads constructor(
      * @return True if the user value should be set as the preference
      * value (and persisted).
      */
-    fun callChangeListener(newValue: Any?): Boolean = onPreferenceChangeListener == null
-        || onPreferenceChangeListener!!(this, newValue)
+    fun callChangeListener(newValue: Any?): Boolean = onPreferenceChangeListener == null || onPreferenceChangeListener!!(this, newValue)
 
     @RestrictTo(LIBRARY_GROUP)
     internal open fun performClick(view: View) {
@@ -899,7 +897,8 @@ open class Preference @JvmOverloads constructor(
         onClick()
 
         if (onPreferenceClickListener?.invoke(this) == true ||
-            preferenceManager?.onPreferenceTreeClickListener?.onPreferenceTreeClick(this) == true) {
+            preferenceManager?.onPreferenceTreeClickListener?.onPreferenceTreeClick(this) == true
+        ) {
             return
         }
 
@@ -1008,8 +1007,7 @@ open class Preference @JvmOverloads constructor(
         if (preference != null) {
             preference.registerDependent(this)
         } else {
-            throw IllegalStateException("Dependency \"$_dependencyKey\" " +
-                "not found for preference \"$key\" (title: \"$_title\"")
+            throw IllegalStateException("Dependency \"$_dependencyKey\" not found for preference \"$key\" (title: \"$_title\"")
         }
     }
 
@@ -1467,8 +1465,7 @@ open class Preference @JvmOverloads constructor(
             baseMethodCalled = false
             val state = onSaveInstanceState()
             if (!baseMethodCalled) {
-                throw IllegalStateException(
-                    "Derived class did not call super.onSaveInstanceState()")
+                throw IllegalStateException("Derived class did not call super.onSaveInstanceState()")
             }
             if (state != null) {
                 container.putParcelable(key, state)
@@ -1520,8 +1517,7 @@ open class Preference @JvmOverloads constructor(
             baseMethodCalled = false
             onRestoreInstanceState(state)
             if (!baseMethodCalled) {
-                throw IllegalStateException(
-                    "Derived class did not call super.onRestoreInstanceState()")
+                throw IllegalStateException("Derived class did not call super.onRestoreInstanceState()")
             }
         }
     }

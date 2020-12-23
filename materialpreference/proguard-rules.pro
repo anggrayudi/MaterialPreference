@@ -20,29 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keepnames class com.anggrayudi.materialpreference.Preference
--keepnames class com.anggrayudi.materialpreference.PreferenceScreen
--keepnames class com.anggrayudi.materialpreference.PreferenceCategory
--keepnames class com.anggrayudi.materialpreference.SeekBarPreference
--keepnames class com.anggrayudi.materialpreference.SeekBarDialogPreference
--keepnames class com.anggrayudi.materialpreference.RingtonePreference
--keepnames class com.anggrayudi.materialpreference.ListPreference
--keepnames class com.anggrayudi.materialpreference.IntegerListPreference
--keepnames class com.anggrayudi.materialpreference.MultiSelectListPreference
--keepnames class com.anggrayudi.materialpreference.EditTextPreference
--keepnames class com.anggrayudi.materialpreference.IndicatorPreference
--keepnames class com.anggrayudi.materialpreference.FolderPreference
--keepnames class com.anggrayudi.materialpreference.ColorPreference
--keepnames class com.anggrayudi.materialpreference.FilePreference
--keepnames class com.anggrayudi.materialpreference.TwoStatePreference
-
--keep class com.anggrayudi.materialpreference.CheckBoxPreference
--keep class com.anggrayudi.materialpreference.SwitchPreference
--keep class com.anggrayudi.materialpreference.TimePreference
--keep class com.anggrayudi.materialpreference.DatePreference
-
--keepclassmembers class * extends com.anggrayudi.materialpreference.Preference { public <init>(...); }
-
 ### Coroutines
 # ServiceLoader support
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}

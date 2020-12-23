@@ -19,6 +19,7 @@ package com.anggrayudi.materialpreference
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import androidx.annotation.Keep
 
 import androidx.core.content.res.TypedArrayUtils
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
@@ -28,11 +29,10 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.CollectionIt
  * Used to group [Preference] objects and provide a disabled title above the group.
  */
 @SuppressLint("RestrictedApi")
-class PreferenceCategory @JvmOverloads constructor(
+class PreferenceCategory @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.preferenceCategoryStyle,
-        android.R.attr.preferenceCategoryStyle),
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.preferenceCategoryStyle, android.R.attr.preferenceCategoryStyle),
     defStyleRes: Int = 0
 ) : PreferenceGroup(context, attrs, defStyleAttr, defStyleRes) {
 
@@ -55,12 +55,13 @@ class PreferenceCategory @JvmOverloads constructor(
         super.onInitializeAccessibilityNodeInfo(info)
         val existingItemInfo = info.collectionItemInfo ?: return
         val newItemInfo = CollectionItemInfoCompat.obtain(
-                existingItemInfo.rowIndex,
-                existingItemInfo.rowSpan,
-                existingItemInfo.columnIndex,
-                existingItemInfo.columnSpan,
-                true /* heading */,
-                existingItemInfo.isSelected)
+            existingItemInfo.rowIndex,
+            existingItemInfo.rowSpan,
+            existingItemInfo.columnIndex,
+            existingItemInfo.columnSpan,
+            true /* heading */,
+            existingItemInfo.isSelected
+        )
         info.setCollectionItemInfo(newItemInfo)
     }
 

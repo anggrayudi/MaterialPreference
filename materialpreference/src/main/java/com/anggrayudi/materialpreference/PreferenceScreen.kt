@@ -19,6 +19,7 @@ package com.anggrayudi.materialpreference
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import androidx.annotation.Keep
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
 import androidx.core.content.res.TypedArrayUtils
@@ -42,9 +43,10 @@ import androidx.core.content.res.TypedArrayUtils
 class PreferenceScreen
 /** Do NOT use this constructor, use [PreferenceManager.createPreferenceScreen]. */
 @RestrictTo(LIBRARY_GROUP)
-constructor(context: Context, attrs: AttributeSet?)
-    : PreferenceGroup(context, attrs, TypedArrayUtils.getAttr(context, R.attr.preferenceScreenStyle,
-        android.R.attr.preferenceScreenStyle)) {
+@Keep constructor(
+    context: Context,
+    attrs: AttributeSet?
+) : PreferenceGroup(context, attrs, TypedArrayUtils.getAttr(context, R.attr.preferenceScreenStyle, android.R.attr.preferenceScreenStyle)) {
 
     override var isOnSameScreenAsChildren = false
         get() = false

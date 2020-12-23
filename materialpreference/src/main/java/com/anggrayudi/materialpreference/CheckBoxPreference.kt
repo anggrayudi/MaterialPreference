@@ -23,6 +23,7 @@ import android.view.View
 import android.view.accessibility.AccessibilityManager
 import android.widget.Checkable
 import android.widget.CompoundButton
+import androidx.annotation.Keep
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
 import androidx.core.content.res.TypedArrayUtils
@@ -42,7 +43,7 @@ import androidx.core.content.res.TypedArrayUtils
  * @see SwitchPreference
  */
 @SuppressLint("RestrictedApi")
-open class CheckBoxPreference @JvmOverloads constructor(
+open class CheckBoxPreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.checkBoxPreferenceStyle,

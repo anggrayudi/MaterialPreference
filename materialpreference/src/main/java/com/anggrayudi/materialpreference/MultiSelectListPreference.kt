@@ -21,6 +21,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.annotation.ArrayRes
+import androidx.annotation.Keep
 import com.anggrayudi.materialpreference.dialog.DialogPreference
 import com.anggrayudi.materialpreference.util.ArraySummaryFormatter
 import java.util.*
@@ -39,7 +40,7 @@ import kotlin.collections.HashSet
  *      | app:entryIcons      | Drawable array |
  *      | app:summaryNothing  | String         |
  */
-open class MultiSelectListPreference @JvmOverloads constructor(
+open class MultiSelectListPreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.multiSelectListPreferenceStyle,
@@ -127,8 +128,7 @@ open class MultiSelectListPreference @JvmOverloads constructor(
         private set
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.MultiSelectListPreference,
-            defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.MultiSelectListPreference, defStyleAttr, defStyleRes)
         _nothingText = a.getText(R.styleable.MultiSelectListPreference_summaryNothing)
         _entries = a.getTextArray(R.styleable.MultiSelectListPreference_android_entries)
         _entryValues = a.getTextArray(R.styleable.MultiSelectListPreference_android_entryValues)
@@ -136,10 +136,9 @@ open class MultiSelectListPreference @JvmOverloads constructor(
             .toTypedArray()
 
         defaultValue = a.getString(R.styleable.Preference_android_defaultValue).orEmpty()
-                .split(",")
-                .map { it.trim() }
-                .filter { it.isNotEmpty() }
-                .toSet()
+            .split(",")
+            .filter { it.isNotBlank() }
+            .toSet()
 
         a.recycle()
     }

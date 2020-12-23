@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
+import androidx.annotation.Keep
 import androidx.core.content.res.TypedArrayUtils
 import com.anggrayudi.materialpreference.dialog.DialogPreference
 import com.anggrayudi.materialpreference.util.StringSummaryFormatter
@@ -18,11 +19,10 @@ import com.anggrayudi.materialpreference.widget.ColorCircleView
  *      | app:defaultColor | Color      |
  */
 @SuppressLint("RestrictedApi")
-open class ColorPreference @JvmOverloads constructor(
+open class ColorPreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.colorPreferenceStyle,
-        android.R.attr.dialogPreferenceStyle),
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.colorPreferenceStyle, android.R.attr.dialogPreferenceStyle),
     defStyleRes: Int = 0
 ) : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
 
@@ -43,8 +43,7 @@ open class ColorPreference @JvmOverloads constructor(
     var defaultColor: Int
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.ColorPreference,
-            defStyleAttr, defStyleRes)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.ColorPreference, defStyleAttr, defStyleRes)
         defaultColor = a.getColor(R.styleable.ColorPreference_defaultColor, colorList[0])
         a.recycle()
     }
@@ -160,6 +159,7 @@ open class ColorPreference @JvmOverloads constructor(
             Color.parseColor("#795548"), // brown
             Color.parseColor("#9E9E9E"), // gray
             Color.parseColor("#607D8B"), // blue gray
-            Color.parseColor("#000000")) // black
+            Color.parseColor("#000000")  // black
+        )
     }
 }

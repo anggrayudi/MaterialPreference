@@ -3,6 +3,7 @@ package com.anggrayudi.materialpreference
 import android.content.Context
 import android.text.format.DateFormat
 import android.util.AttributeSet
+import androidx.annotation.Keep
 import com.anggrayudi.materialpreference.util.toSafeInt
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import com.wdullaer.materialdatetimepicker.time.Timepoint
@@ -12,7 +13,7 @@ import java.util.*
  *
  * @see DatePreference
  */
-open class TimePreference @JvmOverloads constructor(
+open class TimePreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.preferenceStyle,
@@ -77,8 +78,7 @@ open class TimePreference @JvmOverloads constructor(
                 val now = Calendar.getInstance()
                 time = Time(now[Calendar.HOUR_OF_DAY], now[Calendar.MINUTE])
             }
-            val dialog = TimePickerDialog.newInstance(this,
-                time.hourOfDay, time.minute, is24HourMode)
+            val dialog = TimePickerDialog.newInstance(this, time.hourOfDay, time.minute, is24HourMode)
             dialog.version = TimePickerDialog.Version.VERSION_2
             dialog.dismissOnPause(false)
             dialog.enableMinutes(enableMinute)

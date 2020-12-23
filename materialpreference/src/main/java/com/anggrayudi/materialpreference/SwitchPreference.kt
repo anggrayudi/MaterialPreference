@@ -23,6 +23,7 @@ import android.view.View
 import android.view.accessibility.AccessibilityManager
 import android.widget.Checkable
 import android.widget.CompoundButton
+import androidx.annotation.Keep
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
 import androidx.annotation.StringRes
@@ -45,7 +46,7 @@ import com.anggrayudi.materialpreference.widget.AspSwitchCompat
  * @see CheckBoxPreference
  */
 @SuppressLint("RestrictedApi")
-open class SwitchPreference @JvmOverloads constructor(
+open class SwitchPreference @Keep @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.switchPreferenceStyle,
