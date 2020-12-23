@@ -33,9 +33,11 @@ android {
     }
 }
 dependencies {
-    implementation 'com.anggrayudi:materialpreference:3.6.2'
+    implementation 'com.anggrayudi:materialpreference:X.Y.Z'
 }
 ```
+
+Where `X.Y.Z` is the library version: ![Maven Central](https://img.shields.io/maven-central/v/com.anggrayudi/materialpreference.svg)
 
 Snapshots can be found [here](https://oss.sonatype.org/#nexus-search;quick~com.anggrayudi).
 To use SNAPSHOT version, you need to add this URL to the root Gradle:
@@ -369,14 +371,14 @@ Any donation you give is really helpful for us to develop this library. It feels
 
 ## License
 
-    Copyright 2018-2020 Anggrayudi Hardiannicko A.
- 
+    Copyright 2018-2021 Anggrayudi Hardiannicko A.
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
- 
+
         http://www.apache.org/licenses/LICENSE-2.0
- 
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.

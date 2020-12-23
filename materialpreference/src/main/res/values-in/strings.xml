@@ -12,10 +12,4 @@
     <string name="alarm_sound_default">Suara default alarm</string>
     <string name="min_preference_input_chars_">Panjang minimal adalah %d</string>
     <string name="nothing">Tidak ada</string>
-    <string name="please_grant_storage_permission">Berikan izin baca dan tulis pada media penyimpanan.</string>
-    <string name="please_select_root_storage_sdcard">Untuk memberikan akses penyimpanan, pertama-tama silakan pilih jalur root dari kartu SD.</string>
-    <string name="please_select_root_storage_primary">Untuk memberikan akses penyimpanan, pertama-tama silakan pilih jalur root dari penyimpanan internal.</string>
-    <string name="selecting_root_path_success">Sekarang kamu bisa memilih folder apapun di bawah %s</string>
-    <string name="storage_access_denied_confirm">Kamu tidak punya akses tulis ke penyimpanan ini, sehingga tidak ada gunanya memilih folder ini.
-        \nMaukah kamu memberikan akses ke folder ini?</string>
 </resources>

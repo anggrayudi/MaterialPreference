@@ -1,6 +1,5 @@
 package com.anggrayudi.materialpreference
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Dialog
@@ -8,23 +7,13 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
-import android.widget.Toast
-import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.files.selectedFolder
 import com.anggrayudi.materialpreference.util.FolderType
-import com.anggrayudi.storage.SimpleStorage
-import com.anggrayudi.storage.callback.FolderPickerCallback
-import com.anggrayudi.storage.callback.StorageAccessCallback
-import com.anggrayudi.storage.file.StorageType
-import com.anggrayudi.storage.file.fullPath
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.anggrayudi.storage.SimpleStorageHelper
+import com.anggrayudi.storage.file.absolutePath
 import java.io.File
 
 /**
@@ -78,27 +67,9 @@ open class FolderPreference @JvmOverloads constructor(
         a.recycle()
 
         onPreferenceClickListener = {
-            requestStoragePermission()
+            SimpleStorageHelper.requestStoragePermission(context) { openFolderSelector() }
             true
         }
-    }
-
-    private fun requestStoragePermission() {
-        Dexter.withContext(context)
-            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-            .withListener(object : MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                    if (report.areAllPermissionsGranted()) {
-                        openFolderSelector()
-                    } else {
-                        Toast.makeText(context, R.string.please_grant_storage_permission, Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-                override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>, token: PermissionToken) {
-                    // no-op
-                }
-            }).check()
     }
 
     private fun openFolderSelector() {
@@ -109,58 +80,15 @@ open class FolderPreference @JvmOverloads constructor(
                 show(fragment.fragmentManager!!, key)
             }
         } else {
-            setupSimpleStorage()
-            storage.openFolderPicker(REQUEST_CODE_STORAGE_GET_FOLDER)
-        }
-    }
-
-    private fun setupSimpleStorage() {
-        storage.storageAccessCallback = object : StorageAccessCallback {
-            override fun onRootPathNotSelected(requestCode: Int, rootPath: String, rootStorageType: StorageType) {
-                MaterialDialog(context)
-                    .message(if (rootStorageType == StorageType.SD_CARD) R.string.please_select_root_storage_sdcard else R.string.please_select_root_storage_primary)
-                    .negativeButton(android.R.string.cancel)
-                    .positiveButton {
-                        storage.requestStorageAccess(REQUEST_CODE_STORAGE_ACCESS, rootStorageType)
-                    }.show()
-            }
-
-            override fun onRootPathPermissionGranted(requestCode: Int, root: DocumentFile) {
-                storage.openFolderPicker(REQUEST_CODE_STORAGE_GET_FOLDER)
-                Toast.makeText(context, context.getString(R.string.selecting_root_path_success, root.fullPath), Toast.LENGTH_LONG).show()
-            }
-
-            override fun onStoragePermissionDenied(requestCode: Int) {
-                requestStoragePermission()
-            }
-        }
-
-        storage.folderPickerCallback = object : FolderPickerCallback {
-            override fun onFolderSelected(requestCode: Int, folder: DocumentFile) {
-                this@FolderPreference.folder = folder.fullPath
-            }
-
-            override fun onStorageAccessDenied(requestCode: Int, folder: DocumentFile?, storageType: StorageType?) {
-                if (storageType == null) {
-                    requestStoragePermission()
-                    return
+            preferenceFragment!!.storageHelper.run {
+                requestCodeFolderPicker = REQUEST_CODE_STORAGE_GET_FOLDER
+                onFolderSelected = { _, folder ->
+                    this@FolderPreference.folder = folder.absolutePath
                 }
-                MaterialDialog(context)
-                    .message(R.string.storage_access_denied_confirm)
-                    .negativeButton(android.R.string.cancel)
-                    .positiveButton {
-                        storage.requestStorageAccess(REQUEST_CODE_STORAGE_ACCESS, storageType)
-                    }.show()
-            }
-
-            override fun onStoragePermissionDenied(requestCode: Int) {
-                requestStoragePermission()
+                openFolderPicker()
             }
         }
     }
-
-    private val storage: SimpleStorage
-        get() = preferenceFragment!!.storage
 
     class FolderPreferenceDialog : DialogFragment() {
 

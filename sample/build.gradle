@@ -58,6 +58,21 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    flavorDimensions "libSource"
+    productFlavors {
+        local {
+            dimension "libSource"
+            getIsDefault().set(true)
+        }
+        maven {
+            dimension "libSource"
+            configurations.all {
+                // Check for updates every build
+                resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+            }
+        }
+    }
 }
 
 configurations {
@@ -77,11 +92,13 @@ dependencies {
     compileOnly project(':annotation')
     kapt project(':processor')
 
-//    implementation 'androidx.preference:preference:1.1.0-rc01'
+//    kapt 'com.anggrayudi:materialpreference-compiler:1.7'
 
-//    implementation 'com.anggrayudi:materialpreference:3.6.2-SNAPSHOT'
-//    implementation 'com.anggrayudi:materialpreference-api:1.1'
-//    kapt 'com.anggrayudi:materialpreference-compiler:1.1'
+//    localImplementation project(":materialpreference")
+//    localCompileOnly project(':annotation')
+
+//    mavenImplementation("com.anggrayudi:materialpreference:$MATERIAL_PREFERENCE_VERSION") { changing = true }
+//    mavenImplementation 'com.anggrayudi:materialpreference-api:1.7'
 }
 
 tasks.withType(JavaCompile) {

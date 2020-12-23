@@ -20,7 +20,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.anggrayudi.materialpreference.dialog.*
-import com.anggrayudi.storage.SimpleStorage
+import com.anggrayudi.storage.SimpleStorageHelper
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -68,7 +68,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     val preferenceFragmentTitle: String?
         get() = arguments!!.getString(PREFERENCE_TITLE)
 
-    internal lateinit var storage: SimpleStorage
+    internal lateinit var storageHelper: SimpleStorageHelper
 
     /**
      * Sets the root of the preference hierarchy that this fragment is showing.
@@ -163,7 +163,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         onCreatePreferences(savedInstanceState, rootKey)
         (activity as PreferenceActivityMaterial).onCreatePreferences(this, rootKey)
 
-        storage = SimpleStorage(this, savedInstanceState)
+        storageHelper = SimpleStorageHelper(this, savedInstanceState)
     }
 
     /**
@@ -240,7 +240,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        storage.onSaveInstanceState(outState)
+        storageHelper.storage.onSaveInstanceState(outState)
         preferenceScreen?.let {
             val container = Bundle()
             it.saveHierarchyState(container)
@@ -369,7 +369,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        storage.onActivityResult(requestCode, resultCode, data)
+        storageHelper.storage.onActivityResult(requestCode, resultCode, data)
     }
 
     /**
