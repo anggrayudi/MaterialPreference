@@ -7,7 +7,6 @@ archivesBaseName = 'materialpreference-api'
 
 compileKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
         incremental = true
     }
 }
@@ -17,10 +16,6 @@ compileTestKotlin {
         jvmTarget = "1.8"
         incremental = true
     }
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
 
 ext {

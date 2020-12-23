@@ -2,7 +2,7 @@
 apply from: 'extensions.gradle'
 
 buildscript {
-    ext.kotlinVersion = '1.4.10'
+    ext.kotlin_version = '1.4.21'
 
     repositories {
         google()
@@ -10,12 +10,13 @@ buildscript {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
+
     dependencies {
-        classpath('com.android.tools.build:gradle:4.0.1')
-        classpath("com.google.gms:google-services:4.3.3")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.google.gms:google-services:4.3.4'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.0"
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.0'
     }
 }
 
@@ -25,6 +26,24 @@ allprojects {
         jcenter()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+
+    //Support @JvmDefault
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjvm-default=all', '-Xopt-in=kotlin.RequiresOptIn']
+            jvmTarget = '1.8'
+            includeRuntime = true
+        }
+    }
+}
+
+subprojects {
+    afterEvaluate {
+        // global dependencies for all modules
+        dependencies {
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+        }
     }
 }
 
