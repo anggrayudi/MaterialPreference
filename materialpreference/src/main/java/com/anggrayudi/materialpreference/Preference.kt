@@ -916,14 +916,11 @@ open class Preference @Keep @JvmOverloads constructor(
      */
     override fun compareTo(other: Preference): Int {
         return when {
-            order != other.order -> // Do order comparison
-                order - other.order
-            _title === other._title -> // If titles are null or share same object comparison
-                0
+            order != other.order -> order - other.order // Do order comparison
+            _title === other._title -> 0 // If titles are null or share same object comparison
             _title == null -> 1
             other._title == null -> -1
-            else -> // Do name comparison
-                _title!!.toString().compareTo(other._title!!.toString(), ignoreCase = true)
+            else -> _title!!.toString().compareTo(other._title!!.toString(), ignoreCase = true) // Do name comparison
         }
     }
 

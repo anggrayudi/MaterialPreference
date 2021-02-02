@@ -222,14 +222,14 @@ In your `build.gradle` of project level:
 ````gradle
 buildscript {
     // add this line
-    ext.kotlin_version = '1.3.61'
+    ext.kotlin_version = '1.4.21'
 
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:4.1.2'
         // add this line
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
