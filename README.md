@@ -46,8 +46,6 @@ To use SNAPSHOT version, you need to add this URL to the root Gradle:
 allprojects {
     repositories {
         google()
-        jcenter()
-        mavenCentral()
         // add this line
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
@@ -222,7 +220,7 @@ In your `build.gradle` of project level:
 ````gradle
 buildscript {
     // add this line
-    ext.kotlin_version = '1.4.21'
+    ext.kotlin_version = '1.4.30'
 
     repositories {
         google()
