@@ -83,8 +83,9 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 
     companion object {
         fun newInstance(rootKey: String?) = SettingsFragment().apply {
-            arguments = Bundle()
-            arguments!!.putString(PreferenceFragmentMaterial.ARG_PREFERENCE_ROOT, rootKey)
+            arguments = Bundle().also {
+                it.putString(PreferenceFragmentMaterial.ARG_PREFERENCE_ROOT, rootKey)
+            }
         }
     }
 }
@@ -208,43 +209,6 @@ class MainActivity : AppCompatActivity() {
 From above code, `accountName` is a generated method based on your configuration on `preferences.xml`.
 It takes `android:defaultValue` if method `accountName` can't find any value stored in the `SharedPreferences`.
 You can customize the method name via `app:helperMethodName="yourMethodName"`. Read our sample code for more information.
-
-### Java compatibility support
-
-Kotlin is interoperable with Java. Just configure the following setup in your project.
-
-#### Setup
-
-In your `build.gradle` of project level:
-
-````gradle
-buildscript {
-    // add this line
-    ext.kotlin_version = '1.4.30'
-
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.2'
-        // add this line
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-````
-
-And for your app's `build.gradle`:
-
-````gradle
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.anggrayudi:materialpreference:3.x.x'
-}
-````
 
 #### Example
 

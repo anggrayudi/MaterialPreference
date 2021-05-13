@@ -1,8 +1,6 @@
 package com.anggrayudi.materialpreference.dialog
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.database.Cursor
 import android.media.AudioManager
 import android.media.Ringtone
@@ -12,6 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.WhichButton
 import com.afollestad.materialdialogs.actions.getActionButton
@@ -19,6 +18,7 @@ import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.anggrayudi.materialpreference.RingtoneManagerCompat
 import com.anggrayudi.materialpreference.RingtonePreference
 import com.anggrayudi.materialpreference.SafeRingtone
+import com.anggrayudi.storage.extension.hasActivityHandler
 import java.util.*
 
 /**
@@ -82,7 +82,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
 
     private fun loadRingtoneManager(savedInstanceState: Bundle?) {
         // Give the Activity so it can do managed queries
-        ringtoneManager = RingtoneManagerCompat(activity!!)
+        ringtoneManager = RingtoneManagerCompat(requireActivity())
 
         val fallbackRingtonePicker: Boolean
         if (savedInstanceState != null) {
@@ -129,6 +129,13 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
         }
     }
 
+    private val ringtonePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            requireRingtonePreference().onActivityResult(it.data)
+        }
+        dismiss()
+    }
+
     private fun recover(preference: RingtonePreference, ex: Throwable) {
         Log.e(TAG, "RingtoneManager returned unexpected cursor.", ex)
 
@@ -136,11 +143,11 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
         showsDialog = false
 
         // Alternatively try starting system picker.
-        val i = preference.buildRingtonePickerIntent()
-        try {
-            startActivityForResult(i, RC_FALLBACK_RINGTONE_PICKER)
-        } catch (ex2: ActivityNotFoundException) {
-            onRingtonePickerNotFound(RC_FALLBACK_RINGTONE_PICKER)
+        val intent = preference.buildRingtonePickerIntent()
+        if (intent.hasActivityHandler(requireContext())) {
+            ringtonePickerLauncher.launch(intent)
+        } else {
+            onRingtonePickerNotFound()
         }
     }
 
@@ -148,22 +155,9 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
      * Called when there's no ringtone picker available in the system.
      * Let the user know (using e.g. a Toast).
      * Just dismisses this fragment by default.
-     *
-     * @param requestCode You can use this code to launch another activity instead of dismissing
-     * this fragment. The result must contain [RingtoneManager.EXTRA_RINGTONE_PICKED_URI] extra.
      */
-    fun onRingtonePickerNotFound(requestCode: Int) {
+    fun onRingtonePickerNotFound() {
         dismiss()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_FALLBACK_RINGTONE_PICKER) {
-            if (resultCode == Activity.RESULT_OK) {
-                requireRingtonePreference().onActivityResult(data)
-            }
-            dismiss()
-        }
     }
 
     override fun onPrepareDialog(dialog: MaterialDialog): MaterialDialog {
@@ -225,21 +219,21 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
         }
 
         return dialog.noAutoDismiss()
-                .positiveButton(text = positiveButtonText ?: getText(android.R.string.ok)) {
-                    whichButtonClicked = WhichButton.POSITIVE
-                    it.dismiss()
+            .positiveButton(text = positiveButtonText ?: getText(android.R.string.ok)) {
+                whichButtonClicked = WhichButton.POSITIVE
+                it.dismiss()
+            }
+            .negativeButton(text = negativeButtonText ?: getText(android.R.string.cancel)) {
+                whichButtonClicked = WhichButton.NEGATIVE
+                it.dismiss()
+            }
+            .listItemsSingleChoice(items = titles, waitForPositiveButton = false, initialSelection = clickedPos) { d, index, _ ->
+                if (d.isShowing) {
+                    clickedPos = index
+                    d.getActionButton(WhichButton.POSITIVE).isEnabled = true
+                    playRingtone(index, DELAY_MS_SELECTION_PLAYED)
                 }
-                .negativeButton(text = negativeButtonText ?: getText(android.R.string.cancel)) {
-                    whichButtonClicked = WhichButton.NEGATIVE
-                    it.dismiss()
-                }
-                .listItemsSingleChoice(items = titles, waitForPositiveButton = false, initialSelection = clickedPos) { d, index, _ ->
-                    if (d.isShowing) {
-                        clickedPos = index
-                        d.getActionButton(WhichButton.POSITIVE).isEnabled = true
-                        playRingtone(index, DELAY_MS_SELECTION_PLAYED)
-                    }
-                }
+            }
     }
 
     /**
@@ -256,18 +250,18 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
 
     private fun addDefaultRingtoneItem(): Int {
         return when (type) {
-            RingtoneManager.TYPE_NOTIFICATION -> addStaticItem(RingtonePreference.getNotificationSoundDefaultString(context!!))
-            RingtoneManager.TYPE_ALARM -> addStaticItem(RingtonePreference.getAlarmSoundDefaultString(context!!))
-            else -> addStaticItem(RingtonePreference.getRingtoneDefaultString(context!!))
+            RingtoneManager.TYPE_NOTIFICATION -> addStaticItem(RingtonePreference.getNotificationSoundDefaultString(requireContext()))
+            RingtoneManager.TYPE_ALARM -> addStaticItem(RingtonePreference.getAlarmSoundDefaultString(requireContext()))
+            else -> addStaticItem(RingtonePreference.getRingtoneDefaultString(requireContext()))
         }
     }
 
     private fun addSilentItem(): Int {
-        return addStaticItem(RingtonePreference.getRingtoneSilentString(context!!))
+        return addStaticItem(RingtonePreference.getRingtoneSilentString(requireContext()))
     }
 
     private fun addUnknownItem(): Int {
-        return addStaticItem(RingtonePreference.getRingtoneUnknownString(context!!))
+        return addStaticItem(RingtonePreference.getRingtoneUnknownString(requireContext()))
     }
 
     private fun getListPosition(ringtoneManagerPos: Int): Int {
@@ -277,14 +271,14 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
 
     override fun onPause() {
         super.onPause()
-        if (!activity!!.isChangingConfigurations) {
+        if (!requireActivity().isChangingConfigurations) {
             stopAnyPlayingRingtone()
         }
     }
 
     override fun onStop() {
         super.onStop()
-        if (!activity!!.isChangingConfigurations) {
+        if (!requireActivity().isChangingConfigurations) {
             stopAnyPlayingRingtone()
         } else {
             saveAnyPlayingRingtone()
@@ -299,7 +293,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
 
     protected fun requireRingtonePreference(): RingtonePreference {
         return preference as? RingtonePreference
-                ?: throw IllegalStateException("RingtonePreference[${arguments?.getString(ARG_KEY)}] not available (yet).")
+            ?: throw IllegalStateException("RingtonePreference[${arguments?.getString(ARG_KEY)}] not available (yet).")
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
@@ -346,7 +340,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
                 defaultRingtonePos -> {
                     if (defaultRingtone == null) {
                         try {
-                            defaultRingtone = RingtoneManager.getRingtone(context!!, uriForDefaultItem)
+                            defaultRingtone = RingtoneManager.getRingtone(requireContext(), uriForDefaultItem)
                         } catch (ex: SecurityException) {
                             Log.e(TAG, "Failed to create default Ringtone from $uriForDefaultItem.", ex)
                         }
@@ -362,7 +356,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
                 unknownPos -> {
                     if (unknownRingtone == null) {
                         try {
-                            unknownRingtone = RingtoneManager.getRingtone(context!!, existingUri)
+                            unknownRingtone = RingtoneManager.getRingtone(requireContext(), existingUri)
                         } catch (ex: SecurityException) {
                             Log.e(TAG, "Failed to create unknown Ringtone from $existingUri.", ex)
                         }
@@ -378,7 +372,7 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
                     } catch (ex: SecurityException) {
                         Log.e(TAG, "Failed to create selected Ringtone from " + ringtoneManager!!.getRingtoneUri(position) + ".", ex)
                     }
-    
+
                     currentRingtone = ringtone
                 }
             }

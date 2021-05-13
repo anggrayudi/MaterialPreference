@@ -1566,7 +1566,7 @@ open class Preference @Keep @JvmOverloads constructor(
 
         private const val TAG = "Preference"
 
-        /** Specify for [.setOrder] if a specific order is not required. */
+        /** Specify for [setOrder] if a specific order is not required. */
         const val DEFAULT_ORDER = Integer.MAX_VALUE
     }
 }

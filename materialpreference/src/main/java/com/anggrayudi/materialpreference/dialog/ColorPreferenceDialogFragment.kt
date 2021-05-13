@@ -11,7 +11,7 @@ class ColorPreferenceDialogFragment : PreferenceDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val colorPreference = preference as ColorPreference
-        return MaterialDialog(context!!)
+        return MaterialDialog(requireContext())
                 .title(text = colorPreference.dialogTitle.toString())
                 .negativeButton(android.R.string.cancel)
                 .colorChooser(colorPreference.colorList,

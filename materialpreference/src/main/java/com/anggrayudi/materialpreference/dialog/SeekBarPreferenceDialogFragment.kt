@@ -76,7 +76,7 @@ class SeekBarPreferenceDialogFragment : PreferenceDialogFragment(), View.OnKeyLi
     }
 
     private fun setupAccessibilityDelegate(max: Int, min: Int) {
-        seekBar!!.setAccessibilityDelegate(object : View.AccessibilityDelegate() {
+        seekBar!!.accessibilityDelegate = object : View.AccessibilityDelegate() {
             override fun onInitializeAccessibilityEvent(host: View, event: AccessibilityEvent) {
                 super.onInitializeAccessibilityEvent(host, event)
 
@@ -95,7 +95,7 @@ class SeekBarPreferenceDialogFragment : PreferenceDialogFragment(), View.OnKeyLi
                 val progress = seekBar!!.progress + min
                 info.contentDescription = progress.toString() + ""
             }
-        })
+        }
     }
 
     private fun hasDialogTitle(): Boolean {

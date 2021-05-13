@@ -104,13 +104,13 @@ open class DatePreference @Keep @JvmOverloads constructor(
             if (highlightedDays != null)
                 dialog.highlightedDays = highlightedDays
 
-            dialog.show(preferenceFragment!!.fragmentManager!!, key)
+            dialog.show(preferenceFragment!!.parentFragmentManager, key)
             true
         }
     }
 
     override fun onSetupFinished(fragment: PreferenceFragmentMaterial) {
-        val dialog = fragment.fragmentManager?.findFragmentByTag(key) as? DatePickerDialog
+        val dialog = fragment.parentFragmentManager.findFragmentByTag(key) as? DatePickerDialog
         dialog?.onDateSetListener = this
     }
 

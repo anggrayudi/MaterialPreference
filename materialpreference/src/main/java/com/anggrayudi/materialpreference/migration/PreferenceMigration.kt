@@ -1,9 +1,9 @@
 package com.anggrayudi.materialpreference.migration
 
 import android.content.SharedPreferences
-import android.os.Handler
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import com.anggrayudi.storage.extension.launchOnUiThread
 import kotlin.concurrent.thread
 
 interface PreferenceMigration {
@@ -51,12 +51,11 @@ interface PreferenceMigration {
             newVersion: Int,
             preferenceVersionKey: String = DEFAULT_PREFERENCE_VERSION_KEY
         ) {
-            val handler = Handler()
             thread {
                 val plan = MigrationPlan(preferences, preferenceVersionKey, newVersion)
                 migration.migrate(plan, preferences.getInt(preferenceVersionKey, 0))
                 plan.updateVersion(migration)
-                handler.post { migration.onMigrationCompleted(preferences) }
+                launchOnUiThread { migration.onMigrationCompleted(preferences) }
             }
         }
     }

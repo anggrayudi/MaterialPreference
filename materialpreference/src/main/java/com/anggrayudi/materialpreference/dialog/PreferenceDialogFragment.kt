@@ -40,7 +40,7 @@ import com.anggrayudi.materialpreference.PreferenceFragmentMaterial
  * Abstract base class which presents a dialog associated with a
  * [DialogPreference]. Since the preference object may
  * not be available during fragment re-creation, the necessary information for displaying the dialog
- * is read once during the initial call to [.onCreate] and saved/restored in the saved
+ * is read once during the initial call to [onCreate] and saved/restored in the saved
  * instance state. Custom subclasses should also follow this pattern.
  */
 abstract class PreferenceDialogFragment : DialogFragment() {
@@ -48,7 +48,9 @@ abstract class PreferenceDialogFragment : DialogFragment() {
     private var dialogTitle: CharSequence? = null
     private var dialogMessage: CharSequence? = null
     private var dialogIcon: BitmapDrawable? = null
-    @LayoutRes private var dialogLayoutRes: Int = 0
+
+    @LayoutRes
+    private var dialogLayoutRes: Int = 0
 
     protected var positiveButtonText: CharSequence? = null
     protected var negativeButtonText: CharSequence? = null
@@ -56,8 +58,12 @@ abstract class PreferenceDialogFragment : DialogFragment() {
     /** Which button was clicked.  */
     protected var whichButtonClicked = WhichButton.NEGATIVE
 
+    protected val preferenceFragment: PreferenceFragmentMaterial
+        get() = parentFragmentManager.findFragmentByTag(requireArguments().getString(PreferenceFragmentMaterial.TAG)) as? PreferenceFragmentMaterial
+            ?: throw IllegalStateException("PreferenceFragmentMaterial is not found")
+
     /**
-     * Get the preference that requested this dialog. Available after [.onCreate] has
+     * Get the preference that requested this dialog. Available after [onCreate] has
      * been called on the [PreferenceFragmentMaterial] which launched this dialog.
      *
      * @return The [DialogPreference] associated with this dialog.
@@ -65,9 +71,8 @@ abstract class PreferenceDialogFragment : DialogFragment() {
     val preference: DialogPreference?
         get() {
             if (_preference == null) {
-                val key = arguments!!.getString(ARG_KEY)!!
-                val fragment = targetFragment as DialogPreference.TargetFragment
-                _preference = fragment.findPreference(key) as DialogPreference
+                val key = requireArguments().getString(ARG_KEY)!!
+                _preference = preferenceFragment.findPreference(key) as DialogPreference
             }
             return _preference
         }
@@ -76,12 +81,9 @@ abstract class PreferenceDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val rawFragment = targetFragment as? DialogPreference.TargetFragment
-                ?: throw IllegalStateException("Target fragment must implement TargetFragment interface")
-
-        val key = arguments!!.getString(ARG_KEY)!!
+        val key = requireArguments().getString(ARG_KEY)!!
         if (savedInstanceState == null) {
-            _preference = rawFragment.findPreference(key) as DialogPreference
+            _preference = preferenceFragment.findPreference(key) as DialogPreference
             dialogTitle = _preference!!.dialogTitle
             positiveButtonText = _preference!!.positiveButtonText
             negativeButtonText = _preference!!.negativeButtonText
@@ -92,8 +94,10 @@ abstract class PreferenceDialogFragment : DialogFragment() {
             dialogIcon = when {
                 icon is BitmapDrawable -> icon
                 icon != null -> {
-                    val bitmap = Bitmap.createBitmap(icon.intrinsicWidth,
-                            icon.intrinsicHeight, Bitmap.Config.ARGB_8888)
+                    val bitmap = Bitmap.createBitmap(
+                        icon.intrinsicWidth,
+                        icon.intrinsicHeight, Bitmap.Config.ARGB_8888
+                    )
                     val canvas = Canvas(bitmap)
                     icon.setBounds(0, 0, canvas.width, canvas.height)
                     icon.draw(canvas)
@@ -127,9 +131,9 @@ abstract class PreferenceDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = activity!!
+        val context = requireActivity()
         var dialog = MaterialDialog(context)
-                .title(text = dialogTitle.toString())
+            .title(text = dialogTitle.toString())
 
         if (dialogIcon != null)
             dialog.icon(drawable = dialogIcon)

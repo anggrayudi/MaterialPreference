@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
@@ -71,7 +72,7 @@ abstract class PreferenceGroup @JvmOverloads constructor(
         private set
 
     private val idRecycleCache = SimpleArrayMap<String, Long>()
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
     private val clearRecycleCacheRunnable = object : Runnable {
         override fun run() {
             synchronized(this) {

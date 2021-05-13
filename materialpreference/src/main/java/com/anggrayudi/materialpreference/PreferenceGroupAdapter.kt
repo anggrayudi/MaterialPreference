@@ -17,6 +17,7 @@
 package com.anggrayudi.materialpreference
 
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.InflateException
 import android.view.LayoutInflater
@@ -62,7 +63,7 @@ internal class PreferenceGroupAdapter internal constructor(
 
     private var tempPreferenceLayout = PreferenceLayout()
 
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
 
     private val syncRunnable = { syncMyPreferences() }
 

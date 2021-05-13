@@ -75,7 +75,7 @@ abstract class PreferenceActivityMaterial : AppCompatActivity(),
         title = screen.title
         val key = screen.key
         val f = onBuildPreferenceFragment(key)
-        f.arguments!!.putCharSequence(PreferenceFragmentMaterial.PREFERENCE_TITLE, screen.title)
+        f.requireArguments().putCharSequence(PreferenceFragmentMaterial.PREFERENCE_TITLE, screen.title)
         val ft = supportFragmentManager.beginTransaction()
         replaceFragmentStrategy?.run {
             ft.setCustomAnimations(animEnter, animExit, animPopEnter, animPopExit)

@@ -14,7 +14,7 @@ import com.afollestad.materialdialogs.files.folderChooser
 import com.afollestad.materialdialogs.files.selectedFolder
 import com.anggrayudi.materialpreference.util.FolderType
 import com.anggrayudi.storage.SimpleStorageHelper
-import com.anggrayudi.storage.file.absolutePath
+import com.anggrayudi.storage.file.getAbsolutePath
 import java.io.File
 
 /**
@@ -78,13 +78,13 @@ open class FolderPreference @Keep @JvmOverloads constructor(
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             FolderPreferenceDialog().apply {
                 arguments = Bundle().apply { putString("folder", folder) }
-                show(fragment.fragmentManager!!, key)
+                show(fragment.parentFragmentManager, key)
             }
         } else {
-            preferenceFragment!!.storageHelper.run {
+            fragment.storageHelper.run {
                 requestCodeFolderPicker = REQUEST_CODE_STORAGE_GET_FOLDER
                 onFolderSelected = { _, folder ->
-                    this@FolderPreference.folder = folder.absolutePath
+                    this@FolderPreference.folder = folder.getAbsolutePath(context)
                 }
                 openFolderPicker()
             }
@@ -96,9 +96,9 @@ open class FolderPreference @Keep @JvmOverloads constructor(
         private var dialog: MaterialDialog? = null
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            dialog = MaterialDialog(context!!)
+            dialog = MaterialDialog(requireContext())
                 .negativeButton(android.R.string.cancel)
-                .folderChooser(File(arguments!!.getString("folder")!!), allowFolderCreation = true) { _, file ->
+                .folderChooser(requireContext(), File(requireArguments().getString("folder")!!), allowFolderCreation = true) { _, file ->
                     val preference = (activity as PreferenceActivityMaterial)
                         .visiblePreferenceFragment!!.findPreference(tag!!) as FolderPreference
                     preference.folder = file.absolutePath
@@ -108,7 +108,7 @@ open class FolderPreference @Keep @JvmOverloads constructor(
 
         override fun onSaveInstanceState(outState: Bundle) {
             super.onSaveInstanceState(outState)
-            arguments!!.putString("folder", dialog!!.selectedFolder()!!.absolutePath)
+            requireArguments().putString("folder", dialog!!.selectedFolder()!!.absolutePath)
         }
     }
 

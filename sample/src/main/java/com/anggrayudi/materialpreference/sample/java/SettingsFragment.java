@@ -57,10 +57,10 @@ public class SettingsFragment extends PreferenceFragmentMaterial {
         indicatorPreference.setOnPreferenceClickListener(new Function1<Preference, Boolean>() {
             @Override
             public Boolean invoke(Preference preference) {
-                new MaterialDialog(getContext())
-                    .message(null, "Your account has been verified.", false, 1f)
-                    .positiveButton(android.R.string.ok, null, null)
-                    .show();
+                new MaterialDialog(requireContext(), MaterialDialog.getDEFAULT_BEHAVIOR())
+                        .message(null, "Your account has been verified.", null)
+                        .positiveButton(null, null, null)
+                        .show();
                 return true;
             }
         });

@@ -15,6 +15,7 @@
 
         <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
         <item name="dialogTheme">@style/AppTheme.Dialog</item>
+        <item name="md_color_button_text">@color/colorAccent</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>

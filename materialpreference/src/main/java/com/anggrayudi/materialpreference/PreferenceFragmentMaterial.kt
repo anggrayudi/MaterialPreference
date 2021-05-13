@@ -3,7 +3,6 @@ package com.anggrayudi.materialpreference
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -40,8 +39,7 @@ import com.karumi.dexter.listener.single.PermissionListener
 abstract class PreferenceFragmentMaterial : Fragment(),
     PreferenceManager.OnPreferenceTreeClickListener,
     PreferenceManager.OnDisplayPreferenceDialogListener,
-    PreferenceManager.OnNavigateToScreenListener,
-    DialogPreference.TargetFragment {
+    PreferenceManager.OnNavigateToScreenListener {
 
     /** @return The [PreferenceManager] used by this fragment. */
     var preferenceManager: PreferenceManager? = null
@@ -53,10 +51,12 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     private var havePrefs: Boolean = false
     private var initDone: Boolean = false
 
-    private val handler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            when (msg.what) {
-                MSG_BIND_PREFERENCES -> bindPreferences()
+    private val handler by lazy {
+        object : Handler(requireActivity().mainLooper) {
+            override fun handleMessage(msg: Message) {
+                when (msg.what) {
+                    MSG_BIND_PREFERENCES -> bindPreferences()
+                }
             }
         }
     }
@@ -66,7 +66,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     private var selectPreferenceRunnable: Runnable? = null
 
     val preferenceFragmentTitle: String?
-        get() = arguments!!.getString(PREFERENCE_TITLE)
+        get() = requireArguments().getString(PREFERENCE_TITLE)
 
     internal lateinit var storageHelper: SimpleStorageHelper
 
@@ -142,13 +142,10 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val tv = TypedValue()
-        activity!!.theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
+        requireActivity().theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
         val theme = tv.resourceId
         if (theme == 0) {
-            throw IllegalStateException(
-                "Must specify preferenceTheme in theme. " +
-                        "Read this sample project: https://github.com/anggrayudi/MaterialPreference/tree/master/sample"
-            )
+            throw IllegalStateException("Must specify preferenceTheme in theme. Read this sample project: https://github.com/anggrayudi/MaterialPreference/tree/master/sample")
         }
         if (arguments == null) {
             throw IllegalStateException("Must specify non-null PreferenceFragmentMaterial arguments")
@@ -156,9 +153,9 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         styledContext = ContextThemeWrapper(activity, theme)
         preferenceManager = PreferenceManager(styledContext!!)
         preferenceManager!!.onNavigateToScreenListener = this
-        val rootKey = arguments!!.getString(ARG_PREFERENCE_ROOT)
+        val rootKey = requireArguments().getString(ARG_PREFERENCE_ROOT)
         if (rootKey == null && savedInstanceState == null)
-            arguments!!.putCharSequence(PREFERENCE_TITLE, (activity as PreferenceActivityMaterial).activityLabel)
+            requireArguments().putCharSequence(PREFERENCE_TITLE, (activity as PreferenceActivityMaterial).activityLabel)
 
         onCreatePreferences(savedInstanceState, rootKey)
         (activity as PreferenceActivityMaterial).onCreatePreferences(this, rootKey)
@@ -184,7 +181,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 
         // Need to theme the inflater to pick up the preferenceFragmentListStyle
         val tv = TypedValue()
-        activity!!.theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
+        requireActivity().theme.resolveAttribute(R.attr.preferenceTheme, tv, true)
         val themedContext = ContextThemeWrapper(inflater.context, tv.resourceId)
         val themedInflater = inflater.cloneInContext(themedContext)
         scrollView = themedInflater.inflate(R.layout.preference_scrollview, container, false) as NestedScrollView
@@ -201,15 +198,9 @@ abstract class PreferenceFragmentMaterial : Fragment(),
             selectPreferenceRunnable = null
         }
         initDone = true
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (savedInstanceState != null) {
-            val container = savedInstanceState.getBundle(PREFERENCES_TAG)
-            if (container != null) {
-                preferenceScreen?.restoreHierarchyState(container)
-            }
+        val container = savedInstanceState?.getBundle(PREFERENCES_TAG)
+        if (container != null) {
+            preferenceScreen?.restoreHierarchyState(container)
         }
     }
 
@@ -240,7 +231,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        storageHelper.storage.onSaveInstanceState(outState)
+        storageHelper.onSaveInstanceState(outState)
         preferenceScreen?.let {
             val container = Bundle()
             it.saveHierarchyState(container)
@@ -254,8 +245,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
      * @param preferencesResId The XML resource ID to inflate.
      */
     fun addPreferencesFromResource(@XmlRes preferencesResId: Int) {
-        requirePreferenceManager()
-        preferenceScreen = preferenceManager!!.inflateFromResource(styledContext!!, preferencesResId, preferenceScreen)
+        preferenceScreen = requirePreferenceManager().inflateFromResource(styledContext!!, preferencesResId, preferenceScreen)
     }
 
     /**
@@ -267,8 +257,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
      * to use as the root of the preference hierarchy, or null to use the root [PreferenceScreen].
      */
     fun setPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?) {
-        requirePreferenceManager()
-        val xmlRoot = preferenceManager!!.inflateFromResource(styledContext!!, preferencesResId, null)
+        val xmlRoot = requirePreferenceManager().inflateFromResource(styledContext!!, preferencesResId, null)
 
         val root: Preference?
         if (key != null) {
@@ -325,14 +314,12 @@ abstract class PreferenceFragmentMaterial : Fragment(),
      * @return The [Preference] with the key, or null.
      * @see PreferenceGroup.findPreference
      */
-    override fun findPreference(key: CharSequence): Preference? = preferenceManager?.findPreference(key)
+    fun findPreference(key: CharSequence): Preference? = preferenceManager?.findPreference(key)
 
     inline fun <reified T : Preference> findPreferenceAs(key: CharSequence): T? = findPreference(key) as? T
 
-    private fun requirePreferenceManager() {
-        if (preferenceManager == null) {
-            throw RuntimeException("This should be called after super.onCreate.")
-        }
+    private fun requirePreferenceManager(): PreferenceManager {
+        return preferenceManager ?: throw RuntimeException("This should be called after super.onCreate.")
     }
 
     private fun postBindPreferences() {
@@ -341,16 +328,14 @@ abstract class PreferenceFragmentMaterial : Fragment(),
     }
 
     private fun bindPreferences() {
-        val preferenceScreen = preferenceScreen
-        if (preferenceScreen != null) {
-            attachPreferences(preferenceScreen)
-            preferenceScreen.onAttached()
+        preferenceScreen?.let {
+            attachPreferences(it)
+            it.onAttached()
         }
         onBindPreferences()
     }
 
     private fun unbindPreferences() {
-        val preferenceScreen = preferenceScreen
         preferenceScreen?.onDetached()
         onUnbindPreferences()
     }
@@ -365,11 +350,6 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 
     private fun attachPreferences(screen: PreferenceScreen) {
         adapter = PreferenceGroupAdapter(this, screen, listContainer!!)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        storageHelper.storage.onActivityResult(requestCode, resultCode, data)
     }
 
     /**
@@ -396,12 +376,14 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         }
 
         // check if dialog is already showing
-        if (fragmentManager?.findFragmentByTag(DIALOG_FRAGMENT_TAG) != null) {
+        if (parentFragmentManager.findFragmentByTag(DIALOG_FRAGMENT_TAG) != null) {
             return
         }
 
+        val preferenceFragmentTag = tag ?: throw IllegalStateException("${javaClass.name} must have a tag.")
+
         if (preference is RingtonePreference) {
-            openRingtonePreference(preference.key!!)
+            openRingtonePreference(preference.key!!, preferenceFragmentTag)
             return
         }
 
@@ -412,22 +394,20 @@ abstract class PreferenceFragmentMaterial : Fragment(),
             is MultiSelectListPreference -> MultiSelectListPreferenceDialogFragment.newInstance(preference.key!!)
             is SeekBarDialogPreference -> SeekBarPreferenceDialogFragment.newInstance(preference.key!!)
             is ColorPreference -> ColorPreferenceDialogFragment.newInstance(preference.key!!)
-            else -> throw IllegalArgumentException(
-                "Tried to display dialog for unknown preference type. Did you forget to override onDisplayPreferenceDialog()?"
-            )
+            else -> throw IllegalArgumentException("Tried to display dialog for unknown preference type. Did you forget to override onDisplayPreferenceDialog()?")
         }
-        f.setTargetFragment(this, 0)
-        f.show(fragmentManager!!, DIALOG_FRAGMENT_TAG)
+        f.requireArguments().putString(TAG, preferenceFragmentTag)
+        f.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
     }
 
-    private fun openRingtonePreference(preferenceKey: String) {
-        Dexter.withContext(context)
+    private fun openRingtonePreference(preferenceKey: String, preferenceFragmentTag: String) {
+        Dexter.withContext(requireContext())
             .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
             .withListener(object : PermissionListener {
                 override fun onPermissionGranted(response: PermissionGrantedResponse) {
-                    RingtonePreferenceDialogFragment.newInstance(preferenceKey).run {
-                        setTargetFragment(this@PreferenceFragmentMaterial, 0)
-                        show(fragmentManager!!, DIALOG_FRAGMENT_TAG)
+                    RingtonePreferenceDialogFragment.newInstance(preferenceKey).let {
+                        it.requireArguments().putString(TAG, preferenceFragmentTag)
+                        it.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
                     }
                 }
 
@@ -535,7 +515,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
 //    }
 
     companion object {
-        private const val TAG = "PreferenceFragment"
+        const val TAG = "PreferenceFragment"
 
         /** Fragment argument used to specify the tag of the desired root [PreferenceScreen] object. */
         const val ARG_PREFERENCE_ROOT = "com.anggrayudi.materialpreference.PreferenceFragmentMaterial.PREFERENCE_ROOT"

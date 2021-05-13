@@ -3,7 +3,6 @@ package com.anggrayudi.materialpreference.sample
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
@@ -39,7 +38,7 @@ class SettingsFragment : PreferenceFragmentMaterial() {
 
         val indicatorPreference = findPreferenceAs<IndicatorPreference>(PrefKey.ACCOUNT_STATUS)
         indicatorPreference?.onPreferenceClickListener = {
-            MaterialDialog(context!!)
+            MaterialDialog(requireContext())
                 .message(text = "Your account has been verified.")
                 .positiveButton(android.R.string.ok)
                 .show()
@@ -50,33 +49,33 @@ class SettingsFragment : PreferenceFragmentMaterial() {
             true
         }
 
-        val colorPreference = findPreferenceAs<ColorPreference>(PrefKey.THEME_COLOR)
-        colorPreference?.allowArgb = true
-        colorPreference?.allowTransparency = true
+        findPreferenceAs<ColorPreference>(PrefKey.THEME_COLOR)?.run {
+            allowArgb = true
+            allowTransparency = true
+            changeToolbarColor(colorHex)
 
-        // change the last color in this array to colorPrimary
-        val colorList = ColorPreference.DEFAULT_COLOR_LIST.copyOf()
-        colorList[colorList.size - 1] = ContextCompat.getColor(context!!, R.color.colorPrimary)
-        colorPreference?.colorList = colorList
+            // change the last color in this array to colorPrimary
+            val colors = ColorPreference.DEFAULT_COLOR_LIST.copyOf()
+            colors[colorList.size - 1] = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            colorList = colors
 
-        colorPreference?.summaryFormatter = {
-            Handler().post {
-                (activity as SettingsActivity).supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(it)))
-            }
-            when (it) {
-                "#F44336" -> "Red"
-                "#E91E63" -> "Pink"
-                else -> it
+            summaryFormatter = {
+                changeToolbarColor(it!!)
+                when (it) {
+                    "#F44336" -> "Red"
+                    "#E91E63" -> "Pink"
+                    else -> it
+                }
             }
         }
 
         findPreference(PrefKey.RESTORE_DEFAULT)?.onPreferenceClickListener = {
-            MaterialDialog(context!!)
+            MaterialDialog(requireContext())
                 .message(text = "Are you sure you want to restore default settings?")
                 .negativeButton(android.R.string.cancel)
                 .positiveButton(android.R.string.ok) {
-                    App.setDefaultPreferenceValues(context!!)
-                    activity!!.recreate()
+                    App.setDefaultPreferenceValues(requireContext())
+                    requireActivity().recreate()
                 }.show()
             true
         }
@@ -92,13 +91,18 @@ class SettingsFragment : PreferenceFragmentMaterial() {
         }
     }
 
+    private fun changeToolbarColor(colorHex: String) {
+        (requireActivity() as SettingsActivity).supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(colorHex)))
+    }
+
     companion object {
 
         private const val TAG = "SettingsFragment"
 
         fun newInstance(rootKey: String?) = SettingsFragment().apply {
-            arguments = Bundle()
-            arguments!!.putString(ARG_PREFERENCE_ROOT, rootKey)
+            arguments = Bundle().also {
+                it.putString(ARG_PREFERENCE_ROOT, rootKey)
+            }
         }
     }
 }

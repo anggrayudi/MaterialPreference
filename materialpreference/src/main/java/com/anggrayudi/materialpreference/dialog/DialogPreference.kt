@@ -45,7 +45,7 @@ import com.anggrayudi.materialpreference.util.getSupportDrawable
 abstract class DialogPreference @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.dialogPreferenceStyle,android.R.attr.dialogPreferenceStyle),
+    defStyleAttr: Int = TypedArrayUtils.getAttr(context, R.attr.dialogPreferenceStyle, android.R.attr.dialogPreferenceStyle),
     defStyleRes: Int = 0
 ) : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
@@ -134,10 +134,6 @@ abstract class DialogPreference @JvmOverloads constructor(
      */
     fun setNegativeButtonText(@StringRes negativeButtonTextResId: Int) {
         negativeButtonText = context.getString(negativeButtonTextResId)
-    }
-
-    interface TargetFragment {
-        fun findPreference(key: CharSequence): Preference?
     }
 
     init {

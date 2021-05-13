@@ -362,8 +362,7 @@ constructor(val context: Context) {
     /**
      * A basic implementation of [PreferenceComparisonCallback] suitable for use with the
      * default [Preference] classes. If the [PreferenceScreen] contains custom
-     * [Preference] subclasses, you must override
-     * [.arePreferenceContentsTheSame]
+     * [Preference] subclasses, you must override [arePreferenceContentsTheSame]
      */
     class SimplePreferenceComparisonCallback : PreferenceComparisonCallback() {
         /**

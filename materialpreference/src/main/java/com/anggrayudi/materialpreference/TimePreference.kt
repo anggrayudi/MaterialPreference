@@ -94,13 +94,13 @@ open class TimePreference @Keep @JvmOverloads constructor(
             if (maxTime != null)
                 dialog.setMaxTime(maxTime)
 
-            dialog.show(preferenceFragment!!.fragmentManager!!, key)
+            dialog.show(preferenceFragment!!.parentFragmentManager, key)
             true
         }
     }
 
     override fun onSetupFinished(fragment: PreferenceFragmentMaterial) {
-        val dialog = fragment.fragmentManager?.findFragmentByTag(key) as? TimePickerDialog
+        val dialog = fragment.parentFragmentManager.findFragmentByTag(key) as? TimePickerDialog
         dialog?.onTimeSetListener = this
     }
 
