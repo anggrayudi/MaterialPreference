@@ -27,8 +27,6 @@ before_install:
   - echo "signing.password=$SIGNING_PASSWORD" >> gradle.properties
   # Copy secret keys to gradle.properties
   - echo "MATERIAL_PREFERENCE_PLAY_STORE_BASE_64_PUBLIC_KEY=$PLAY_STORE_BASE_64_PUBLIC_KEY" >> gradle.properties
-  - echo "SONATYPE_NEXUS_USERNAME=$OSS_SONATYPE_NEXUS_USERNAME" >> gradle.properties
-  - echo "SONATYPE_NEXUS_PASSWORD=$OSS_SONATYPE_NEXUS_PASSWORD" >> gradle.properties
 
 script: ./gradlew clean build --stacktrace
 
