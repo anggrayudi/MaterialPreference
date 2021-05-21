@@ -2,9 +2,13 @@ package com.anggrayudi.materialpreference.sample
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatDelegate
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItems
 import com.anggrayudi.materialpreference.PreferenceActivityMaterial
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial
 import org.koin.android.ext.android.inject
@@ -34,8 +38,10 @@ class SettingsActivity : PreferenceActivityMaterial(), SharedPreferences.OnShare
     }
 
     private fun applyDayNightTheme() {
-        AppCompatDelegate.setDefaultNightMode(if (preferencesHelper.isEnableDarkTheme)
-            AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+        AppCompatDelegate.setDefaultNightMode(
+            if (preferencesHelper.isEnableDarkTheme)
+                AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        )
     }
 
     override fun onBuildPreferenceFragment(rootKey: String?): PreferenceFragmentMaterial {
@@ -49,8 +55,24 @@ class SettingsActivity : PreferenceActivityMaterial(), SharedPreferences.OnShare
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
-        menu.findItem(R.id.action_donate).intent = Intent(this, DonationActivity::class.java)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_donate) {
+            MaterialDialog(this)
+                .title(text = "Donation")
+                .message(text = "Select your donation method.")
+                .listItems(items = listOf("PayPal", "Saweria")) { _, index, _ ->
+                    val url = when (index) {
+                        0 -> "https://www.paypal.com/paypalme/hardiannicko"
+                        else -> "https://saweria.co/hardiannicko"
+                    }
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+                .show()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onStop() {

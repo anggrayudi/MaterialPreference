@@ -1,12 +1,9 @@
 package com.anggrayudi.materialpreference.sample.java;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 
 import com.anggrayudi.materialpreference.PreferenceActivityMaterial;
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial;
-import com.anggrayudi.materialpreference.sample.DonationActivity;
 import com.anggrayudi.materialpreference.sample.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -31,8 +28,8 @@ public class SettingsActivity extends PreferenceActivityMaterial {
         if (savedInstanceState == null) {
             settingsFragment = SettingsFragment.newInstance(null);
             getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, settingsFragment, TAG)
-                .commit();
+                    .add(R.id.fragment_container, settingsFragment, TAG)
+                    .commit();
         } else {
             onBackStackChanged();
         }
@@ -48,12 +45,5 @@ public class SettingsActivity extends PreferenceActivityMaterial {
     public void onBackStackChanged() {
         settingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag(TAG);
         setTitle(settingsFragment.getPreferenceFragmentTitle());
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        menu.findItem(R.id.action_donate).setIntent(new Intent(this, DonationActivity.class));
-        return super.onCreateOptionsMenu(menu);
     }
 }

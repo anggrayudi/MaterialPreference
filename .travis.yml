@@ -20,8 +20,6 @@ before_install:
   - echo "storePassword=$RELEASE_KEYSTORE_STORE_PASSWORD" >> local.properties
   - echo "keyAlias=$RELEASE_KEYSTORE_KEY_ALIAS" >> local.properties
   - echo "keyPassword=$RELEASE_KEYSTORE_KEY_PASSWORD" >> local.properties
-  # Copy secret keys to gradle.properties
-  - echo "MATERIAL_PREFERENCE_PLAY_STORE_BASE_64_PUBLIC_KEY=$PLAY_STORE_BASE_64_PUBLIC_KEY" >> gradle.properties
 
 script: ./gradlew clean build --stacktrace
 
