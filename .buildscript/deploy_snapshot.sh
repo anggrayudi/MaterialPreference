@@ -24,6 +24,4 @@ else
   echo "Deploying snapshot..."
   ./gradlew :materialpreference:uploadArchives --no-daemon --no-parallel --stacktrace
   echo "Snapshot deployed!"
-  ./gradlew :materialpreference:closeAndReleaseRepository --stacktrace
-  echo "Snapshot released!"
 fi
