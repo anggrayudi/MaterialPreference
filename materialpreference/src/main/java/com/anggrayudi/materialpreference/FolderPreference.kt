@@ -82,11 +82,10 @@ open class FolderPreference @Keep @JvmOverloads constructor(
             }
         } else {
             fragment.storageHelper.run {
-                requestCodeFolderPicker = REQUEST_CODE_STORAGE_GET_FOLDER
                 onFolderSelected = { _, folder ->
                     this@FolderPreference.folder = folder.getAbsolutePath(context)
                 }
-                openFolderPicker()
+                openFolderPicker(REQUEST_CODE_STORAGE_GET_FOLDER)
             }
         }
     }
