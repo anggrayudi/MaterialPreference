@@ -2,7 +2,7 @@ language: android
 dist: trusty
 jdk: oraclejdk8
 
-if: (branch = master OR type = pull_request)
+if: branch = master OR type = pull_request
 
 before_install:
   # Download SDK
