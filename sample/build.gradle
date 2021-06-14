@@ -2,17 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-def properties = new Properties()
-properties.load(rootProject.file('local.properties').newDataInputStream())
-
 android {
     signingConfigs {
-        release {
-            keyAlias properties['keyAlias']
-            keyPassword properties['keyPassword']
-            storePassword properties['storePassword']
-            storeFile file('keystore.jks')
-        }
         debug {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
@@ -38,12 +29,11 @@ android {
             shrinkResources true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
         }
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -82,7 +72,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'androidx.recyclerview:recyclerview:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation "io.insert-koin:koin-android:3.0.1"
 
     implementation project(':materialpreference')

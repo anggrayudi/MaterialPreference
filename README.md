@@ -1,7 +1,7 @@
 # Material Preference
 
 ![Maven Central](https://img.shields.io/maven-central/v/com.anggrayudi/materialpreference.svg)
-[![Build Status](https://travis-ci.com/anggrayudi/MaterialPreference.svg?branch=master)](https://travis-ci.com/anggrayudi/MaterialPreference)
+[![Build Status](https://github.com/anggrayudi/MaterialPreference/workflows/Android%20CI/badge.svg)](https://github.com/anggrayudi/MaterialPreference/actions?query=workflow%3A%22Android+CI%22)
 
 A library designed for people who love simplicity. Hate the old preference style? Try this library.
 
