@@ -1,5 +1,5 @@
 ext {
-    appVersionCode = 18
+    appVersionCode = 19
     minSdkVersion = 17
     targetSdkVersion = 30
     compileSdkVersion = 30
