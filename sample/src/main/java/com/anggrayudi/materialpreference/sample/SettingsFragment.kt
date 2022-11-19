@@ -19,7 +19,7 @@ import com.anggrayudi.materialpreference.annotation.PreferencesConfig
  *
  *      dependencies {
  *          implementation 'com.anggrayudi:materialpreference:3.7.0'
- *          kapt 'com.anggrayudi:materialpreference-compiler:1.7'
+ *          kapt 'com.anggrayudi:materialpreference-compiler:1.'
  *      }
  */
 @PreferencesConfig

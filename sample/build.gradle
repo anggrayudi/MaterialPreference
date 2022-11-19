@@ -80,13 +80,13 @@ dependencies {
     compileOnly project(':annotation')
     kapt project(':processor')
 
-//    kapt 'com.anggrayudi:materialpreference-compiler:1.7'
+//    kapt 'com.anggrayudi:materialpreference-compiler:1.8'
 
 //    localImplementation project(":materialpreference")
 //    localCompileOnly project(':annotation')
 
 //    mavenImplementation("com.anggrayudi:materialpreference:$MATERIAL_PREFERENCE_VERSION") { changing = true }
-//    mavenImplementation 'com.anggrayudi:materialpreference-api:1.7'
+//    mavenImplementation 'com.anggrayudi:materialpreference-api:1.8'
 }
 
 tasks.withType(JavaCompile) {
