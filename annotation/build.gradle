@@ -1,6 +1,5 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
-apply plugin: "com.vanniktech.maven.publish"
 
 version = "$PROCESSOR_VERSION"
 archivesBaseName = "$POM_ARTIFACT_ID"

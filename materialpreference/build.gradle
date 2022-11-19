@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: "com.vanniktech.maven.publish"
 
 version = "$MATERIAL_PREFERENCE_VERSION"
 archivesBaseName = "$POM_ARTIFACT_ID"
