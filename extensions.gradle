@@ -1,11 +1,10 @@
 ext {
     appVersionCode = 19
     minSdkVersion = 17
-    targetSdkVersion = 30
-    compileSdkVersion = 30
-    buildToolsVersion = '30.0.2'
+    targetSdkVersion = 33
+    compileSdkVersion = 33
     dialogVersion = '3.3.0'
-    coroutinesVersion = '1.4.3'
+    coroutinesVersion = '1.6.4'
 
     // Project
     VCS_URL = "https://github.com/anggrayudi/MaterialPreference.git"

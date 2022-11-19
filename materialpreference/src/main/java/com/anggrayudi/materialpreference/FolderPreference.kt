@@ -2,20 +2,13 @@ package com.anggrayudi.materialpreference
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.app.Dialog
 import android.content.Context
-import android.os.Build
-import android.os.Bundle
 import android.util.AttributeSet
 import androidx.annotation.Keep
-import androidx.fragment.app.DialogFragment
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.files.folderChooser
-import com.afollestad.materialdialogs.files.selectedFolder
 import com.anggrayudi.materialpreference.util.FolderType
-import com.anggrayudi.storage.SimpleStorageHelper
+import com.anggrayudi.storage.SimpleStorage
+import com.anggrayudi.storage.file.FileFullPath
 import com.anggrayudi.storage.file.getAbsolutePath
-import java.io.File
 
 /**
  *      |     Attribute     |                        Value Type                       |
@@ -68,46 +61,21 @@ open class FolderPreference @Keep @JvmOverloads constructor(
         a.recycle()
 
         onPreferenceClickListener = {
-            SimpleStorageHelper.requestStoragePermission(context) { openFolderSelector() }
+            openFolderSelector()
             true
         }
     }
 
     private fun openFolderSelector() {
         val fragment = preferenceFragment ?: return
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            FolderPreferenceDialog().apply {
-                arguments = Bundle().apply { putString("folder", folder) }
-                show(fragment.parentFragmentManager, key)
+        fragment.storageHelper.run {
+            onFolderSelected = { _, folder ->
+                this@FolderPreference.folder = folder.getAbsolutePath(context)
             }
-        } else {
-            fragment.storageHelper.run {
-                onFolderSelected = { _, folder ->
-                    this@FolderPreference.folder = folder.getAbsolutePath(context)
-                }
-                openFolderPicker(REQUEST_CODE_STORAGE_GET_FOLDER)
-            }
-        }
-    }
-
-    class FolderPreferenceDialog : DialogFragment() {
-
-        private var dialog: MaterialDialog? = null
-
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            dialog = MaterialDialog(requireContext())
-                .negativeButton(android.R.string.cancel)
-                .folderChooser(requireContext(), File(requireArguments().getString("folder")!!), allowFolderCreation = true) { _, file ->
-                    val preference = (activity as PreferenceActivityMaterial)
-                        .visiblePreferenceFragment!!.findPreference(tag!!) as FolderPreference
-                    preference.folder = file.absolutePath
-                }
-            return dialog as MaterialDialog
-        }
-
-        override fun onSaveInstanceState(outState: Bundle) {
-            super.onSaveInstanceState(outState)
-            requireArguments().putString("folder", dialog!!.selectedFolder()!!.absolutePath)
+            openFolderPicker(
+                REQUEST_CODE_STORAGE_GET_FOLDER,
+                initialPath = FileFullPath(fragment.requireContext(), folder ?: SimpleStorage.externalStoragePath)
+            )
         }
     }
 

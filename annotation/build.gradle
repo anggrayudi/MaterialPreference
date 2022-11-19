@@ -18,6 +18,11 @@ compileTestKotlin {
     }
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 ext {
     // POM
     POM_ARTIFACT_ID = archivesBaseName
