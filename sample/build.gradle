@@ -73,7 +73,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation "io.insert-koin:koin-android:3.0.1"
+    implementation 'io.insert-koin:koin-android:3.3.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation project(':materialpreference')
