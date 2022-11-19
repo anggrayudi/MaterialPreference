@@ -1,8 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: "com.vanniktech.maven.publish"
 
-group = 'com.anggrayudi'
 version = "$MATERIAL_PREFERENCE_VERSION"
+archivesBaseName = "$POM_ARTIFACT_ID"
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -54,30 +55,4 @@ dependencies {
 configurations.all {
     // Check for updates every build
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
-
-ext {
-    // POM
-    POM_ARTIFACT_ID = archivesBaseName
-    VERSION_NAME = version
-
-    POM_NAME = archivesBaseName
-    POM_PACKAGING = 'aar'
-    POM_DESCRIPTION = 'A library designed to replace default preferences on Android framework with something beauty.'
-}
-
-apply plugin: "com.vanniktech.maven.publish"
-
-publishing {
-    repositories {
-        maven {
-            credentials {
-                username = anggrayudi_maven_username
-                password = anggrayudi_maven_password
-            }
-            url = version.endsWith('SNAPSHOT')
-                    ? 'https://oss.sonatype.org/content/repositories/snapshots/'
-                    : 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
-        }
-    }
 }

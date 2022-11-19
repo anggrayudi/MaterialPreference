@@ -1,9 +1,9 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
+apply plugin: "com.vanniktech.maven.publish"
 
-group = 'com.anggrayudi'
 version = "$PROCESSOR_VERSION"
-archivesBaseName = 'materialpreference-api'
+archivesBaseName = "$POM_ARTIFACT_ID"
 
 compileKotlin {
     kotlinOptions {
@@ -22,15 +22,3 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
-
-ext {
-    // POM
-    POM_ARTIFACT_ID = archivesBaseName
-    VERSION_NAME = version
-
-    POM_NAME = archivesBaseName
-    POM_PACKAGING = 'jar'
-    POM_DESCRIPTION = 'Annotation processor API for library MaterialPreference.'
-}
-
-apply plugin: "com.vanniktech.maven.publish"
