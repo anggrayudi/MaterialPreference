@@ -38,7 +38,6 @@ dependencies {
     api 'androidx.documentfile:documentfile:1.0.1'
     api 'androidx.cardview:cardview:1.0.0'
 
-    api 'com.karumi:dexter:6.2.2'
     api 'com.wdullaer:materialdatetimepicker:4.2.3'
     api "com.afollestad.material-dialogs:core:$dialogVersion"
     api "com.afollestad.material-dialogs:files:$dialogVersion"
