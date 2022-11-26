@@ -18,8 +18,8 @@ import com.anggrayudi.materialpreference.annotation.PreferencesConfig
  * add the following configuration to your `build.gradle` in `dependencies` section:
  *
  *      dependencies {
- *          implementation 'com.anggrayudi:materialpreference:3.7.0'
- *          kapt 'com.anggrayudi:materialpreference-compiler:1.'
+ *          implementation 'com.anggrayudi:materialpreference:3.x.x'
+ *          kapt 'com.anggrayudi:materialpreference-compiler:1.x'
  *      }
  */
 @PreferencesConfig
