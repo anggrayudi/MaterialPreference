@@ -1,10 +1,10 @@
 package com.anggrayudi.materialpreference.sample
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Environment
+import androidx.multidex.MultiDexApplication
 import com.anggrayudi.materialpreference.PreferenceManager
 import com.anggrayudi.materialpreference.PreferenceManager.Companion.KEY_HAS_SET_DEFAULT_VALUES
 import com.anggrayudi.materialpreference.migration.MigrationPlan
@@ -14,7 +14,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
-class App : Application() {
+class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()

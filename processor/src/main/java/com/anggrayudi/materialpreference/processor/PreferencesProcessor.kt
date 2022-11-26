@@ -27,8 +27,10 @@ class PreferencesProcessor : AbstractProcessor() {
             }
 
             // D:\YourProjectDirs\app\build\generated\source\kaptKotlin\debug
-            val resFile = File(File(generatedSourcesRoot).parentFile.parentFile.parentFile.parentFile.parentFile,
-                    "src${File.separator}main${File.separator}res${File.separator}")
+            val resFile = File(
+                File(generatedSourcesRoot).parentFile.parentFile.parentFile.parentFile.parentFile,
+                "src${File.separator}main${File.separator}res${File.separator}"
+            )
 
             val a = it.getAnnotation(PreferencesConfig::class.java)
             val xmlRes = a.preferencesXmlRes.toXmlFileName()
@@ -41,16 +43,20 @@ class PreferencesProcessor : AbstractProcessor() {
             val prefKeyClassBuilder = TypeSpec.objectBuilder(a.prefKeyClassName)
 
             val prefHelperClassBuilder = TypeSpec.classBuilder(a.prefHelperClassName)
-                    .primaryConstructor(FunSpec.constructorBuilder().addParameter("context", ClassName("android.content", "Context")).build())
-                    .addProperty(PropertySpec.builder("preferences", ClassName("android.content", "SharedPreferences"))
-                            .initializer("%T.getDefaultSharedPreferences(context)", ClassName("com.anggrayudi.materialpreference", "PreferenceManager"))
-                            .build())
+                .primaryConstructor(FunSpec.constructorBuilder().addParameter("context", ClassName("android.content", "Context")).build())
+                .addProperty(
+                    PropertySpec.builder("preferences", ClassName("android.content", "SharedPreferences"))
+                        .initializer("%T.getDefaultSharedPreferences(context)", ClassName("com.anggrayudi.materialpreference", "PreferenceManager"))
+                        .build()
+                )
 
             val specs = getPreferenceSpecs(xmlFile, a.capitalStyle)
             specs.forEach { spec ->
-                prefKeyClassBuilder.addProperty(PropertySpec.builder(spec.constantName, String::class, KModifier.CONST)
+                prefKeyClassBuilder.addProperty(
+                    PropertySpec.builder(spec.constantName, String::class, KModifier.CONST)
                         .initializer("%S", spec.key)
-                        .build())
+                        .build()
+                )
 
                 if (spec.dataType != PreferenceDataType.NOTHING && spec.methodName != null) {
                     val getterBuilder = FunSpec.getterBuilder()
@@ -62,13 +68,18 @@ class PreferencesProcessor : AbstractProcessor() {
 
                             val defaultValue = getStringSetDefaultValue(spec)
                             if (defaultValue.isNotEmpty()) {
-                                getterBuilder.addStatement("return preferences.getStringSet(%S, mutableSetOf(%L)) ?: mutableSetOf(%L)", spec.key, defaultValue, defaultValue)
+                                getterBuilder.addStatement(
+                                    "return preferences.getStringSet(%S, mutableSetOf(%L)) ?: mutableSetOf(%L)",
+                                    spec.key,
+                                    defaultValue,
+                                    defaultValue
+                                )
                             } else {
                                 getterBuilder.addStatement("return preferences.getStringSet(%S, mutableSetOf()) ?: mutableSetOf()", spec.key)
                             }
 
                             setterBuilder.addParameter("value", parameterSpec)
-                                    .addStatement("preferences.edit().putStringSet(%S, value).apply()", spec.key)
+                                .addStatement("preferences.edit().putStringSet(%S, value).apply()", spec.key)
 
                             PropertySpec.builder(spec.methodName!!, parameterSpec)
                         }
@@ -81,7 +92,7 @@ class PreferencesProcessor : AbstractProcessor() {
                             }
 
                             setterBuilder.addParameter("value", Boolean::class)
-                                    .addStatement("preferences.edit().putBoolean(%S, value).apply()", spec.key)
+                                .addStatement("preferences.edit().putBoolean(%S, value).apply()", spec.key)
 
                             PropertySpec.builder(spec.methodName!!, Boolean::class)
                         }
@@ -94,7 +105,7 @@ class PreferencesProcessor : AbstractProcessor() {
                             }
 
                             setterBuilder.addParameter("value", Int::class)
-                                    .addStatement("preferences.edit().putInt(%S, value).apply()", spec.key)
+                                .addStatement("preferences.edit().putInt(%S, value).apply()", spec.key)
 
                             PropertySpec.builder(spec.methodName!!, Int::class)
                         }
@@ -107,7 +118,7 @@ class PreferencesProcessor : AbstractProcessor() {
                             }
 
                             setterBuilder.addParameter("value", Float::class)
-                                    .addStatement("preferences.edit().putFloat(%S, value).apply()", spec.key)
+                                .addStatement("preferences.edit().putFloat(%S, value).apply()", spec.key)
 
                             PropertySpec.builder(spec.methodName!!, Float::class)
                         }
@@ -120,7 +131,7 @@ class PreferencesProcessor : AbstractProcessor() {
                             }
 
                             setterBuilder.addParameter("value", Long::class)
-                                    .addStatement("preferences.edit().putLong(%S, value).apply()", spec.key)
+                                .addStatement("preferences.edit().putLong(%S, value).apply()", spec.key)
 
                             PropertySpec.builder(spec.methodName!!, Long::class)
                         }
@@ -129,19 +140,19 @@ class PreferencesProcessor : AbstractProcessor() {
                             val timeClass = ClassName("com.anggrayudi.materialpreference", "TimePreference").nestedClass("Time")
                             if (spec.defaultValue != null && spec.defaultValue != "@null") {
                                 getterBuilder.addStatement("val time = preferences.getString(%S, %S) ?: %S", spec.key, spec.defaultValue!!, spec.defaultValue!!)
-                                        .addStatement("return TimePreference.toTime(time)")
+                                    .addStatement("return TimePreference.toTime(time)")
 
                                 setterBuilder.addParameter("value", timeClass)
-                                        .addStatement("preferences.edit().putString(%S, value.toString()).apply()", spec.key)
+                                    .addStatement("preferences.edit().putString(%S, value.toString()).apply()", spec.key)
 
                                 PropertySpec.builder(spec.methodName!!, timeClass)
                             } else {
                                 getterBuilder.addStatement("val time = preferences.getString(%S, null)", spec.key)
-                                        .addStatement("return if (time != null) TimePreference.toTime(time) else null", spec.key)
+                                    .addStatement("return if (time != null) TimePreference.toTime(time) else null", spec.key)
 
                                 val nullableTime = timeClass.copy(nullable = true)
                                 setterBuilder.addParameter("value", nullableTime)
-                                        .addStatement("preferences.edit().putString(%S, value?.toString()).apply()", spec.key)
+                                    .addStatement("preferences.edit().putString(%S, value?.toString()).apply()", spec.key)
 
                                 PropertySpec.builder(spec.methodName!!, nullableTime)
                             }
@@ -152,7 +163,7 @@ class PreferencesProcessor : AbstractProcessor() {
                                 getterBuilder.addStatement("return preferences.getString(%S, %S) ?: %S", spec.key, spec.defaultValue!!, spec.defaultValue!!)
 
                                 setterBuilder.addParameter("value", String::class)
-                                        .addStatement("preferences.edit().putString(%S, value).apply()", spec.key)
+                                    .addStatement("preferences.edit().putString(%S, value).apply()", spec.key)
 
                                 PropertySpec.builder(spec.methodName!!, String::class)
                             } else {
@@ -160,7 +171,7 @@ class PreferencesProcessor : AbstractProcessor() {
 
                                 val parameterSpec = String::class.asTypeName().copy(nullable = true)
                                 setterBuilder.addParameter("value", parameterSpec)
-                                        .addStatement("preferences.edit().putString(%S, value).apply()", spec.key)
+                                    .addStatement("preferences.edit().putString(%S, value).apply()", spec.key)
 
                                 PropertySpec.builder(spec.methodName!!, parameterSpec)
                             }
@@ -168,8 +179,8 @@ class PreferencesProcessor : AbstractProcessor() {
                     }
 
                     propertyBuilder.mutable(true)
-                            .getter(getterBuilder.build())
-                            .setter(setterBuilder.build())
+                        .getter(getterBuilder.build())
+                        .setter(setterBuilder.build())
 
                     prefHelperClassBuilder.addProperty(propertyBuilder.build()).build()
                 }
@@ -178,11 +189,13 @@ class PreferencesProcessor : AbstractProcessor() {
             val withDefaultValue = specs.filter { spec -> spec.defaultValue != null || spec.dataType == PreferenceDataType.STRING_SET }
             if (withDefaultValue.isNotEmpty()) {
                 val functionBuilder = FunSpec.builder("setDefaultPreferenceValues")
-                        .addKdoc("All preferences that do not define `android:defaultValue` wont be included into this method." +
-                                "\nBTW, you can use `@null` to define `null` value like this => `android:defaultValue=\"@null\"`")
-                        .addAnnotation(JvmStatic::class)
-                        .addParameter("context", ClassName("android.content", "Context"))
-                        .addStatement("%T.getDefaultSharedPreferences(context).edit()", ClassName("com.anggrayudi.materialpreference", "PreferenceManager"))
+                    .addKdoc(
+                        "All preferences that do not define `android:defaultValue` wont be included into this method." +
+                                "\nBTW, you can use `@null` to define `null` value like this => `android:defaultValue=\"@null\"`"
+                    )
+                    .addAnnotation(JvmStatic::class)
+                    .addParameter("context", ClassName("android.content", "Context"))
+                    .addStatement("%T.getDefaultSharedPreferences(context).edit()", ClassName("com.anggrayudi.materialpreference", "PreferenceManager"))
 
                 withDefaultValue.forEach { spec ->
                     when (spec.dataType) {
@@ -223,8 +236,8 @@ class PreferencesProcessor : AbstractProcessor() {
                 functionBuilder.addStatement(".apply()")
 
                 val companionBlock = TypeSpec.companionObjectBuilder()
-                        .addFunction(functionBuilder.build())
-                        .build()
+                    .addFunction(functionBuilder.build())
+                    .build()
                 prefHelperClassBuilder.addType(companionBlock)
             }
 
@@ -232,14 +245,14 @@ class PreferencesProcessor : AbstractProcessor() {
             val packageName = processingEnv.elementUtils.getPackageOf(it).qualifiedName.toString().substringBeforeLast(".java")
 
             FileSpec.builder(packageName, a.prefKeyClassName)
-                    .addType(prefKeyClassBuilder.build())
-                    .build()
-                    .writeTo(File(generatedSourcesRoot).apply { mkdirs() })
+                .addType(prefKeyClassBuilder.build())
+                .build()
+                .writeTo(File(generatedSourcesRoot).apply { mkdirs() })
 
             FileSpec.builder(packageName, a.prefHelperClassName)
-                    .addType(prefHelperClassBuilder.build())
-                    .build()
-                    .writeTo(File(generatedSourcesRoot))
+                .addType(prefHelperClassBuilder.build())
+                .build()
+                .writeTo(File(generatedSourcesRoot))
             return false
         }
         return false
@@ -360,9 +373,9 @@ class PreferencesProcessor : AbstractProcessor() {
         return if (!capitalStyle)
             key
         else if (key.contains("_")) {
-            key.toUpperCase(Locale.US)
+            key.uppercase()
         } else {
-            val resolvedKey = key.split(Regex("(?=[A-Z])")).joinToString("_").toUpperCase(Locale.US)
+            val resolvedKey = key.split(Regex("(?=[A-Z])")).joinToString("_").uppercase()
             if (resolvedKey.startsWith("_"))
                 resolvedKey.replaceFirst("_", "")
             else
@@ -373,17 +386,18 @@ class PreferencesProcessor : AbstractProcessor() {
     private fun createMethodName(key: String, dataType: PreferenceDataType): String {
         val methodWords = (if (key.contains("_")) key.split("_") else key.split(Regex("(?=[A-Z])"))).filter { it.isNotBlank() }
         return if (dataType == PreferenceDataType.BOOLEAN) {
-            "is" + methodWords.joinToString("") { it.capitalize() }
+            "is" + methodWords.joinToString("") { it.replaceFirstChar { c -> c.uppercase() } }
         } else {
-            methodWords[0].decapitalize() + methodWords.takeLast(methodWords.size - 1).joinToString("") { it.capitalize() }
+            methodWords[0].replaceFirstChar { it.lowercase() } + methodWords.takeLast(methodWords.size - 1)
+                .joinToString("") { it.replaceFirstChar { c -> c.uppercase() } }
         }
     }
 
     private fun getStringSetDefaultValue(spec: PreferenceSpec) = spec.defaultValue?.toString().orEmpty()
-            .split(",")
-            .map { s -> s.trim() }
-            .filter { s -> s.isNotEmpty() }
-            .joinToString(",") { s -> "\"$s\"" }
+        .split(",")
+        .map { s -> s.trim() }
+        .filter { s -> s.isNotEmpty() }
+        .joinToString(",") { s -> "\"$s\"" }
 
     private fun String.toXmlFileName() = if (endsWith(".xml")) this else "$this.xml"
 

@@ -13,7 +13,6 @@ android {
     }
 
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.anggrayudi.materialpreference.sample"
@@ -21,6 +20,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.appVersionCode
         versionName "$MATERIAL_PREFERENCE_VERSION"
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -69,23 +69,24 @@ configurations {
 
 dependencies {
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test:runner:1.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation "io.insert-koin:koin-android:3.0.1"
+    implementation 'io.insert-koin:koin-android:3.3.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation project(':materialpreference')
     compileOnly project(':annotation')
     kapt project(':processor')
 
-//    kapt 'com.anggrayudi:materialpreference-compiler:1.7'
+//    kapt 'com.anggrayudi:materialpreference-compiler:1.8'
 
 //    localImplementation project(":materialpreference")
 //    localCompileOnly project(':annotation')
 
 //    mavenImplementation("com.anggrayudi:materialpreference:$MATERIAL_PREFERENCE_VERSION") { changing = true }
-//    mavenImplementation 'com.anggrayudi:materialpreference-api:1.7'
+//    mavenImplementation 'com.anggrayudi:materialpreference-api:1.8'
 }
 
 tasks.withType(JavaCompile) {

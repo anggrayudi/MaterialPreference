@@ -2,7 +2,7 @@
 apply from: 'extensions.gradle'
 
 buildscript {
-    ext.kotlin_version = '1.5.10'
+    ext.kotlin_version = '1.7.20'
 
     repositories {
         google()
@@ -11,11 +11,11 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.1'
-        classpath 'com.google.gms:google-services:4.3.8'
+        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'com.google.gms:google-services:4.3.14'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.15.1'
-        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.20'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.22.0'
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.7.20'
     }
 }
 
@@ -25,18 +25,33 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
-
-    //Support @JvmDefault
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-        kotlinOptions {
-            freeCompilerArgs = ['-Xjvm-default=all', '-Xopt-in=kotlin.RequiresOptIn']
-            jvmTarget = '1.8'
-            includeRuntime = true
-        }
-    }
 }
 
 subprojects {
+    if (name != 'sample') {
+        apply plugin: "com.vanniktech.maven.publish"
+
+        repositories {
+            maven {
+                url = version.toString().endsWith("SNAPSHOT")
+                        ? 'https://oss.sonatype.org/content/repositories/snapshots/'
+                        : 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            }
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            // Force Kotlin to use current version
+            force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+            force "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+            force "org.jetbrains.kotlin:kotlin-android-extensions-runtime:$kotlin_version"
+            force "junit:junit:4.13.2"
+        }
+    }
+
     afterEvaluate {
         // global dependencies for all modules
         dependencies {

@@ -1,31 +1,8 @@
 ext {
     appVersionCode = 19
     minSdkVersion = 17
-    targetSdkVersion = 30
-    compileSdkVersion = 30
-    buildToolsVersion = '30.0.2'
+    targetSdkVersion = 33
+    compileSdkVersion = 33
     dialogVersion = '3.3.0'
-    coroutinesVersion = '1.4.3'
-
-    // Project
-    VCS_URL = "https://github.com/anggrayudi/MaterialPreference.git"
-    GROUP = "com.anggrayudi"
-
-    // POM Project
-    POM_URL = "https://github.com/anggrayudi/MaterialPreference"
-
-    // POM SCM
-    POM_SCM_URL = "https://github.com/anggrayudi/MaterialPreference"
-    POM_SCM_CONNECTION = "scm:git:git://github.com/anggrayudi/MaterialPreference.git"
-    POM_SCM_DEV_CONNECTION = "scm:git:ssh://github.com:anggrayudi/MaterialPreference.git"
-
-    // POM Licenses
-    POM_LICENCE_NAME = "The Apache Software License, Version 2.0"
-    POM_LICENCE_URL = "https://github.com/anggrayudi/MaterialPreference/blob/master/LICENSE"
-    //POM_LICENCE_DIST  = "
-
-    // POM Developers
-    POM_DEVELOPER_ID = "anggrayudi"
-    POM_DEVELOPER_NAME = "Anggrayudi H"
-    POM_DEVELOPER_URL = "https://github.com/anggrayudi/"
+    coroutinesVersion = '1.6.4'
 }

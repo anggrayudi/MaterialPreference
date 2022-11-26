@@ -163,7 +163,7 @@ apply plugin: 'kotlin-kapt' // Add this line
 
 dependencies {
     implementation 'com.anggrayudi:materialpreference:3.x.x'
-    kapt 'com.anggrayudi:materialpreference-compiler:1.7'
+    kapt 'com.anggrayudi:materialpreference-compiler:1.8'
 }
 ````
 
@@ -328,7 +328,7 @@ Don't forget to check this runtime permission before opening ringtone picker on 
 
 ## License
 
-    Copyright 2018-2021 Anggrayudi Hardiannicko A.
+    Copyright 2018-2022 Anggrayudi Hardiannicko A.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

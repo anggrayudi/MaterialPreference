@@ -1,6 +1,7 @@
 package com.anggrayudi.materialpreference.dialog
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.database.Cursor
 import android.media.AudioManager
 import android.media.Ringtone
@@ -18,8 +19,6 @@ import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.anggrayudi.materialpreference.RingtoneManagerCompat
 import com.anggrayudi.materialpreference.RingtonePreference
 import com.anggrayudi.materialpreference.SafeRingtone
-import com.anggrayudi.storage.extension.hasActivityHandler
-import java.util.*
 
 /**
  * Created by Eugen on 07.12.2015.
@@ -144,9 +143,9 @@ class RingtonePreferenceDialogFragment : PreferenceDialogFragment(), Runnable {
 
         // Alternatively try starting system picker.
         val intent = preference.buildRingtonePickerIntent()
-        if (intent.hasActivityHandler(requireContext())) {
+        try {
             ringtonePickerLauncher.launch(intent)
-        } else {
+        } catch (e: ActivityNotFoundException) {
             onRingtonePickerNotFound()
         }
     }

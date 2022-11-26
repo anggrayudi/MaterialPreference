@@ -20,12 +20,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.anggrayudi.materialpreference.dialog.*
 import com.anggrayudi.storage.SimpleStorageHelper
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.single.PermissionListener
+import com.anggrayudi.storage.permission.*
 
 /**
  * A fragment class to manage and display all preferences.
@@ -60,6 +55,9 @@ abstract class PreferenceFragmentMaterial : Fragment(),
             }
         }
     }
+
+    private lateinit var ringtonePermissionRequest: FragmentPermissionRequest
+    private var ringtonePreferenceKey: String? = null
 
     private val requestFocus = Runnable { scrollView?.focusableViewAvailable(scrollView) }
 
@@ -161,6 +159,25 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         (activity as PreferenceActivityMaterial).onCreatePreferences(this, rootKey)
 
         storageHelper = SimpleStorageHelper(this, savedInstanceState)
+
+        ringtonePermissionRequest = FragmentPermissionRequest.Builder(this)
+            .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+            .withCallback(object : PermissionCallback {
+                override fun onPermissionsChecked(result: PermissionResult, fromSystemDialog: Boolean) {
+                    if (ringtonePreferenceKey != null && result.areAllPermissionsGranted) {
+                        RingtonePreferenceDialogFragment.newInstance(ringtonePreferenceKey!!).let {
+                            it.requireArguments().putString(TAG, requireTag())
+                            it.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
+                        }
+                    }
+                    ringtonePreferenceKey = null
+                }
+
+                override fun onShouldRedirectToSystemSettings(blockedPermissions: List<PermissionReport>) {
+                    SimpleStorageHelper.redirectToSystemSettings(requireContext())
+                }
+            })
+            .build()
     }
 
     /**
@@ -360,7 +377,6 @@ abstract class PreferenceFragmentMaterial : Fragment(),
      * @param preference The Preference object requesting the dialog.
      */
     override fun onDisplayPreferenceDialog(preference: Preference) {
-
         var handled = false
         if (callbackFragment is OnPreferenceDisplayDialogCallback) {
             handled = (callbackFragment as OnPreferenceDisplayDialogCallback)
@@ -380,10 +396,9 @@ abstract class PreferenceFragmentMaterial : Fragment(),
             return
         }
 
-        val preferenceFragmentTag = tag ?: throw IllegalStateException("${javaClass.name} must have a tag.")
-
         if (preference is RingtonePreference) {
-            openRingtonePreference(preference.key!!, preferenceFragmentTag)
+            ringtonePreferenceKey = preference.key
+            ringtonePermissionRequest.check()
             return
         }
 
@@ -396,30 +411,11 @@ abstract class PreferenceFragmentMaterial : Fragment(),
             is ColorPreference -> ColorPreferenceDialogFragment.newInstance(preference.key!!)
             else -> throw IllegalArgumentException("Tried to display dialog for unknown preference type. Did you forget to override onDisplayPreferenceDialog()?")
         }
-        f.requireArguments().putString(TAG, preferenceFragmentTag)
+        f.requireArguments().putString(TAG, requireTag())
         f.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
     }
 
-    private fun openRingtonePreference(preferenceKey: String, preferenceFragmentTag: String) {
-        Dexter.withContext(requireContext())
-            .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-            .withListener(object : PermissionListener {
-                override fun onPermissionGranted(response: PermissionGrantedResponse) {
-                    RingtonePreferenceDialogFragment.newInstance(preferenceKey).let {
-                        it.requireArguments().putString(TAG, preferenceFragmentTag)
-                        it.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
-                    }
-                }
-
-                override fun onPermissionDenied(response: PermissionDeniedResponse) {
-                    // no-op
-                }
-
-                override fun onPermissionRationaleShouldBeShown(request: PermissionRequest, token: PermissionToken) {
-                    // no-op
-                }
-            }).check()
-    }
+    private fun requireTag() = tag ?: throw IllegalStateException("${javaClass.name} must have a tag.")
 
     fun scrollToPreference(key: String) {
         scrollToPreferenceInternal(null, key)

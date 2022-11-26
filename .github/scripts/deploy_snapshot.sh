@@ -10,6 +10,6 @@ elif [ "${GITHUB_REF##*/}" != "master" ]; then
   echo "Skipping deployment: wrong branch. Expected 'master' but was '${GITHUB_REF##*/}'."
 else
   echo "Deploying snapshot..."
-  ./gradlew :materialpreference:uploadArchives --no-daemon --no-parallel --stacktrace
+  ./gradlew :materialpreference:publishAllPublicationsToMavenCentral --no-daemon --no-parallel --stacktrace
   echo "Snapshot released!"
 fi
