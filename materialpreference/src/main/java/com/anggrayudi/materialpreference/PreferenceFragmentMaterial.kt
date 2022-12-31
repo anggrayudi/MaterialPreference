@@ -3,6 +3,7 @@ package com.anggrayudi.materialpreference
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -165,10 +166,7 @@ abstract class PreferenceFragmentMaterial : Fragment(),
             .withCallback(object : PermissionCallback {
                 override fun onPermissionsChecked(result: PermissionResult, fromSystemDialog: Boolean) {
                     if (ringtonePreferenceKey != null && result.areAllPermissionsGranted) {
-                        RingtonePreferenceDialogFragment.newInstance(ringtonePreferenceKey!!).let {
-                            it.requireArguments().putString(TAG, requireTag())
-                            it.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
-                        }
+                        showRingtonePicker(ringtonePreferenceKey!!)
                     }
                     ringtonePreferenceKey = null
                 }
@@ -178,6 +176,13 @@ abstract class PreferenceFragmentMaterial : Fragment(),
                 }
             })
             .build()
+    }
+
+    private fun showRingtonePicker(key: String) {
+        RingtonePreferenceDialogFragment.newInstance(key).let {
+            it.requireArguments().putString(TAG, requireTag())
+            it.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
+        }
     }
 
     /**
@@ -397,8 +402,12 @@ abstract class PreferenceFragmentMaterial : Fragment(),
         }
 
         if (preference is RingtonePreference) {
-            ringtonePreferenceKey = preference.key
-            ringtonePermissionRequest.check()
+            if (Build.VERSION.SDK_INT < 29) {
+                ringtonePreferenceKey = preference.key
+                ringtonePermissionRequest.check()
+            } else {
+                showRingtonePicker(preference.key!!)
+            }
             return
         }
 

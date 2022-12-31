@@ -45,6 +45,7 @@ import com.anggrayudi.materialpreference.callback.OnPreferenceClickListener
 import com.anggrayudi.materialpreference.callback.OnPreferenceLongClickListener
 import com.anggrayudi.materialpreference.util.applyTint
 import com.anggrayudi.materialpreference.util.getSupportDrawable
+import com.anggrayudi.materialpreference.util.parcelable
 import java.util.*
 
 /**
@@ -1510,7 +1511,7 @@ open class Preference @Keep @JvmOverloads constructor(
      */
     internal open fun dispatchRestoreInstanceState(container: Bundle) {
         if (hasKey()) {
-            val state = container.getParcelable<Parcelable>(key) ?: return
+            val state = container.parcelable<Parcelable>(key!!) ?: return
             baseMethodCalled = false
             onRestoreInstanceState(state)
             if (!baseMethodCalled) {

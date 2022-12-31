@@ -24,6 +24,7 @@ import android.provider.Settings.System
 import android.util.AttributeSet
 import androidx.annotation.Keep
 import com.anggrayudi.materialpreference.dialog.DialogPreference
+import com.anggrayudi.materialpreference.util.parcelable
 
 /**
  * A [Preference] that allows the user to choose a ringtone from those on the device.
@@ -170,7 +171,7 @@ open class RingtonePreference @Keep @JvmOverloads constructor(
      * by [RingtoneManager.ACTION_RINGTONE_PICKER].
      */
     fun onActivityResult(data: Intent?) {
-        saveRingtone(data?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI) ?: return)
+        saveRingtone(data?.parcelable(RingtoneManager.EXTRA_RINGTONE_PICKED_URI) ?: return)
     }
 
     internal fun saveRingtone(uri: Uri?) {

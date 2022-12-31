@@ -35,6 +35,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.WhichButton
 import com.afollestad.materialdialogs.customview.customView
 import com.anggrayudi.materialpreference.PreferenceFragmentMaterial
+import com.anggrayudi.materialpreference.util.parcelable
 
 /**
  * Abstract base class which presents a dialog associated with a
@@ -111,7 +112,7 @@ abstract class PreferenceDialogFragment : DialogFragment() {
             negativeButtonText = savedInstanceState.getCharSequence(SAVE_STATE_NEGATIVE_TEXT)
             dialogMessage = savedInstanceState.getCharSequence(SAVE_STATE_MESSAGE)
             dialogLayoutRes = savedInstanceState.getInt(SAVE_STATE_LAYOUT, 0)
-            val bitmap = savedInstanceState.getParcelable<Bitmap>(SAVE_STATE_ICON)
+            val bitmap = savedInstanceState.parcelable<Bitmap>(SAVE_STATE_ICON)
             if (bitmap != null) {
                 dialogIcon = BitmapDrawable(resources, bitmap)
             }

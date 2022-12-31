@@ -5,6 +5,7 @@ gen/
 *.aab
 *.class
 .DS_Store
+*.hprof
 
 # Gradle files
 .gradle/

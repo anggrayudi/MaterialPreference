@@ -37,7 +37,8 @@ class ListPreferenceDialogFragment : PreferenceDialogFragment() {
             val preference = listPreference
             if (preference.entries == null || preference.entryValues == null) {
                 throw IllegalStateException(
-                    "ListPreference requires an entries array and an entryValues array.")
+                    "ListPreference requires an entries array and an entryValues array."
+                )
             }
 
             clickedDialogEntryIndex = preference.findIndexOfValue(preference.value, preference.defaultValue)
@@ -62,7 +63,8 @@ class ListPreferenceDialogFragment : PreferenceDialogFragment() {
             items = entries.map { it.toString() },
             initialSelection = clickedDialogEntryIndex,
             waitForPositiveButton = false,
-            disabledIndices = getDisabledIndices(listPreference.disabledEntryValues, entryValues)) { _, index, _ ->
+            disabledIndices = getDisabledIndices(listPreference.disabledEntryValues, entryValues)
+        ) { _, index, _ ->
             clickedDialogEntryIndex = index
             whichButtonClicked = WhichButton.POSITIVE
             dialog.dismiss()
