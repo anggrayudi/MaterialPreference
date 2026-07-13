@@ -1,5 +1,7 @@
 # Material Preference
 
+> **⚠️ Archived — no longer maintained.** Most apps have moved to Jetpack Compose, and modern AI coding assistants make it easy to build a custom preference UI tailored to your own app's style/theme. This repository is kept for reference but will not receive further updates.
+
 ![Maven Central](https://img.shields.io/maven-central/v/com.anggrayudi/materialpreference.svg)
 [![Build Status](https://github.com/anggrayudi/MaterialPreference/workflows/Android%20CI/badge.svg)](https://github.com/anggrayudi/MaterialPreference/actions?query=workflow%3A%22Android+CI%22)
 
